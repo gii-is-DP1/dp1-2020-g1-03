@@ -254,7 +254,16 @@
             <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-
-
-
+    
+<developers>
+ 	<developer>
+ 		<id>abrgarvil</id>
+ 		<name>Abraham</name>
+ 		<email>abrgarvil@alum.us.es</email>
+ 		<url>http://www.tmht.com/abrgarvil</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
+</developers>
 </project>
