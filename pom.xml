@@ -31,21 +31,7 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-<developers>
- <developer>
- <id>dancasnar1</id>
- <name>Daniel</name>
- <email>leo@tmht.com</email>
- <url>http://www.tmht.com/leo</url>
- <roles>
- <role>leader</role>
- </roles>
- <properties>
- </properties>
- </developer>
 
- <!-- More developers ...-->
-</developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
@@ -279,5 +265,15 @@
  			<role>developer</role>
  		</roles>
  	</developer>
+    <developer>
+        <id>dancasnar1</id>
+        <name>Daniel</name>
+        <email>leo@tmht.com</email>
+        <url>http://www.tmht.com/leo</url>
+        <roles>
+            <role>leader</role>
+        </roles>
+   </developer>
+
 </developers>
 </project>
