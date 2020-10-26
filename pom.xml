@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
-    <artifactId>spring-petclinic</artifactId>
+    <artifactId>G1-03</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
     <parent>
@@ -12,7 +12,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>petclinic</name>
+    <name>Practica1-G1-03</name>
 
     <properties>
 
@@ -254,8 +254,26 @@
             <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
-
+    
 <developers>
+ 	<developer>
+ 		<id>abrgarvil</id>
+ 		<name>Abraham</name>
+ 		<email>abrgarvil@alum.us.es</email>
+ 		<url>http://www.tmht.com/abrgarvil</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
+    <developer>
+        <id>dancasnar1</id>
+        <name>Daniel</name>
+        <email>leo@tmht.com</email>
+        <url>http://www.tmht.com/leo</url>
+        <roles>
+            <role>leader</role>
+        </roles>
+   </developer>
  	<developer>
  		<id>luipozdel</id>
  		<name>Luis</name>
