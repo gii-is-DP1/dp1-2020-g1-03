@@ -255,6 +255,16 @@
         </license>
     </licenses>
 
-
+<developers>
+ 	<developer>
+ 		<id>luipozdel</id>
+ 		<name>Luis</name>
+ 		<email>luipozdel@alum.us.es</email>
+ 		<url>http://www.tmht.com/luipozdel</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
+</developers>
 
 </project>
