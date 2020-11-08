@@ -25,9 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
+import org.springframework.samples.petclinic.service.CitaService;
 import org.springframework.samples.petclinic.service.OwnerService;
-import org.springframework.samples.petclinic.service.ServicioCita;
-import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,15 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/owners/{ownerId}")
 public class OwnerController {
-	@Autowired
-	private ServicioCita servicioCita;
-	@GetMapping()
-	public String listadoCitas(ModelMap modelMap) {
-		String vista="owners/{ownerId}/listadoCitas";
-		List<Cita> citas= servicioCita.findAllCitas();
-		modelMap.addAttribute("citas", citas);
-		return vista;
-	}
+	
 	private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
 	private final OwnerService ownerService;
