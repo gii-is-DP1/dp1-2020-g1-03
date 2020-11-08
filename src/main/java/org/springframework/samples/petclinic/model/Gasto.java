@@ -59,7 +59,7 @@ public class Gasto extends BaseEntity {
 	private Integer cantidad;
 	
 	@Column(name = "fecha")        
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fecha;
 
 	/**

@@ -49,7 +49,7 @@ public class Cita extends NamedEntity {
 
 	@Column(name = "fecha_hora")
 	@NotEmpty
-	@DateTimeFormat(pattern ="dd/MM/yyyy hh:mm")
+	@DateTimeFormat(pattern ="yyyy-MM-dd hh:mm")
 	private Date fechaHora;
 
 	@Column(name = "estado")

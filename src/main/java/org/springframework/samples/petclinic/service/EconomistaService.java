@@ -47,9 +47,13 @@ public class EconomistaService {
 	}
 
 	@Transactional(readOnly = true)
-	public Owner findEconomistaById(int economistaId) {
+	public Economista findEconomistaById(int economistaId) {
 		// TODO Auto-generated method stub
 		return economistaRepository.findById(economistaId);
+	}
+
+	public int findEconomistaIdByUsername(String user) throws DataAccessException {
+		return this.economistaRepository.findEconIdByUsername(user);
 	}	
 
 }

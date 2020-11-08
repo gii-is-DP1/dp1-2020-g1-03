@@ -16,12 +16,14 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Economista;
 import org.springframework.samples.petclinic.model.Gasto;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -70,12 +73,45 @@ public class GastoController {
 //	}
 
 	@GetMapping()
-	public String listadoCitas(Map<String, Object> model) {
+	public String listadoGastos(Map<String, Object> model) {
 		//String vista="owners/{ownerId}/listadoCitas";
 		List<Gasto> gastos= gastoService.findAllGastosS();
-		System.out.println(gastos);
 		model.put("gastos", gastos);
 		return "gastos/gastosList";
 		}
+	
+	@GetMapping(value = "{gastoId}")
+	public String mostarGastos(@PathVariable("gastoId") int gastoId,Map<String, Object> model) {
+		//String vista="owners/{ownerId}/listadoCitas";
+		Gasto gasto= gastoService.findGastoById(gastoId);
+		model.put("gasto", gasto);
+		return "gastos/gastosShow";
+		}
+	
+	@GetMapping(value = "/{gastoId}/edit")
+	public String initEditGasto(@PathVariable("gastoId") int gastoId, Map<String, Object> model) {
+		Gasto gasto = this.gastoService.findGastoById(gastoId);
+		System.out.println(gasto+ "GASTO");
+		model.put("gasto", gasto);
+		return "gastos/crearOEditarGasto";
+	}
+
+	@PostMapping(value = "/{gastoId}/edit")
+	public String processEditGasto(final Principal principal,@Valid Gasto gasto, BindingResult result,
+			@PathVariable("gastoId") int gastoId) {
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			return "gastos/crearOEditarGasto";
+		}
+		else {
+			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
+			Economista econ= this.economistaService.findEconomistaById(idEcon);
+			gasto.setEconomista(econ);
+			System.out.println(gasto.getEconomista());
+			gasto.setId(gastoId);
+			this.gastoService.saveGasto(gasto);
+			return "redirect:/economistas/gasto/{gastoId}";
+		}
+	}
                 
 }
