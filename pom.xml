@@ -31,21 +31,7 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-<developers>
- <developer>
- <id>dancasnar1</id>
- <name>Daniel</name>
- <email>leo@tmht.com</email>
- <url>http://www.tmht.com/leo</url>
- <roles>
- <role>leader</role>
- </roles>
- <properties>
- </properties>
- </developer>
 
- <!-- More developers ...-->
-</developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
@@ -269,4 +255,36 @@
         </license>
     </licenses>
     
+
+<developers>
+ 	<developer>
+ 		<id>abrgarvil</id>
+ 		<name>Abraham</name>
+ 		<email>abrgarvil@alum.us.es</email>
+ 		<url>http://www.tmht.com/abrgarvil</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
+    <developer>
+        <id>dancasnar1</id>
+        <name>Daniel</name>
+        <email>leo@tmht.com</email>
+        <url>http://www.tmht.com/leo</url>
+        <roles>
+            <role>leader</role>
+        </roles>
+   </developer>
+ 	<developer>
+ 		<id>luipozdel</id>
+ 		<name>Luis</name>
+ 		<email>luipozdel@alum.us.es</email>
+ 		<url>http://www.tmht.com/luipozdel</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
+</developers>
+
+
 </project>
