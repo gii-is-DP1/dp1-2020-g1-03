@@ -8,6 +8,9 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
 INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 
+INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
+
 INSERT INTO users(username,password,enabled) VALUES ('abrgarvil','abrgarvil',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
 
@@ -71,4 +74,10 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (1, 7, '2013-01-01',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02', 'rabies shot');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 13, '2013-01-04', 'spayed');
+
+INSERT INTO economista VALUES (1, 'Jose', 'Escobito', 'Muchos', 'economista1');
+
+INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Material esterilizante', 250, '2020-10-04', 'Gasto correspondiente a la compra de material esterilizante para la clinica',1);
+INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Sueldos', 10250, '2020-10-11', 'Gasto correspondiente a los sueldos de todos los trabajadores de la clinica del mes de Octubre',1);
+INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
