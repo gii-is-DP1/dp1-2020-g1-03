@@ -91,7 +91,6 @@ public class GastoController {
 	@GetMapping(value = "/{gastoId}/edit")
 	public String initEditGasto(@PathVariable("gastoId") int gastoId, Map<String, Object> model) {
 		Gasto gasto = this.gastoService.findGastoById(gastoId);
-		System.out.println(gasto+ "GASTO");
 		model.put("gasto", gasto);
 		return "gastos/crearOEditarGasto";
 	}
@@ -100,17 +99,40 @@ public class GastoController {
 	public String processEditGasto(final Principal principal,@Valid Gasto gasto, BindingResult result,
 			@PathVariable("gastoId") int gastoId) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
 			return "gastos/crearOEditarGasto";
 		}
 		else {
 			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
 			Economista econ= this.economistaService.findEconomistaById(idEcon);
 			gasto.setEconomista(econ);
-			System.out.println(gasto.getEconomista());
 			gasto.setId(gastoId);
 			this.gastoService.saveGasto(gasto);
 			return "redirect:/economistas/gasto/{gastoId}";
+		}
+	}
+	
+	@GetMapping(value = "/new")
+	public String initCrearGasto(final Principal principal, Map<String, Object> model) {
+		Gasto gasto = new Gasto();
+		int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
+		Economista econ= this.economistaService.findEconomistaById(idEcon);
+		gasto.setEconomista(econ);
+		model.put("gasto", gasto);
+		return "gastos/crearOEditarGasto";
+	}
+
+	@PostMapping(value = "/new")
+	public String processCrearGasto(final Principal principal,@Valid Gasto gasto, BindingResult result) {
+		if (result.hasErrors()) {
+			return "gastos/crearOEditarGasto";
+		}
+		else {
+			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
+			Economista econ= this.economistaService.findEconomistaById(idEcon);
+			gasto.setEconomista(econ);
+			//gasto.setId(gastoId);
+			this.gastoService.saveGasto(gasto);
+			return "redirect:/economistas/gasto";
 		}
 	}
                 

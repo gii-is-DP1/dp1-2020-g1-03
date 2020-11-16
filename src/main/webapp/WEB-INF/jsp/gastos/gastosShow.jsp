@@ -6,12 +6,12 @@
 
 <petclinic:layout pageName="gastos">
 
-    <h2>Información sobre gastos</h2>
+    <h2>Informacion sobre gastos</h2>
 
 
     <table class="table table-striped">
         <tr>
-            <th>Título</th>
+            <th>Titulo</th>
             <td><b><c:out value="${gasto.titulo}"/></b></td>
         </tr>
         <tr>
