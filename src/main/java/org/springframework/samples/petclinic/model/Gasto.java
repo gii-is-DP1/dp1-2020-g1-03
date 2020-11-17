@@ -29,7 +29,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
+
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -56,10 +61,12 @@ public class Gasto extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "cantidad")
+	@PositiveOrZero
 	private Integer cantidad;
 	
 	@Column(name = "fecha")        
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Past
 	private LocalDate fecha;
 
 	/**

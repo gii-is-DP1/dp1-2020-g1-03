@@ -18,34 +18,16 @@ package org.springframework.samples.petclinic.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Economista;
 import org.springframework.samples.petclinic.model.Gasto;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-
 import java.security.Principal;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.EconomistaService;
 import org.springframework.samples.petclinic.service.GastoService;
-import org.springframework.samples.petclinic.service.OwnerService;
-import org.springframework.samples.petclinic.service.PetService;
-import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author Juergen Hoeller
@@ -73,19 +55,31 @@ public class GastoController {
 //	}
 
 	@GetMapping()
-	public String listadoGastos(Map<String, Object> model) {
+	public String listadoGastos(Map<String, Object> model, Principal principal) {
 		//String vista="owners/{ownerId}/listadoCitas";
-		List<Gasto> gastos= gastoService.findAllGastosS();
-		model.put("gastos", gastos);
-		return "gastos/gastosList";
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
+			List<Gasto> gastos= gastoService.findAllGastosS();
+			model.put("gastos", gastos);
+			return "gastos/gastosList";
+		} else {
+			//ModelAndView exception = new ModelAndView("exception");
+			return "exception";
+		}
+		
 		}
 	
 	@GetMapping(value = "{gastoId}")
 	public String mostarGastos(@PathVariable("gastoId") int gastoId,Map<String, Object> model) {
 		//String vista="owners/{ownerId}/listadoCitas";
 		Gasto gasto= gastoService.findGastoById(gastoId);
+		System.out.println(gasto);
+		if(gasto==null) {
+			return "exception";
+		} else {
 		model.put("gasto", gasto);
 		return "gastos/gastosShow";
+		}
 		}
 	
 	@GetMapping(value = "/{gastoId}/edit")
