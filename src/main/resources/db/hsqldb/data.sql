@@ -81,5 +81,5 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Sueldos', 10250, '2020-10-11', 'Gasto correspondiente a los sueldos de todos los trabajadores de la clinica del mes de Octubre',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
-INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
-INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
+//INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
+//INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
