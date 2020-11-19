@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web;
+/*package org.springframework.samples.petclinic.web;
 
 import java.util.List;
 import java.util.Map;
@@ -32,8 +32,9 @@ public class VacunaOwnerController {
 	
 	@GetMapping(value = "{vacunaId}")
 	public String mostarVacuna(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
-		Vacuna vacuna= vacunaService.findById(Id);
+		Vacuna vacuna= vacunaService.findVacunaById(Id);
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShow";
 		}
 }
+*/

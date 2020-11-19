@@ -13,9 +13,9 @@ public interface VacunaRepository extends Repository<Vacuna, Integer> {
 	//@Query()
 	List<Vacuna> findAll() throws DataAccessException;
 	
-	@Query("SELECT VACUNA FROM VACUNAS NATURALJOIN PETS NATURALJOIN OWNER WHERE OWNER_ID = ?1")
+	/*
 	List<Vacuna> findByOwnerId(int ownerId) throws DataAccessException;
-	
+	*/
 	//@Query()
 	Vacuna findById(int id) throws DataAccessException;
 	

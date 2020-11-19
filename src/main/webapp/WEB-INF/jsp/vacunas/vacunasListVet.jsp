@@ -13,14 +13,14 @@
         <tr>
             <th>Nombre</th>
             <th>Fecha</th>
-            <!--<th>Cantidad</th>-->
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${vacunas}" var="vacuna">
             <tr>
                 <td>
-                	<spring:url value="/vet/vacuna" var="vacunasUrl">
+                	<spring:url value="/vets/vacuna/{vacunaId}" var="vacunasUrl">
+                	<spring:param name="vacunaId" value="${vacuna.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.nombre}"/></a>
                 </td>

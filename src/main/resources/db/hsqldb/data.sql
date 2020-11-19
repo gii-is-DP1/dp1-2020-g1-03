@@ -84,8 +84,8 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3
 //INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 //INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
 
-INSERT INTO vacunas (id, nombre, fecha, descripcion, pet_id, vet_id) VALUES (1, 'COVOD', '2020-01-01', 'La vida tio', 1, 1)
-
+INSERT INTO vacunas(id, nombre, fecha, descripcion, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'La vida tio', 1, 1)
+//INSERT INTO vacunas(id, nombre, fecha, descripcion, pet_id, vet_id) VALUES (2, 'Rabia', '2013-05-01', 'Se le ha añadido la vacuna contra la la rabia', 1, 1)
 
 
 

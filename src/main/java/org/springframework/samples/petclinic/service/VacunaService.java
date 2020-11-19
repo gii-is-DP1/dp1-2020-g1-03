@@ -14,30 +14,30 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VacunaService {
 
-//	private VetRepository vetRepository;
+	private VetRepository vetRepository;
 //	
-//	private PetRepository petRepository;
+	private PetRepository petRepository;
 	
 	private VacunaRepository vacunaRepository;
 
 	@Autowired
-	public VacunaService(VacunaRepository vacunaRepository) {
+	public VacunaService(VacunaRepository vacunaRepository,PetRepository petRepository,VetRepository vetRepository) {
 		this.vacunaRepository = vacunaRepository;
-//		this.vetRepository = vetRepository;
-//		this.petRepository = petRepository;
+		this.vetRepository = vetRepository;
+		this.petRepository = petRepository;
 	}
 
 	@Transactional(readOnly = true)
-	public Vacuna findById(int id) throws DataAccessException {
+	public Vacuna findVacunaById(int id) throws DataAccessException {
 		return this.vacunaRepository.findById(id);
 	}
-
+	/*
 	@Transactional(readOnly = true)
 	public List<Vacuna> findByOwnerId(int ownerId) throws DataAccessException {
 		return this.vacunaRepository.findByOwnerId(ownerId);
-	}
+	}*/
 
-	public List<Vacuna> findAll() throws DataAccessException {
+	public List<Vacuna> findAllVacunas() throws DataAccessException {
 		return this.vacunaRepository.findAll();
 	}
 

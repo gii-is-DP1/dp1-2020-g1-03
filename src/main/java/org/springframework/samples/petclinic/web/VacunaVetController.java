@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/vets/{vetId}/vacunas")
+@RequestMapping("/vets/vacuna")
 public class VacunaVetController {
 	
 	private VacunaService vacunaService;
@@ -24,14 +24,14 @@ public class VacunaVetController {
 
 	@GetMapping()
 	public String listadoVacunas(Map<String, Object> model) {
-		List<Vacuna> vacunas = vacunaService.findAll();
+		List<Vacuna> vacunas = vacunaService.findAllVacunas();
 		model.put("vacunas", vacunas);
 		return "vacunas/vacunasListVet";
 	}
 	
 	@GetMapping(value = "{vacunaId}")
 	public String mostarVacuna(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
-		Vacuna vacuna= vacunaService.findById(Id);
+		Vacuna vacuna= vacunaService.findVacunaById(Id);
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShow";
 		}
