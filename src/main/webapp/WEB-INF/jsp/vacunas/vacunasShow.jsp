@@ -21,6 +21,10 @@
             <th>Descripcion</th>
             <td><c:out value="${vacuna.descripcion}"/></td>
         </tr>
+        <tr>
+            <th>Nombre del Veterinario</th>
+            <td><c:out value="${vacuna.vet.firstName} ${vacuna.vet.lastName}"/></td>
+        </tr>
     </table>
 
 
