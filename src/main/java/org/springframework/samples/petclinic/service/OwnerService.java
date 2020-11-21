@@ -75,5 +75,7 @@ public class OwnerService {
 		//creating authorities
 		authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}		
-
+	//public int findComentarioByOwnerName(String user) throws DataAccessException {
+		//return this.ownerRepository.findOwnerIdByUsername(user);
+	//}	
 }
