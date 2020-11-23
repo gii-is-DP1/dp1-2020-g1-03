@@ -32,6 +32,10 @@ public class Vacuna extends BaseEntity {
 	@Column(name = "descripcion")
 	private String descripcion;
 
+	@Column(name = "tipoenfermedad")
+	@NotEmpty
+	private TipoEnfermedad tipoenfermedad;
+	
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
