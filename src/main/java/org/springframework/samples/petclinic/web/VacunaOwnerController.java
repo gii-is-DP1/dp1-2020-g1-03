@@ -1,5 +1,6 @@
-/*package org.springframework.samples.petclinic.web;
+package org.springframework.samples.petclinic.web;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/owners/{ownerId}/vacunas")
+@RequestMapping("/owners/{ownerId}/vacuna")
 public class VacunaOwnerController {
 
 	private VacunaService vacunaService;
@@ -22,10 +23,10 @@ public class VacunaOwnerController {
 	public VacunaOwnerController(VacunaService vacunaService) {
 		this.vacunaService = vacunaService;
 	}
-
+	
 	@GetMapping()
 	public String listadoVacunas(Map<String, Object> model, @PathVariable("ownerId") int ownerId) {
-		List<Vacuna> vacunas = vacunaService.findByOwnerId(ownerId);
+		Collection<Vacuna> vacunas = vacunaService.findAllVacunasByOwnerId(ownerId);
 		model.put("vacunas", vacunas);
 		return "vacunas/vacunasListOwner";
 	}
@@ -37,4 +38,3 @@ public class VacunaOwnerController {
 		return "vacunas/vacunasShow";
 		}
 }
-*/
