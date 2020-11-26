@@ -57,7 +57,6 @@ public class GastoController {
 	@GetMapping()
 	public String listadoGastos(Map<String, Object> model, Principal principal) {
 		//String vista="owners/{ownerId}/listadoCitas";
-		System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
 			List<Gasto> gastos= gastoService.findAllGastosS();
 			model.put("gastos", gastos);

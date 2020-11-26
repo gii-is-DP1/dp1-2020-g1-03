@@ -53,7 +53,7 @@ class GastoTests {
 
 		gasto.setTitulo("");
 
-		gasto.setCantidad(null);
+		gasto.setCantidad(100);
 		gasto.setFecha(LocalDate.of(2020, 11, 11));
 		gasto.setDescription("");;
 

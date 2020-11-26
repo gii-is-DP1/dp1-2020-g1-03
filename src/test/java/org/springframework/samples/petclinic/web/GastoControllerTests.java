@@ -149,8 +149,8 @@ class GastoControllerTests {
 
 	}
 	
-	// Escenario negativo
-	//PREGUNTAR
+//	// Escenario negativo
+//	//PREGUNTAR
 //		@WithMockUser(value = "pedro", roles = "owner")
 //		@Test
 //		void testGastoListError() throws Exception {

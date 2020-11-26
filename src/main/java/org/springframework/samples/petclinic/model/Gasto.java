@@ -59,9 +59,10 @@ public class Gasto extends BaseEntity {
 	@Column(name = "titulo")
 	private String titulo;
 	
-	@NotNull
+	
 	@Column(name = "cantidad")
 	@PositiveOrZero
+	@NotNull
 	private Integer cantidad;
 	
 	@Column(name = "fecha")        
