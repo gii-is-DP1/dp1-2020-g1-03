@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/vets")
+//@RequestMapping("/vets")
 public class ComentarioController {
 	private final ComentarioService comentarioService;
     private final OwnerService ownerService;
@@ -40,44 +40,84 @@ public class ComentarioController {
         this.vetService = vetService;
 	}
 	
-
-	@GetMapping(value = "/{vetId}/comentarios")
-	public String listadoComentariosByVetId(Map<String, Object> model, @PathVariable("vetId") int vetId) {
-		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(vetId);
+	@GetMapping(value = "/vets/comentarios/{vetId}")
+	public String listadoComentariosByVetId(Map<String, Object> model, @PathVariable("vetId") int vetId, final Principal principal) {
+		System.out.println(principal.getName());
+		int idVet = this.vetService.findVetIdByFirstname(principal.getName());
+		System.out.println("ID DEL VETERINARIO"+idVet);
+		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
 		model.put("comentarios", comentarios);
 		return "comentarios/comentariosList";
 		}
-	
-//	@GetMapping(value = "/{vet_id}/comentarios")
-//	public String mostarComentariosDeVet(@PathVariable("vet_id") int vet_id,Map<String, Object> model) {
-//		Vet vet= comentarioService.findComentarioByVetId(vet_id);
-//		model.put("veterinario", vet);
+
+//	@GetMapping(value = "/{comentarioId}/show")
+//	public String mostarComentariosDeVet(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
+//		System.out.println(principal.);
+//		int idVet = this.comentarioService.findVetIdByUsername(principal.getName());		
+//		Vet vet= this.comentarioService.findVetById(idVet);
+//		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
+//		model.put("comentario", comentarios);
 //		return "comentario/comentariosShow";
 //		}
-//	
-//	@GetMapping(value = "/{comentarioId}/edit")
-//	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model) {
-//		Comentario comentario= this.comentarioService.findComentarioByOwnerId(comentarioId);
-//		System.out.println(comentario+ "COMENTARIO");
-//		model.put("comentario", comentario);
-//		return "comentario/crearOEditarComentario";
-//	}
-//
-//	@PostMapping(value = "/{comentarioId}/edit")
-//	public String processEditComentario(final Principal principal,@Valid Comentario comentario, BindingResult result,
-//			@PathVariable("comentarioId") int comentarioId) {
-//		if (result.hasErrors()) {
-//			System.out.println(result.getAllErrors());
-//			return "comentario/crearOEditarComentario";
-//		}
-//		else {
-//			int idOwner = this.ownerService.findOwnerByLastName(principal.getName()).hashCode();
-//			Owner owner= this.ownerService.findOwnerById(idOwner);
-//			comentario.setOwner(owner);
-//			System.out.println(comentario.getOwner());
-//			comentario.setId(comentarioId);
-//			this.comentarioService.saveComentario(comentario);
-//			return "redirect:/comentarios/";
-//		}
-//	}
+	
+	
+
+	
+	
+	//    DUEÑO ABAJO	
+	
+	
+	@GetMapping(value = "/owners/comentarios/{ownerId}")
+	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal, @PathVariable("ownerId") int ownerId) {
+		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());	
+		Owner owner= this.ownerService.findOwnerById(idOwner);
+		Collection<Comentario> comentario= comentarioService.findAllComentariosByOwnerId(idOwner);
+		model.put("comentarios", comentario);
+		return "comentarios/comentariosListOwner";
+		}
+	@GetMapping(value = "/owners/comentarios/show/{comentarioId}")
+	public String mostarComentariosDeOwner(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
+		
+		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
+		model.put("comentario", comentario);
+		return "comentarios/show";
+		}
+	@GetMapping(value = "/owners/edit/{comentarioId}")
+	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model) {
+		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
+		System.out.println(comentario+ "COMENTARIO");
+		model.put("comentario", comentario);
+		return "comentarios/crearOEditarComentario";
+	}
+
+	@PostMapping(value = "/owners/edit/{comentarioId}")
+	public String processEditComentario(final Principal principal,@Valid Comentario comentario, BindingResult result,
+			@PathVariable("comentarioId") int comentarioId) {
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			return "comentarios/crearOEditarComentario";
+		}
+		else {
+			comentario.setId(comentarioId);
+			this.comentarioService.saveComentario(comentario);
+			return "redirect:/owners/comentarios";
+		}
+	}
+	@GetMapping(value = "/owners/{comentarioId}/create")
+	public String initCreateComentario(Map<String, Object> model, @PathVariable("comentarioId") int comentarioId) {
+		Comentario comentario = new Comentario();
+		model.put("comentario", comentario);
+		return "comentarios/crearOEditarComentario";
+	}
+
+	@PostMapping(value = "/owners/{comentarioId}/create")
+	public String processCreateComentario(@Valid Comentario comentario, BindingResult result) {
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			return "comentarios/crearOEditarComentario";
+		} else {
+			this.comentarioService.saveComentario(comentario);
+			return "redirect:/vets/" + comentario.getTitulo();
+		}
+	}
 }

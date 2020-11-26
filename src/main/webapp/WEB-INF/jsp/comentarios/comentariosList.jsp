@@ -21,7 +21,7 @@
                 <td>
                 	<spring:url value="/comentarios/" var="comentarioUrl">
                     </spring:url>
-                    <a href="${fn:escapeXml(comentarioUrl)}"><c:out value="${comentario.titulo}"/></a>
+                    <c:out value="${comentario.titulo}"/>
                 </td>
                 <td>
                     <c:out value="${comentario.cuerpo}"/>

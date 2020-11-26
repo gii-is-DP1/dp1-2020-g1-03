@@ -59,4 +59,8 @@ public class VetService {
 //	public Vet findVetById(int id) throws DataAccessException {
 //		return vetRepository.findById(id);
 //	}
+
+	public int findVetIdByFirstname(String user) {
+		return vetRepository.findVetIdByFirstname(user);
+	}
 }
