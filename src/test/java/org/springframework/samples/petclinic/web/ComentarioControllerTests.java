@@ -1,7 +1,11 @@
 package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,6 +16,7 @@ import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Economista;
 import org.springframework.samples.petclinic.model.Gasto;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.ComentarioService;
 import org.springframework.samples.petclinic.service.EconomistaService;
@@ -45,11 +50,47 @@ public class ComentarioControllerTests {
 
 	private Comentario			comentario1;
 
-	private Economista			josue;
+	private Vet					josue;
 	
 	private Owner				pedro;
 	
 	private Vet					error;
 
 	private Comentario 			comentario2;
+	
+	@BeforeEach
+	void setup() {
+		this.pedro = new Owner();
+		User username= new User();
+		username.setUsername("josue1");
+		this.pedro.setUser(username);
+		this.pedro.setId(ComentarioControllerTests.TEST_OWNER_ID);
+		this.pedro.setAddress("Plaza San Pedro");
+		this.pedro.setCity("Roma");
+		this.pedro.setTelephone("954442211");
+		this.pedro.setFirstName("Josue");
+		this.pedro.setLastName("Perez Gutierrez");
+		
+		this.josue = new Vet();
+		this.josue.setId(ComentarioControllerTests.TEST_VET_ID);
+		this.josue.setFirstName("Josue");
+		this.josue.setLastName("Perez Gutierrez");
+
+
+
+
+		this.error = new Vet();
+		this.error.setId(2);
+		this.error.setFirstName("Error");
+		this.error.setLastName("Error");
+
+		this.comentario1 = new Comentario();
+		this.comentario1.setId(ComentarioControllerTests.TEST_COMENTARIO_ID);
+		this.comentario1.setCuerpo("Buen servicio y atención");
+		this.comentario1.setTitulo("Buen veterinario");
+		
+		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
+		BDDMockito.given(this.ownerService.findOwnerIdByUsername("josue1")).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
+
+	}
 }
