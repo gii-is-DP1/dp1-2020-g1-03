@@ -93,7 +93,7 @@ public class ComentarioControllerTests {
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
-	void testShowGastoForm() throws Exception {
+	void testShowComentarioForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
 
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
