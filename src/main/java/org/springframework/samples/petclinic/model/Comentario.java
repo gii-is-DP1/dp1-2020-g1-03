@@ -23,7 +23,7 @@ public class Comentario extends BaseEntity{
 	@Column(name = "titulo")
 	private String titulo;
 	
-	@NotNull
+	@NotEmpty
 	@Column(name = "cuerpo")
 	private String cuerpo;
 	

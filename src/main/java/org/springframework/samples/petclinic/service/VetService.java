@@ -63,4 +63,7 @@ public class VetService {
 	public int findVetIdByFirstname(String user) {
 		return vetRepository.findVetIdByFirstname(user);
 	}
+	public Vet findVetById(int vetId) {
+		return vetRepository.findVetById(vetId);
+	}
 }

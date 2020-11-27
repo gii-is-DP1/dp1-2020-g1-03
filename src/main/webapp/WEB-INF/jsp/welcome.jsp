@@ -16,8 +16,5 @@
     
         </div>
     </div>
-    <spring:url value="/owners/comentarios/{ownerId}" var="comentariosUrl">
-        <spring:param name="ownerId" value="${owner.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(comentariosUrl)}" class="btn btn-default">Comentarios</a>
 </petclinic:layout>
+

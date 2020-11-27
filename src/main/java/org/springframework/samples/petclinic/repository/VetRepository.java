@@ -44,9 +44,11 @@ public interface VetRepository extends Repository<Vet, Integer>{
 	 */
 	Collection<Vet> findAll() throws DataAccessException;
 
-	@Query("SELECT id FROM Vet vet WHERE first_name LIKE :user")
+	@Query("SELECT vet FROM Vet vet WHERE first_name =:user")
 	int findVetIdByFirstname(String user);
 
+	Vet findVetById(int vetId) throws DataAccessException;;
+	
 	
 	//@Query("SELECT vet FROM Vet WHERE vet_id =:id")
 	//public Vet findById(@Param("vet_id") int id);

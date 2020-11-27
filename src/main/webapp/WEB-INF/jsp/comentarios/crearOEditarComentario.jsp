@@ -9,8 +9,9 @@
 <petclinic:layout pageName="comentarios">
         
         <h2>
-         <c:if test="${comentarios['new']}"> Nuevo </c:if>  Comentario
+         <c:if test="${comentario['new']}"> Nuevo </c:if>  Comentario
     	</h2>
+    	
         
         <form:form modelAttribute="comentario" class="form-horizontal" id="add-comentario-form">
         <div class="form-group has-feedback">
@@ -20,10 +21,11 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
-                    <c:when test="${comentarios['new']}">
+                    <c:when test="${comentario['new']}">
                         <button class="btn btn-default" type="submit">Crear comentario</button>
                     </c:when>
                     <c:otherwise>
+                    	<button class="btn btn-default" type="submit">Crear comentario</button>
                         <button class="btn btn-default" type="submit">Editar comentario</button>
                     </c:otherwise>
                 </c:choose>
@@ -51,3 +53,4 @@
     
     
 </petclinic:layout>
+

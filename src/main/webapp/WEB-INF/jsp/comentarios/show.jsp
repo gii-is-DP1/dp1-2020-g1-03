@@ -6,9 +6,8 @@
 
 <petclinic:layout pageName="comentarios">
 
-    <h2>Informacion sobre comentarios</h2>
 		<h2>
-         <c:if test="${comentario['new']}"> Nuevo </c:if>  Comentario
+         	<c:if test="${comentario['new']}"> Nuevo </c:if>  Comentario
     	</h2>
     <table class="table table-striped">
         <tr>
@@ -19,9 +18,14 @@
             <th>Cuerpo</th>
             <td><c:out value="${comentario.cuerpo}"/></td>
         </tr>
+        <tr>
+            <th>Veterianario</th>
+            <td><c:out value="${comentario.vet.firstName}"/></td>
+        </tr>
     </table>
-    <spring:url value="/owners/edit/{comentarioId}" var="editUrl">
+    <spring:url value="/owners/comentarios/edit/{comentarioId}/{vetId}" var="editUrl">
         <spring:param name="comentarioId" value="${comentario.id}"/>
+        <spring:param name="vetId" value="${comentario.vet.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar comentario</a>
 

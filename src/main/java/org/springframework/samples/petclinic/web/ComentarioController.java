@@ -40,8 +40,8 @@ public class ComentarioController {
         this.vetService = vetService;
 	}
 	
-	@GetMapping(value = "/vets/comentarios/{vetId}")
-	public String listadoComentariosByVetId(Map<String, Object> model, @PathVariable("vetId") int vetId, final Principal principal) {
+	@GetMapping(value = "/vets/comentarios")
+	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
 		int idVet = this.vetService.findVetIdByFirstname(principal.getName());
 		System.out.println("ID DEL VETERINARIO"+idVet);
@@ -67,10 +67,10 @@ public class ComentarioController {
 	//    DUEÑO ABAJO	
 	
 	
-	@GetMapping(value = "/owners/comentarios/{ownerId}")
-	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal, @PathVariable("ownerId") int ownerId) {
+	@GetMapping(value = "/owners/comentarios")
+	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal) {
 		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());	
-		Owner owner= this.ownerService.findOwnerById(idOwner);
+		//Owner owner= this.ownerService.findOwnerById(idOwner);
 		Collection<Comentario> comentario= comentarioService.findAllComentariosByOwnerId(idOwner);
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
@@ -82,42 +82,46 @@ public class ComentarioController {
 		model.put("comentario", comentario);
 		return "comentarios/show";
 		}
-	@GetMapping(value = "/owners/edit/{comentarioId}")
-	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model) {
+	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
+	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
 		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
-		System.out.println(comentario+ "COMENTARIO");
 		model.put("comentario", comentario);
 		return "comentarios/crearOEditarComentario";
 	}
-
-	@PostMapping(value = "/owners/edit/{comentarioId}")
-	public String processEditComentario(final Principal principal,@Valid Comentario comentario, BindingResult result,
+	
+	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
+	public String processEditComentario(final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
 			@PathVariable("comentarioId") int comentarioId) {
+		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner ow= this.ownerService.findOwnerById(idOw);
+		comentario.setOwner(ow);
+		comentario.setId(comentarioId);
+		comentario.setVet(this.vetService.findVetById(vetId));
+		this.comentarioService.saveComentario(comentario);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			System.out.println(result.getAllErrors()+ "Errores");
 			return "comentarios/crearOEditarComentario";
 		}
 		else {
-			comentario.setId(comentarioId);
-			this.comentarioService.saveComentario(comentario);
-			return "redirect:/owners/comentarios";
+			
+			return "redirect:/owners/comentarios/show/{comentarioId}";
 		}
 	}
-	@GetMapping(value = "/owners/{comentarioId}/create")
-	public String initCreateComentario(Map<String, Object> model, @PathVariable("comentarioId") int comentarioId) {
+	@GetMapping(value = "/new")
+	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
 		Comentario comentario = new Comentario();
 		model.put("comentario", comentario);
 		return "comentarios/crearOEditarComentario";
 	}
 
-	@PostMapping(value = "/owners/{comentarioId}/create")
+	@PostMapping(value = "/new")
 	public String processCreateComentario(@Valid Comentario comentario, BindingResult result) {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "comentarios/crearOEditarComentario";
 		} else {
 			this.comentarioService.saveComentario(comentario);
-			return "redirect:/vets/" + comentario.getTitulo();
+			return "redirect:/vets/comentarios" + comentario.getTitulo();
 		}
 	}
 }

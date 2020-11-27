@@ -6,10 +6,7 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="citas">
-    <h2>Owners</h2>
-		<h2>
-         <c:if test="${comentario['new']}"> Nuevo </c:if>  Comentario
-    	</h2>
+
     <table id="vetsTable" class="table table-striped">
         <thead>
         <tr>
