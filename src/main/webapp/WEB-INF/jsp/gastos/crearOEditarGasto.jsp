@@ -15,7 +15,7 @@
             <petclinic:inputField label="Titulo" name="titulo"/>
             <petclinic:inputField label="Cantidad" name="cantidad"/>
             <petclinic:inputField label="Fecha" name="fecha"/>
-            <petclinic:inputField label="Descripciion" name="description"/>
+            <petclinic:inputField label="Descripcion" name="description"/>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
