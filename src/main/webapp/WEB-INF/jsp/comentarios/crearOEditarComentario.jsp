@@ -25,7 +25,6 @@
                         <button class="btn btn-default" type="submit">Crear comentario</button>
                     </c:when>
                     <c:otherwise>
-                    	<button class="btn btn-default" type="submit">Crear comentario</button>
                         <button class="btn btn-default" type="submit">Editar comentario</button>
                     </c:otherwise>
                 </c:choose>

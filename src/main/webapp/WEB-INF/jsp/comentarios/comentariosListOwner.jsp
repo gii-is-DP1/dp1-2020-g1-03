@@ -34,5 +34,7 @@
         </c:forEach>
         </tbody>
     </table>
-
+	<spring:url value="comentarios/new" var="editUrl">
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Crear comentario</a>
 </petclinic:layout>

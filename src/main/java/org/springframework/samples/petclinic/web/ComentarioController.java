@@ -43,7 +43,8 @@ public class ComentarioController {
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
-		int idVet = this.vetService.findVetIdByFirstname(principal.getName());
+		int idVet = this.vetService.findVetIdByUsername(principal.getName());
+		System.out.println(idVet);
 		System.out.println("ID DEL VETERINARIO"+idVet);
 		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
 		model.put("comentarios", comentarios);
@@ -107,21 +108,29 @@ public class ComentarioController {
 			return "redirect:/owners/comentarios/show/{comentarioId}";
 		}
 	}
-	@GetMapping(value = "/new")
+	@GetMapping(value = "/owners/comentarios/new")  ///owners/comentarios/new
 	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
 		Comentario comentario = new Comentario();
+		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner ow= this.ownerService.findOwnerById(idOw);
+		comentario.setOwner(ow);
 		model.put("comentario", comentario);
 		return "comentarios/crearOEditarComentario";
 	}
 
-	@PostMapping(value = "/new")
-	public String processCreateComentario(@Valid Comentario comentario, BindingResult result) {
+	@PostMapping(value = "/owners/comentarios/new")
+	public String processCreateComentario(@Valid Comentario comentario, BindingResult result,final Principal principal) {
+		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner ow= this.ownerService.findOwnerById(idOw);
+		comentario.setOwner(ow);
+		comentario.setId(comentario.getId());
+		this.comentarioService.saveComentario(comentario);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "comentarios/crearOEditarComentario";
 		} else {
-			this.comentarioService.saveComentario(comentario);
-			return "redirect:/vets/comentarios" + comentario.getTitulo();
+			
+			return "redirect:/owners/comentarios" + comentario.getTitulo();
 		}
 	}
 }
