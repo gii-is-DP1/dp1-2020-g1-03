@@ -51,15 +51,12 @@ public class ComentarioController {
 		return "comentarios/comentariosList";
 		}
 
-//	@GetMapping(value = "/{comentarioId}/show")
-//	public String mostarComentariosDeVet(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
-//		System.out.println(principal.);
-//		int idVet = this.comentarioService.findVetIdByUsername(principal.getName());		
-//		Vet vet= this.comentarioService.findVetById(idVet);
-//		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
-//		model.put("comentario", comentarios);
-//		return "comentario/comentariosShow";
-//		}
+	@GetMapping(value = "/vets/comentarios/show/{comentarioId}")
+	public String mostarComentariosDeVet(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
+		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
+		model.put("comentario", comentario);
+		return "comentarios/showVet";
+		}
 	
 	
 

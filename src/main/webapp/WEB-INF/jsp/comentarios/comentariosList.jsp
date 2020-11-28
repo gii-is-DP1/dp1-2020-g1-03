@@ -19,9 +19,10 @@
         <c:forEach items="${comentarios}" var="comentario">
             <tr>
                 <td>
-                	<spring:url value="/comentarios/" var="comentarioUrl">
+                	<spring:url value="/vets/comentarios/show/{comentarioId}" var="comentarioUrl">
+                        <spring:param name="comentarioId" value="${comentario.id}"/>
                     </spring:url>
-                    <c:out value="${comentario.titulo}"/>
+                    <a href="${fn:escapeXml(comentarioUrl)}"><c:out value="${comentario.titulo}"/></a>
                 </td>
                 <td>
                     <c:out value="${comentario.cuerpo}"/>
