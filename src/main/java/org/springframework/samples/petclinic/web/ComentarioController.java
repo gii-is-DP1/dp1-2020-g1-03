@@ -40,6 +40,13 @@ public class ComentarioController {
         this.vetService = vetService;
 	}
 	
+	
+	
+	//VETERINARIO
+	
+	
+	
+	
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
@@ -63,6 +70,11 @@ public class ComentarioController {
 	
 	
 	//    DUEÑO ABAJO	
+	
+	
+	
+	
+	
 	
 	
 	@GetMapping(value = "/owners/comentarios")

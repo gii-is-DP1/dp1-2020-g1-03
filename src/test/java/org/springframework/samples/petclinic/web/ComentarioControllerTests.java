@@ -93,7 +93,7 @@ public class ComentarioControllerTests {
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
-	void testShowComentarioForm() throws Exception {
+	void testShowOwnerComentarioForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
 
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
@@ -102,4 +102,26 @@ public class ComentarioControllerTests {
 
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/show"));
 	}
+	
+	@WithMockUser(value = "josue", roles = "vet")
+	@Test
+	void testShowVetComentarioForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
+
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
+
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("cuerpo", Matchers.is("Buen servicio y atención"))))
+
+			.andExpect(MockMvcResultMatchers.view().name("comentarios/showVet"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testGastoList() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios", ComentarioControllerTests.TEST_COMENTARIO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
+
+	}
+	
+	
 }
