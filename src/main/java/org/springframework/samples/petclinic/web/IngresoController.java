@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.model.Ingreso;
 import org.springframework.samples.petclinic.service.EconomistaService;
 
 import org.springframework.samples.petclinic.service.IngresoService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,19 +34,30 @@ public class IngresoController {
 	}
 
 	@GetMapping()
-	public String listadoIngresos(Map<String, Object> model) {
+	public String listadoIngresos(Map<String, Object> model, Principal principal) {
 		// String vista="owners/{ownerId}/listadoCitas";
-		List<Ingreso> ingresos = ingresoService.findAllIngresos();
-		model.put("ingresos", ingresos);
-		return "ingresos/ingresosList";
+		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
+			List<Ingreso> ingresos = ingresoService.findAllIngresos();
+			model.put("ingresos", ingresos);
+			return "ingresos/ingresosList";
+		}else {
+			//ModelAndView exception = new ModelAndView("exception");
+			return "exception";			
+		}
+
 	}
 
 	@GetMapping(value = "{ingresoId}")
 	public String mostarIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
 		// String vista="owners/{ownerId}/listadoCitas";
 		Ingreso ingreso = ingresoService.findIngresoById(ingresoId);
-		model.put("ingreso", ingreso);
-		return "ingresos/ingresosShow";
+		if(ingreso==null) {
+			return "exception";
+		}else {
+			model.put("ingreso", ingreso);
+			return "ingresos/ingresosShow";			
+		}
+
 	}
 
 	@GetMapping(value = "/{ingresoId}/edit")
