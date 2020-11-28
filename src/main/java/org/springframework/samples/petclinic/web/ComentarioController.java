@@ -129,8 +129,8 @@ public class ComentarioController {
 			System.out.println(result.getAllErrors());
 			return "comentarios/crearOEditarComentario";
 		} else {
-			
-			return "redirect:/owners/comentarios" + comentario.getTitulo();
+			this.comentarioService.saveComentario(comentario);
+			return "redirect:/owners/comentarios";
 		}
 	}
 }
