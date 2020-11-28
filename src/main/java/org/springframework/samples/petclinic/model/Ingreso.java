@@ -31,7 +31,7 @@ public class Ingreso extends BaseEntity{
 	@NotNull
 	@Column(name = "cantidad")
 	@PositiveOrZero
-	private int cantidad;
+	private Integer cantidad;
 	
 	@Column(name = "fecha")        
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
