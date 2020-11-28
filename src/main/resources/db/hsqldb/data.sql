@@ -35,6 +35,19 @@ INSERT INTO authorities(id,username,authority) VALUES (18,'owner10','owner');
 INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 
+
+INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (25,'vet2','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet3','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (26,'vet3','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet4','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (27,'vet4','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (28,'vet5','veterinarian');
+INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (29,'vet6','veterinarian');
+
+
 INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
 
@@ -45,12 +58,12 @@ INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',T
 INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
 
 
-INSERT INTO vets VALUES (1, 'James', 'Carter');
-INSERT INTO vets VALUES (2, 'Helen', 'Leary');
-INSERT INTO vets VALUES (3, 'Linda', 'Douglas');
-INSERT INTO vets VALUES (4, 'Rafael', 'Ortega');
-INSERT INTO vets VALUES (5, 'Henry', 'Stevens');
-INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins');
+INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
+INSERT INTO vets VALUES (3, 'Linda', 'Douglas','vet3');
+INSERT INTO vets VALUES (4, 'Rafael', 'Ortega','vet4');
+INSERT INTO vets VALUES (5, 'Henry', 'Stevens','vet5');
+INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins','vet6');
 
 INSERT INTO specialties VALUES (1, 'radiology');
 INSERT INTO specialties VALUES (2, 'surgery');
@@ -112,6 +125,7 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (1,'ComentarioPrueba', 'Esto es un comentario de prueba', 2, 1);
+INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (3,'ComentarioPrueba', 'Esto es un comentario de prueba', 3, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioPrueba', 'Esto es un comentario de prueba', 4, 1);

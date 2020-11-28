@@ -43,7 +43,7 @@ public interface VetRepository extends Repository<Vet, Integer>{
 	 * @return a <code>Collection</code> of <code>Vet</code>s
 	 */
 	Collection<Vet> findAll() throws DataAccessException;
-	@Query("SELECT vet.id FROM User user, Vet vet WHERE user.username LIKE :username%")
+	@Query("SELECT vet.id FROM Vet vet WHERE vet.user.username LIKE :username%")
 	int findVetIdByUsername(String username) throws DataAccessException;
 
 
