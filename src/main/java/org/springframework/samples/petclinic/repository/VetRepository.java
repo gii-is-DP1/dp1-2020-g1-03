@@ -18,7 +18,11 @@ package org.springframework.samples.petclinic.repository;
 import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.model.Comentario;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
@@ -39,5 +43,13 @@ public interface VetRepository extends Repository<Vet, Integer>{
 	 * @return a <code>Collection</code> of <code>Vet</code>s
 	 */
 	Collection<Vet> findAll() throws DataAccessException;
+	@Query("SELECT vet.id FROM Vet vet WHERE vet.user.username LIKE :username%")
+	int findVetIdByUsername(String username) throws DataAccessException;
 
+
+	Vet findVetById(int vetId) throws DataAccessException;;
+	
+	
+	//@Query("SELECT vet FROM Vet WHERE vet_id =:id")
+	//public Vet findById(@Param("vet_id") int id);
 }
