@@ -6,11 +6,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="gastos">
+<petclinic:layout pageName="ingresos">
     <h2>
-        <c:if test="${gasto['new']}">Nuevo </c:if> Gasto
+        <c:if test="${ingreso['new']}">Nuevo </c:if> Ingreso
     </h2>
-    <form:form modelAttribute="gasto" class="form-horizontal" id="add-gasto-form">
+    <form:form modelAttribute="ingreso" class="form-horizontal" id="add-gasto-form">
         <div class="form-group has-feedback">
             <petclinic:inputField label="Titulo" name="titulo"/>
             <petclinic:inputField label="Cantidad" name="cantidad"/>
@@ -20,11 +20,11 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
-                    <c:when test="${gasto['new']}">
-                        <button class="btn btn-default" type="submit">Crear gasto</button>
+                    <c:when test="${ingreso['new']}">
+                        <button class="btn btn-default" type="submit">Crear ingreso</button>
                     </c:when>
                     <c:otherwise>
-                        <button class="btn btn-default" type="submit">Editar gasto</button>
+                        <button class="btn btn-default" type="submit">Editar ingreso</button>
                     </c:otherwise>
                 </c:choose>
             </div>

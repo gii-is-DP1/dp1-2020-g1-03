@@ -122,6 +122,7 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Sueldos', 10250, '2020-10-11', 'Gasto correspondiente a los sueldos de todos los trabajadores de la clinica del mes de Octubre',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
+
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (1,'ComentarioPrueba', 'Esto es un comentario de prueba', 2, 1);
@@ -129,4 +130,13 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro coment
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (3,'ComentarioPrueba', 'Esto es un comentario de prueba', 3, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioPrueba', 'Esto es un comentario de prueba', 4, 1);
+
+INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
+INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
+
+INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
+INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
+
+
+
 

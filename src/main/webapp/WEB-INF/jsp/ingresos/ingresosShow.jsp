@@ -4,34 +4,33 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="gastos">
+<petclinic:layout pageName="ingresos">
 
-    <h2>Informacion sobre gastos</h2>
+    <h2>Informacion sobre ingresos</h2>
 
 
     <table class="table table-striped">
         <tr>
             <th>Titulo</th>
-            <td><b><c:out value="${gasto.titulo}"/></b></td>
+            <td><b><c:out value="${ingreso.titulo}"/></b></td>
         </tr>
         <tr>
             <th>Cantidad</th>
-            <td><c:out value="${gasto.cantidad} EUR"/></td>
+            <td><c:out value="${ingreso.cantidad} EUR"/></td>
         </tr>
         <tr>
             <th>Fecha</th>
-            <td><c:out value="${gasto.fecha}"/></td>
+            <td><c:out value="${ingreso.fecha}"/></td>
         </tr>
         <tr>
             <th>Descripcion</th>
-            <td><c:out value="${gasto.description}"/></td>
+            <td><c:out value="${ingreso.description}"/></td>
         </tr>
     </table>
-    <spring:url value="{gastoId}/edit" var="editUrl">
-        <spring:param name="gastoId" value="${gasto.id}"/>
+    <spring:url value="{ingresoId}/edit" var="editUrl">
+        <spring:param name="ingresoId" value="${ingreso.id}"/>
     </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar gasto</a>
-
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar ingreso</a>
     <br/>
     <br/>
     <br/>

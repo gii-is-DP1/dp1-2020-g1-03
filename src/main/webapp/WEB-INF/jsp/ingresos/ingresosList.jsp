@@ -5,10 +5,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="citas">
-    <h2>Gastos</h2>
+<petclinic:layout pageName="ingresos">
+    <h2>Ingresos</h2>
 
-    <table id="vetsTable" class="table table-striped">
+    <table id="ingresosTable" class="table table-striped">
         <thead>
         <tr>
             <th>Titulo</th>
@@ -17,26 +17,26 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${gastos}" var="gasto">
+        <c:forEach items="${ingresos}" var="ingreso">
             <tr>
                 <td>
-                	<spring:url value="/economistas/gasto/{gastoId}" var="gastoUrl">
-                        <spring:param name="gastoId" value="${gasto.id}"/>
+                	<spring:url value="/economistas/ingreso/{ingresoId}" var="ingresoUrl">
+                        <spring:param name="ingresoId" value="${ingreso.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(gastoUrl)}"><c:out value="${gasto.titulo}"/></a>
+                    <a href="${fn:escapeXml(ingresoUrl)}"><c:out value="${ingreso.titulo}"/></a>
                 </td>
                 <td>
-                    <c:out value="${gasto.fecha}"/>
+                    <c:out value="${ingreso.fecha}"/>
                 </td>
                 <td>
-                    <c:out value="${gasto.cantidad}"/>
+                    <c:out value="${ingreso.cantidad}"/>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-    <spring:url value="gasto/new" var="editUrl">
+    <spring:url value="ingreso/create" var="createUrl">
     </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Crear gasto</a>
+   	<a href="${fn:escapeXml(createUrl)}" class="btn btn-default">Crear ingreso</a>
 
 </petclinic:layout>

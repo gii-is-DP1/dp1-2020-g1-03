@@ -284,6 +284,15 @@
  			<role>developer</role>
  		</roles>
  	</developer>
+ 	<developer>
+ 		<id>manmunesp1</id>
+ 		<name>Manuel</name>
+ 		<email>manmunesp1@alum.us.es</email>
+ 		<url>http://www.tmht.com/manmunesp1</url>
+ 		<roles>
+ 			<role>developer</role>
+ 		</roles>
+ 	</developer>
 </developers>
 
 
