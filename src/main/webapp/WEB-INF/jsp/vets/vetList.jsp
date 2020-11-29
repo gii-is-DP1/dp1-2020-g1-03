@@ -34,10 +34,17 @@
                 </td>
             </tr>
         </c:forEach>
+
         </tbody>
     </table>
 
     <table class="table-buttons">
+    	<tr>
+                    <spring:url value="/vets/vacuna/{vacunaId}" var="vacunasUrl">
+                	<spring:param name="vacunaId" value="${vacuna.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.nombre}"/>Vacunas list</a>
+        </tr>
         <tr>
             <td>
                 <a href="<spring:url value="/vets.xml" htmlEscape="true" />">View as XML</a>

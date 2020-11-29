@@ -59,7 +59,14 @@
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 						<span>Gastos</span>
 					</petclinic:menuItem>
-				</sec:authorize>		
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('economista')">
+					<petclinic:menuItem active="${name eq 'ingresos'}" url="/economistas/ingreso" title="Ingresos">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Ingresos</span>
+					</petclinic:menuItem>
+				</sec:authorize>	
 
 			</ul>
 
