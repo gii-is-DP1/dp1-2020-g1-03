@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -28,10 +30,12 @@ public class Ingreso extends BaseEntity{
 	
 	@NotNull
 	@Column(name = "cantidad")
+	@PositiveOrZero
 	private Integer cantidad;
 	
 	@Column(name = "fecha")        
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Past
 	private LocalDate fecha;
 
 	/**
