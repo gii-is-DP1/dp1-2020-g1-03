@@ -1,5 +1,10 @@
 package org.springframework.samples.petclinic.model;
 
-public enum TipoEnfermedad {
-	RABIA, SARNA, PARVOVIRUS
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "tipoenfermedades")
+public class TipoEnfermedad extends NamedEntity{
+
 }

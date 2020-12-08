@@ -19,10 +19,10 @@ import lombok.Setter;
 @Setter
 @Table(name = "vacunas")
 public class Vacuna extends BaseEntity {
-
-	@NotEmpty
-	@Column(name = "nombre")
-	private String nombre;
+	
+	@ManyToOne
+	@JoinColumn(name = "tipoenfermedad_id")
+	private TipoEnfermedad tipoenfermedad;
 
 	@Column(name = "fecha")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -31,10 +31,6 @@ public class Vacuna extends BaseEntity {
 	@NotEmpty
 	@Column(name = "descripcion")
 	private String descripcion;
-
-	@Column(name = "tipoenfermedad")
-	@NotEmpty
-	private TipoEnfermedad tipoenfermedad;
 	
 	@ManyToOne
 	@JoinColumn(name = "pet_id")
@@ -43,5 +39,7 @@ public class Vacuna extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "vet_id")
 	private Vet vet;
+	
+	
 
 }

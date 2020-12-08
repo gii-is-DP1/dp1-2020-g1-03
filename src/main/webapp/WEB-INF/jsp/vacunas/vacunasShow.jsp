@@ -10,8 +10,8 @@
 
     <table class="table table-striped">
         <tr>
-            <th>Titulo</th>
-            <td><b><c:out value="${vacuna.nombre}"/></b></td>
+            <th>Nombre</th>
+            <td><b><c:out value="${vacuna.tipoenfermedad.name}"/></b></td>
         </tr>
         <tr>
             <th>Fecha</th>

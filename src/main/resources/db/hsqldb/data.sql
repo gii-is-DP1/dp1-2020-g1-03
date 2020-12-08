@@ -82,6 +82,10 @@ INSERT INTO types VALUES (4, 'snake');
 INSERT INTO types VALUES (5, 'bird');
 INSERT INTO types VALUES (6, 'hamster');
 
+INSERT INTO tipoenfermedades VALUES (1, 'Rabia');
+INSERT INTO tipoenfermedades VALUES (2, 'Sarna');
+INSERT INTO tipoenfermedades VALUES (3, 'Parvovirus');
+
 INSERT INTO owners VALUES (1, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023', 'owner1');
 INSERT INTO owners VALUES (2, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749', 'owner2');
 INSERT INTO owners VALUES (3, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763', 'owner3');
@@ -134,8 +138,8 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioP
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
 
-INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
-INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
+INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (1, 1, '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 1, 1);
+INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (2, 3, '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 1);
 
 
 
