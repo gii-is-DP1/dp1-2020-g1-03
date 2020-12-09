@@ -22,7 +22,7 @@ public class Vacuna extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "tipoenfermedad_id")
-	private TipoEnfermedad tipoenfermedad;
+	private TipoEnfermedad tipoEnfermedad;
 
 	@Column(name = "fecha")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -39,7 +39,5 @@ public class Vacuna extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "vet_id")
 	private Vet vet;
-	
-	
 
 }

@@ -12,11 +12,11 @@
     </h2>
     <form:form modelAttribute="vacuna" class="form-horizontal" id="add-vacuna-form">
         <div class="form-group has-feedback">
-         <div class="control-group">
-                    <petclinic:selectField name="Nombre" label="TipoEnfermedade" names="${tipoenfermedades}" size="5"/>
+       <div class="control-group">
+                    <petclinic:selectField name="tipoEnfermedad" label="Nombre" names="${tipoenfermedades}" size="3"/>
                 </div>
             <petclinic:inputField label="Fecha" name="fecha"/>
-            <petclinic:inputField label="Descripcion" name="description"/>
+            <petclinic:inputField label="Descripcion" name="descripcion"/>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">

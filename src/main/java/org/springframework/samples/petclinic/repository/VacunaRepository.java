@@ -26,7 +26,7 @@ public interface VacunaRepository extends Repository<Vacuna, Integer> {
 	
 	void save(Vacuna vacuna) throws DataAccessException;
 	
-	@Query("SELECT tenfermedades FROM TipoEnfermedad tenfermedades ORDER BY tenfermedades.name")
+	@Query("SELECT tenfermedad FROM TipoEnfermedad tenfermedad ORDER BY tenfermedad.name")
 	List<TipoEnfermedad> findTipoEnfermedad() throws DataAccessException;
 	
 }

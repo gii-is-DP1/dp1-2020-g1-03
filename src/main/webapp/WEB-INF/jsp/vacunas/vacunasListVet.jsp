@@ -22,7 +22,7 @@
                 	<spring:url value="/vets/vacuna/{vacunaId}" var="vacunasUrl">
                 	<spring:param name="vacunaId" value="${vacuna.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.tipoenfermedad.name}"/></a>
+                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.tipoEnfermedad.name}"/></a>
                 </td>
                 <td>
                     <c:out value="${vacuna.fecha}"/>

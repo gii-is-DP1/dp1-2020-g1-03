@@ -11,7 +11,7 @@
     <table class="table table-striped">
         <tr>
             <th>Nombre</th>
-            <td><b><c:out value="${vacuna.tipoenfermedad.name}"/></b></td>
+            <td><b><c:out value="${vacuna.tipoEnfermedad.name}"/></b></td>
         </tr>
         <tr>
             <th>Fecha</th>
