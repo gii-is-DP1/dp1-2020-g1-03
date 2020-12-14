@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Ingreso;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
@@ -46,8 +47,18 @@ public class VacunaService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Collection<TipoEnfermedad> findTipoEnfermedad() throws DataAccessException {
-		return vacunaRepository.findTipoEnfermedad();
+	public Collection<TipoEnfermedad> findTipoEnfermedades() throws DataAccessException {
+		return vacunaRepository.findTipoEnfermedades();
+	}
+	
+	@Transactional(readOnly = true)
+	public TipoEnfermedad findTipoEnfermedad(String tipoEnfermedad) throws DataAccessException {
+		return vacunaRepository.findTipoEnfermedad(tipoEnfermedad);
+	}
+	
+	@Transactional(readOnly = true)
+	public Collection<Pet> findMascotaByEspecie(String especie) throws DataAccessException {
+		return vacunaRepository.findMascotaByEspecie(especie);
 	}
 
 }

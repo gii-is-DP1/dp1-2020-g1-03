@@ -7,6 +7,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
@@ -27,6 +29,12 @@ public interface VacunaRepository extends Repository<Vacuna, Integer> {
 	void save(Vacuna vacuna) throws DataAccessException;
 	
 	@Query("SELECT tenfermedad FROM TipoEnfermedad tenfermedad ORDER BY tenfermedad.name")
-	List<TipoEnfermedad> findTipoEnfermedad() throws DataAccessException;
+	Collection<TipoEnfermedad> findTipoEnfermedades() throws DataAccessException;
+	
+	@Query("SELECT tenfermedad FROM TipoEnfermedad tenfermedad WHERE tenfermedad.name LIKE ?1")
+	TipoEnfermedad findTipoEnfermedad(String tipoEnfermedad);
+	
+	@Query("SELECT DISTINCT pet FROM Pet pet WHERE pet.type.name LIKE ?1")
+	public Collection<Pet> findMascotaByEspecie(String especieMascota);
 	
 }

@@ -11,8 +11,15 @@
         <c:if test="${vacuna['new']}">Nueva </c:if> Vacuna
     </h2>
     <form:form modelAttribute="vacuna" class="form-horizontal" id="add-vacuna-form">
+    	<input type="hidden" name="id" value="${vacuna.id}"/>
         <div class="form-group has-feedback">
        <div class="control-group">
+           <div class="form-group">
+                    <label class="col-sm-2 control-label">Mascota</label>
+                    <div class="col-sm-10">
+                        <c:out value="${vacuna.pet.name}"/>
+                    </div>
+                </div>
                     <petclinic:selectField name="tipoEnfermedad" label="Nombre" names="${tipoenfermedades}" size="3"/>
                 </div>
             <petclinic:inputField label="Fecha" name="fecha"/>
