@@ -5,6 +5,21 @@ INSERT INTO authorities(id,username,authority) VALUES (1,'admin1','admin');
 INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
 
+INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
+
+INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
+
+INSERT INTO users(username,password,enabled) VALUES ('secretario1','secretario1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (5,'secretario1','secretario');
+
+INSERT INTO users(username,password,enabled) VALUES ('abrgarvil','abrgarvil',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
+
+INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
+
 INSERT INTO users(username,password,enabled) VALUES ('owner2','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (10,'owner2','owner');
 
@@ -31,10 +46,6 @@ INSERT INTO authorities(id,username,authority) VALUES (17,'owner9','owner');
 
 INSERT INTO users(username,password,enabled) VALUES ('owner10','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (18,'owner10','owner');
--- One vet user, named vet1 with passwor v3t
-INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
-
 
 INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (25,'vet2','veterinarian');
@@ -46,17 +57,6 @@ INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (28,'vet5','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (29,'vet6','veterinarian');
-
-
-INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
-
-INSERT INTO users(username,password,enabled) VALUES ('abrgarvil','abrgarvil',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
-
-INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
-
 
 INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
@@ -118,6 +118,8 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 13, '2013-01-04'
 
 INSERT INTO economista VALUES (1, 'Jose', 'Escobito', 'Muchos', 'economista1');
 
+INSERT INTO secretario VALUES (1, 'Pedro', 'Escobar', 'Word', 'secretario1');
+
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Material esterilizante', 250, '2020-10-04', 'Gasto correspondiente a la compra de material esterilizante para la clinica',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Sueldos', 10250, '2020-10-11', 'Gasto correspondiente a los sueldos de todos los trabajadores de la clinica del mes de Octubre',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
@@ -133,6 +135,7 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioP
 
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
+
 
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
