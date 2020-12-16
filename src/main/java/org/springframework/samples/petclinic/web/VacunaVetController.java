@@ -84,43 +84,37 @@ public class VacunaVetController {
 	public String processFindForm(Pet pet, BindingResult result, Map<String, Object> model) {
 
 		// allow parameterless GET request for /owners to return all records
-		if (pet.getType() == null) {
+		if (pet.getType().getName() == null) {
 			pet.getType().setName("");; // empty string signifies broadest possible search
 		}
 
 		// find owners by last name
 		Collection<Pet> results = this.vacunaService.findMascotaByEspecie(pet.getType().getName());
 		if (results.isEmpty()) {
-			// no owners found
-			//result.rejectValue("Escpecie", "notFound", "not found");
+			result.rejectValue("type.name", "notFound", "not found");
 			return "vacunas/EncontrarMascotas";
 		}
 		else if (results.size() == 1) {
-			// 1 owner found
 			pet = results.iterator().next();
-			return "redirect:/pets/" + pet.getId();
+			return "redirect:/vets/vacuna/pets/" + pet.getId();
 		}
 		else {
-			// multiple owners found
-			model.put("selections", results);
+			model.put("pets", results);
 			return "vacunas/MascotasList";
 		}
 	}
 	
-	/*@InitBinder("pet")
-	public void initOwnerBinder(WebDataBinder dataBinder) {
-		dataBinder.setDisallowedFields("id");
-	}*/
 	
 	@GetMapping(value = "/pets/{petId}/create")
-	public String initCreateVacuna(Map<String, Object> model) {
+	public String initCreateVacuna(Map<String, Object> model,@PathVariable("petId") int Id) {
 		Vacuna vacuna = new Vacuna();
+		vacuna.setPet(this.petService.findPetById(Id));
 		model.put("vacuna", vacuna);
 		return "vacunas/crearVacuna";
 	}
 
 	@PostMapping(value = "/pets/{petId}/create")
-	public String processCreateVacuna(@Valid Vacuna vacuna,@PathVariable("petId") int Id,BindingResult result, final Principal principal) {
+	public String processCreateVacuna(@Valid Vacuna vacuna, @PathVariable("petId") int Id,BindingResult result, final Principal principal) {
 		vacuna.setId(vacuna.getId());
 		int idVet = this.vetService.findVetIdByUsername(principal.getName());
 		Vet vet= this.vetService.findVetById(idVet);

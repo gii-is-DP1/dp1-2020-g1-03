@@ -19,14 +19,18 @@
         </tr>
         <tr>
             <th>Fecha nacimiento</th>
-            <td><c:out value="${pet.birth_date}"/></td>
+            <td><c:out value="${pet.birthDate}"/></td>
         </tr>
         <tr>
             <th>Nombre del Dueño</th>
             <td><c:out value="${pet.owner.firstName} ${pet.owner.lastName}"/></td>
         </tr>
     </table>
-
+	
+	<spring:url value="/vets/vacuna/pets/{petId}/create" var="createUrl">
+		<spring:param name="petId" value="${pet.id}"/>
+    </spring:url>
+   	<a href="${fn:escapeXml(createUrl)}" class="btn btn-default">Andir nueva vacuna</a>
 
     <br/>
     <br/>

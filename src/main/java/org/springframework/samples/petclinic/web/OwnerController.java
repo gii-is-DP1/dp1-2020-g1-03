@@ -62,7 +62,7 @@ public class OwnerController {
 	}
 
 
-@GetMapping(value = "/owners/find")
+	@GetMapping(value = "/owners/find")
 	public String initFindForm(Map<String, Object> model) {
 		model.put("owner", new Owner());
 		return "owners/findOwners";
