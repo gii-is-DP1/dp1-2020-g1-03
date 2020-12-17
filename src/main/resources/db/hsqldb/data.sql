@@ -95,21 +95,21 @@ INSERT INTO owners VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Wa
 INSERT INTO owners VALUES (20, 'Daniel', 'Castroviejo', '2335 Independence La.', 'Waunakee', '6085555487', 'dancasnar1');
 INSERT INTO owners VALUES (15, 'abrgarvil', 'Garcia', 'Reina Mercedes', 'Sevilla', '6805555487', 'abrgarvil');
 
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (6, 'George', '2010-01-20', 4, 5);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (7, 'Samantha', '2012-09-04', 1, 6);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (8, 'Max', '2012-09-04', 1, 6);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (9, 'Lucky', '2011-08-06', 5, 7);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (10, 'Mulligan', '2007-02-24', 2, 8);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (11, 'Freddy', '2010-03-09', 5, 9);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (12, 'Lucky', '2010-06-24', 2, 10);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-06-08', 1, 10);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (19, 'Sly2', '2012-06-08', 1, 20);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (18, 'George', '2012-06-08', 2, 15);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (1, 'Leo', '2010-09-07', 1, 1,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (2, 'Basil', '2012-08-06', 6, 2,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (6, 'George', '2010-01-20', 4, 5,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (7, 'Samantha', '2012-09-04', 1, 6,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (8, 'Max', '2012-09-04', 1, 6,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (9, 'Lucky', '2011-08-06', 5, 7,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (10, 'Mulligan', '2007-02-24', 2, 8,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (11, 'Freddy', '2010-03-09', 5, 9,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (12, 'Lucky', '2010-06-24', 2, 10,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (13, 'Sly', '2012-06-08', 1, 10,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (19, 'Sly2', '2012-06-08', 1, 20,1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id,competicion_pet_id) VALUES (18, 'George', '2012-06-08', 2, 15,1);
 
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (1, 7, '2013-01-01', 'rabies shot');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02', 'rabies shot');
@@ -135,6 +135,11 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioP
 
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
+
+
+INSERT INTO competiciones(id,nombre,fecha_hora_inicio,fecha_hora_fin,secretario_id,competicion_pet_id) VALUES (1,'CompeticionPrueba', '2021-02-19 20:20', '2021-02-19 22:20', 1, 1);
+INSERT INTO competiciones(id,nombre,fecha_hora_inicio,fecha_hora_fin,secretario_id,competicion_pet_id) VALUES (2,'CompeticionPrueba2', '2021-02-10 10:20', '2021-02-11 12:20', 1, 2);
+
 
 
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
