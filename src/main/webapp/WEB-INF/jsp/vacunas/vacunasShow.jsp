@@ -26,6 +26,10 @@
             <td><c:out value="${vacuna.vet.firstName} ${vacuna.vet.lastName}"/></td>
         </tr>
     </table>
+    
+    <spring:url value="/vets/vacuna" var="vacunasUrl">          	
+                    </spring:url>
+                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="Volver"/></a>
 
 
     <br/>

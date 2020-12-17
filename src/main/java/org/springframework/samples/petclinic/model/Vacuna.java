@@ -8,8 +8,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +28,7 @@ public class Vacuna extends BaseEntity {
 
 	@Column(name = "fecha")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Past
 	private LocalDate fecha;
 
 	@NotEmpty
@@ -39,5 +42,9 @@ public class Vacuna extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "vet_id")
 	private Vet vet;
+	
+	public long numeroDiasEntreDosFechas(LocalDate fecha2){
+	   return DAYS.between(this.fecha, fecha2);
+	}
 
 }

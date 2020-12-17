@@ -18,6 +18,8 @@ import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -48,10 +50,15 @@ public class VacunaVetController {
 		return this.vacunaService.findTipoEnfermedades();
 	}
 	
-	@InitBinder("tipoEnfermedad")
-	public void initPetBinder(WebDataBinder dataBinder) {
+	@InitBinder("vacuna")
+	public void initTipoEnfermedadBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new VacunaValidator());
 	}
+	/*
+	@InitBinder("fecha")
+	public void initFechaBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new VacunaValidator());
+	}*/
 
 	@GetMapping()
 	public String listadoVacunas(Map<String, Object> model) {
@@ -120,12 +127,16 @@ public class VacunaVetController {
 		Vet vet= this.vetService.findVetById(idVet);
 		vacuna.setVet(vet);
 		vacuna.setPet(this.petService.findPetById(Id));
-		this.vacunaService.saveVacuna(vacuna);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "vacunas/crearVacuna";
 		} else {
-			this.vacunaService.saveVacuna(vacuna);
+				try{
+					this.vacunaService.saveVacuna(vacuna,Id);
+				}catch(DistanciaEntreDiasException ex){
+                result.rejectValue("fecha", "distancia", "La vacuna no ha podido ser añadida por violación de la regla de negocio");
+                return "vacunas/crearVacuna";
+            }
 			return "redirect:/vets/vacuna/" + vacuna.getId();
 		}
 	}

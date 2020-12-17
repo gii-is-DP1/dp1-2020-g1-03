@@ -32,9 +32,12 @@ public interface VacunaRepository extends Repository<Vacuna, Integer> {
 	Collection<TipoEnfermedad> findTipoEnfermedades() throws DataAccessException;
 	
 	@Query("SELECT tenfermedad FROM TipoEnfermedad tenfermedad WHERE tenfermedad.name LIKE ?1")
-	TipoEnfermedad findTipoEnfermedad(String tipoEnfermedad);
+	TipoEnfermedad findTipoEnfermedad(String tipoEnfermedad) throws DataAccessException;
 	
 	@Query("SELECT DISTINCT pet FROM Pet pet WHERE pet.type.name LIKE ?1")
-	public Collection<Pet> findMascotaByEspecie(String especieMascota);
+	Collection<Pet> findMascotaByEspecie(String especieMascota) throws DataAccessException;
+	
+	@Query("SELECT vacuna FROM Vacuna vacuna WHERE vacuna.pet.id LIKE ?1 ORDER BY vacuna.fecha")
+	List<Vacuna> findVacunasByPetId(int petId) throws DataAccessException;
 	
 }
