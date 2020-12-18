@@ -31,7 +31,7 @@
         </c:forEach>
         </tbody>
     </table>
-    <spring:url value="vacuna/pets/find" var="createUrl">
+    <spring:url value="/vets/vacuna/pets/find" var="createUrl">
     </spring:url>
    	<a href="${fn:escapeXml(createUrl)}" class="btn btn-default">Crear vacuna</a>
 

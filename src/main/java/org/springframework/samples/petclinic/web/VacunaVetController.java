@@ -92,14 +92,14 @@ public class VacunaVetController {
 
 		// allow parameterless GET request for /owners to return all records
 		if (pet.getType().getName() == null) {
-			pet.getType().setName("");; // empty string signifies broadest possible search
+			pet.getType().setName(""); // empty string signifies broadest possible search
 		}
 
 		// find owners by last name
 		Collection<Pet> results = this.vacunaService.findMascotaByEspecie(pet.getType().getName());
 		if (results.isEmpty()) {
 			result.rejectValue("type.name", "notFound", "not found");
-			return "vacunas/EncontrarMascotas";
+			return "vacunas/MascotasList";
 		}
 		else if (results.size() == 1) {
 			pet = results.iterator().next();
@@ -129,6 +129,10 @@ public class VacunaVetController {
 		vacuna.setPet(this.petService.findPetById(Id));
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
+			return "vacunas/crearVacuna";
+		}else if(vacuna.getFecha().compareTo(vacuna.getPet().getBirthDate())<0) {
+			System.out.println("Fecha de vacuna anterior a fecha de nacimiento de la mascota");
+			result.rejectValue("fecha", "distancia", "Fecha de vacuna anterior a fecha de nacimiento de la mascota");
 			return "vacunas/crearVacuna";
 		} else {
 				try{
