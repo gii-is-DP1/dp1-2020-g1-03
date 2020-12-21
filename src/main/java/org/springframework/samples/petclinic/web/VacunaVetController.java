@@ -90,7 +90,7 @@ public class VacunaVetController {
 	@GetMapping(value = "/pets")
 	public String processFindForm(Pet pet, BindingResult result, Map<String, Object> model) {
 
-		System.out.println(pet.getType().getName() + "Hellodah");
+		System.out.println(pet.getType() + "Hellodah");
 		// find owners by last name
 		Collection<Pet> results = this.vacunaService.findMascotaByEspecie(pet.getType().getName());
 		if (results.isEmpty()) {
