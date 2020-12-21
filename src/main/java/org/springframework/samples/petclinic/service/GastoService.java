@@ -44,14 +44,11 @@ public class GastoService {
 
 	private GastoRepository gastoRepository;
 	
-	private EconomistaRepository economistaRepository;
 	
 
 	@Autowired
-	public GastoService(GastoRepository gastoRepository,
-			EconomistaRepository economistaRepository) {
+	public GastoService(GastoRepository gastoRepository) {
 		this.gastoRepository = gastoRepository;
-		this.economistaRepository = economistaRepository;
 	}
 
 	

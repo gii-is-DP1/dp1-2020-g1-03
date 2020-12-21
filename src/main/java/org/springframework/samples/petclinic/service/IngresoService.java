@@ -18,14 +18,10 @@ public class IngresoService {
 	
 	private IngresoRepository ingresoRepository;
 	
-	private EconomistaRepository economistaRepository;
-	
 
 	@Autowired
-	public IngresoService(IngresoRepository ingresoRepository,
-			EconomistaRepository economistaRepository) {
+	public IngresoService(IngresoRepository ingresoRepository) {
 		this.ingresoRepository = ingresoRepository;
-		this.economistaRepository = economistaRepository;
 	}
 
 	
