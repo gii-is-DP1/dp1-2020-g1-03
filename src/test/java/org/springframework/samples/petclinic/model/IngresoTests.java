@@ -62,7 +62,7 @@ class IngresoTests {
 	}
 	
 	@Test
-	void shouldNotValidateWhenHisFechaCitaIsFuture() {
+	void shouldNotValidateWhenHisFechaIngresoIsFuture() {
 
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Ingreso ingreso = new Ingreso();

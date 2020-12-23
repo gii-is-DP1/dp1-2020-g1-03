@@ -1,22 +1,17 @@
 package org.springframework.samples.petclinic.service;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Ingreso;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VacunaRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
 import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
-import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class VacunaService {
 	
 	private VacunaRepository vacunaRepository;
+	
+	public static final Integer dias=7;
 
 	@Autowired
 	public VacunaService(VacunaRepository vacunaRepository,PetRepository petRepository,VetRepository vetRepository) {
@@ -42,15 +39,12 @@ public class VacunaService {
 		vacunaRepository.save(vacuna);
 		}else {
 			Vacuna ultVacuna=ultVacunas.get(ultVacunas.size()-1);
-			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<5) {
-				System.out.println(ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha()));
-				System.out.println(ultVacuna.getFecha());
-				System.out.println(ultVacuna.getId());
+			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<dias) {
 				throw new DistanciaEntreDiasException();
 			}else {
 				vacunaRepository.save(vacuna);
 			}
-			//vacunaRepository.save(vacuna);
+			
 		}               
 	}
 	
@@ -66,11 +60,6 @@ public class VacunaService {
 	@Transactional(readOnly = true)
 	public Collection<TipoEnfermedad> findTipoEnfermedades() throws DataAccessException {
 		return vacunaRepository.findTipoEnfermedades();
-	}
-	
-	@Transactional(readOnly = true)
-	public TipoEnfermedad findTipoEnfermedad(String tipoEnfermedad) throws DataAccessException {
-		return vacunaRepository.findTipoEnfermedad(tipoEnfermedad);
 	}
 	
 	@Transactional(readOnly = true)
