@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.model;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -59,4 +61,8 @@ public class Clase extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name = "secretario")
 	private Secretario secretario;
+	
+	public long numeroDiasEntreDosFechas(LocalDateTime fecha2){
+		   return DAYS.between(this.fechaHoraFin, fecha2);
+		}
 }

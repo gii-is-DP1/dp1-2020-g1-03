@@ -42,8 +42,12 @@
             <th>Adiestrador</th>
             <td><c:out value="${clase.adiestrador.firstName}"/>  <c:out value=" ${clase.adiestrador.lastName}"/></td>
         </tr>
+        
     </table>
-
+<spring:url value="apuntar/{claseId}" var="apuntarUrl">
+<spring:param name="claseId" value="${clase.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(apuntarUrl)}" class="btn btn-default">Apuntar mascota</a>
     <br/>
     <br/>
     <br/>
