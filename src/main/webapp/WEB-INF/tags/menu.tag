@@ -25,20 +25,20 @@
 				<petclinic:menuItem active="${name eq 'home'}" url="/"
 					title="home page">
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-					<span>Inicio</span>
+					<span>Home</span>
 				</petclinic:menuItem>
 
 				<sec:authorize access="hasAnyAuthority('owner')">
 					<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"	title="find owners">
 						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-						<span>Buscar dueños</span>
+						<span>Find owners</span>
 					</petclinic:menuItem>
 				</sec:authorize>
 
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-					<span>Veterinarios</span>
+					<span>Veterinarians</span>
 				</petclinic:menuItem>
 				
 				<sec:authorize access="hasAnyAuthority('owner')">
@@ -47,7 +47,28 @@
 						<span>Comentarios</span>
 					</petclinic:menuItem>
 				</sec:authorize>
-
+				
+				<sec:authorize access="hasAnyAuthority('adiestrador')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/adiestradores/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('secretario')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/secretarios/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/owners/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
 				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
 					title="trigger a RuntimeException to see how it is handled">
 					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
@@ -75,8 +96,8 @@
 
 			<ul class="nav navbar-nav navbar-right">
 				<sec:authorize access="!isAuthenticated()">
-					<li><a href="<c:url value="/login" />">Iniciar sesion</a></li>
-					<li><a href="<c:url value="/users/new" />">Registrarse</a></li>
+					<li><a href="<c:url value="/login" />">Login</a></li>
+					<li><a href="<c:url value="/users/new" />">Register</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
 					<li class="dropdown"><a href="#" class="dropdown-toggle"

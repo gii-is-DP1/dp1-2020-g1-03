@@ -5,21 +5,6 @@ INSERT INTO authorities(id,username,authority) VALUES (1,'admin1','admin');
 INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
-
-INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
-
-INSERT INTO users(username,password,enabled) VALUES ('secretario1','secretario1',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (5,'secretario1','secretario');
-
-INSERT INTO users(username,password,enabled) VALUES ('abrgarvil','abrgarvil',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
-
-INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
-
 INSERT INTO users(username,password,enabled) VALUES ('owner2','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (10,'owner2','owner');
 
@@ -46,6 +31,10 @@ INSERT INTO authorities(id,username,authority) VALUES (17,'owner9','owner');
 
 INSERT INTO users(username,password,enabled) VALUES ('owner10','0wn3r',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (18,'owner10','owner');
+-- One vet user, named vet1 with passwor v3t
+INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
+
 
 INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (25,'vet2','veterinarian');
@@ -57,6 +46,22 @@ INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (28,'vet5','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (29,'vet6','veterinarian');
+
+
+INSERT INTO users(username,password,enabled) VALUES ('economista1','economista1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (4,'economista1','economista');
+
+INSERT INTO users(username,password,enabled) VALUES ('abrgarvil','abrgarvil',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
+
+INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
+
+INSERT INTO users(username,password,enabled) VALUES ('adiestrador1','adiestrador1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (87,'adiestrador1','adiestrador');
+
+INSERT INTO users(username,password,enabled) VALUES ('secretario1','secretario1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (5,'secretario1','secretario');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
@@ -136,10 +141,11 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioP
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
 
-
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
-
-
+--INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
+--INSERT INTO adiestrador(id,first_name,last_name,competencias) VALUES (1,'Daniel','Castroviejo','Competencia1');
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota, adiestrador_id) VALUES (1,'Clase1','2020-12-14 15:30', '2020-12-14 16:30', 10, 8, 1, 2, 1);
 
 
