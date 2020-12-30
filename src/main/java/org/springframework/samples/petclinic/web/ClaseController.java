@@ -137,13 +137,15 @@ public class ClaseController {
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
 		apClase.setPet(apClase.getPet());
+		Clase clas = this.claseService.findClaseById(claseId);
+		apClase.setClase(clas);
+		System.out.println(apClase.getPet().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
+		System.out.println(apClase.getClase().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
 		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
-		System.out.println(clasesApuntadas);
-		System.out.println(apClase.getPet().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
 		Boolean b=true;
 		int i=0;
 		if(!clasesApuntadas.isEmpty()) {
-			while(b && i<clasesApuntadas.size()-1) {
+			while(b && i<clasesApuntadas.size()) {
 				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio())) {
 					b=false;		
 				}
@@ -155,29 +157,31 @@ public class ClaseController {
 			System.out.println(result.getAllErrors());
 			return "clases/apuntarClases";
 		}else if(apClase.getClase().getFechaHoraInicio().isBefore(LocalDateTime.now())){
-			result.rejectValue("pets","La clase ya ha comenzado o ha terminado",
+			result.rejectValue("pet","La clase ya ha comenzado o ha terminado",
 					"La clase ya ha comenzado o ha terminado");
 			
 			return "clases/apuntarClases";
 			
 		}else if(b==false){
-			result.rejectValue("pets","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada",
+			result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada",
 					"No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada");
 			return "clases/apuntarClases";
 		}else {
 			try{
 				this.claseService.escogerMascota(apClase);
 			}catch(DiferenciaTipoMascotaException ex){
-            result.rejectValue("pets", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio");
+            result.rejectValue("pet", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio");
             return "clases/apuntarClases";
         }catch(DiferenciaClasesDiasException ex2){
-            result.rejectValue("pets", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio");
+            result.rejectValue("pet", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio");
             return "clases/apuntarClases";
         }catch(LimiteAforoClaseException ex3){
-            result.rejectValue("pets", "Aforo completo de la clase, violación de regla de negocio", "Aforo completo de la clase, violación de regla de negocio");
+            result.rejectValue("pet", "Aforo completo de la clase, violación de regla de negocio", "Aforo completo de la clase, violación de regla de negocio");
             return "clases/apuntarClases";
-        }
+        }	
 			apClase.getClase().setNumeroPlazasDisponibles(apClase.getClase().getNumeroPlazasDisponibles()-1);
+			this.claseService.saveClase(apClase.getClase());
+			
 			return "redirect:/owners/clases";
 		}
 		}

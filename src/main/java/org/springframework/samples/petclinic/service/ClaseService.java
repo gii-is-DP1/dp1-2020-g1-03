@@ -24,8 +24,9 @@ public class ClaseService {
 	public static final int dias=7;
 
 	@Autowired
-	public ClaseService(ClaseRepository claseRepository) {
+	public ClaseService(ClaseRepository claseRepository, ApuntarClaseRepository apuntarClaseRepository) {
 		this.claseRepository = claseRepository;
+		this.apuntarClaseRepository=apuntarClaseRepository;
 	}
 	@Transactional()
 	public void saveClase(Clase clase) throws DataAccessException {
@@ -63,15 +64,14 @@ public class ClaseService {
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
-		if(!pet.getType().equals(clase.getType())) {
+		if(pet.getType()!=clase.getType()) {
 			throw new DiferenciaTipoMascotaException();
-		}else if(clase.getNumeroPlazasDisponibles()<0){
+		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();
 		}else if(clasesApuntadas.size()>limiteClases && clasesApuntadas.get(clasesApuntadas.size()-1)
-				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias){
+				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias && clasesApuntadas!=null){
 			throw new DiferenciaClasesDiasException();
 		}else {
-//			apClase.setPet(pet);
 			apuntarClaseRepository.save(apClase);
 		}
 			
