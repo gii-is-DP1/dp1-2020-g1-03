@@ -87,4 +87,8 @@ public class PetService {
 	public Collection<Pet> findAllPets() throws DataAccessException{
 		return petRepository.findAll();
 	}
+	
+	public Collection<String> findNameMascota(int idOwner) throws DataAccessException{
+		return petRepository.findNameMascota(idOwner);
+	}
 }

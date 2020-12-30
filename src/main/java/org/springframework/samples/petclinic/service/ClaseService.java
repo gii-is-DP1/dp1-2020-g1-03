@@ -71,6 +71,7 @@ public class ClaseService {
 				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias){
 			throw new DiferenciaClasesDiasException();
 		}else {
+//			apClase.setPet(pet);
 			apuntarClaseRepository.save(apClase);
 		}
 			

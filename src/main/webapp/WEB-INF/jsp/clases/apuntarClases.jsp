@@ -3,12 +3,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="apuntarClases">
     <h2>Apuntar Clases</h2>
         
-        <form:form modelAttribute="apuntarClase" class="form-horizontal" id="add-clase-form">
+        <form:form modelAttribute="apuntarClase" class="form-horizontal" id="add-apuntarClase-form">
         
     	<input type="hidden" name="id" value="${apuntarClase.id}"/>
         <table class="table table-striped">
@@ -47,7 +48,7 @@
         
     </table>
                 <div class="control-group">
-                    <petclinic:selectField name="pets" label="Mascota" names="${pets}" size="3"/>
+                    <petclinic:selectField name="pet" label="Mascota" names="${pets}" size="3"/>
                 </div>
         
         <div class="form-group">

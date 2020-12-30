@@ -29,7 +29,9 @@ import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMa
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +53,13 @@ public class ClaseController {
 		this.petService = petService;
 		this.ownerService = ownerService;
 	}
+	
+	@InitBinder("pet")
+	public void initPetBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new ApuntarClaseValidator());
+	}
+	
+	
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
 		return this.petService.findPetTypes();
@@ -62,10 +71,10 @@ public class ClaseController {
 	}
 	
 	@ModelAttribute("pets")
-	public Collection<Pet> populatePet(final Principal principal) {
+	public Collection<String> populatePet(final Principal principal) {
 		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner owner = this.ownerService.findOwnerById(idOwner);
-		return owner.getPets();
+		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
+		return mascotas;
 	}
 	
 	//ADIESTRADOR
@@ -127,8 +136,10 @@ public class ClaseController {
 	@PostMapping(value = "owners/clases/show/apuntar/{claseId}")
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
-		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
 		apClase.setPet(apClase.getPet());
+		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
+		System.out.println(clasesApuntadas);
+		System.out.println(apClase.getPet().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
 		Boolean b=true;
 		int i=0;
 		if(!clasesApuntadas.isEmpty()) {
