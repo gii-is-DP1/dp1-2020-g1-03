@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.web;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -70,11 +71,16 @@ public class ClaseController {
 		return this.adiestradorService.findNameAndLastnameAdiestrador();
 	}
 	
+	
 	@ModelAttribute("pets")
 	public Collection<String> populatePet(final Principal principal) {
-		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
+		if(idOwner!=null) {
 		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
 		return mascotas;
+		}else {
+		return new ArrayList<String>();
+		}
 	}
 	
 	//ADIESTRADOR
@@ -102,26 +108,18 @@ public class ClaseController {
 	
 	@GetMapping(value = "/owners/clases")
 	public String listadoClases(Map<String, Object> model, final Principal principal) {
-
 		Collection<Clase> clases= this.claseService.findAllClases();
-
 		model.put("clases", clases);
-
 		return "clases/clasesListOwner";
-
 		}
 
 	
 
 	@GetMapping(value = "owners/clases/show/{claseId}")
 	public String mostarClaseOwner(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
-
 		Clase clase= claseService.findClaseById(claseId);
-
 		model.put("clase", clase);
-
 		return "clases/showClaseOwner";
-
 		}
 	
 	@GetMapping(value = "owners/clases/show/apuntar/{claseId}")	
@@ -139,20 +137,24 @@ public class ClaseController {
 		apClase.setPet(apClase.getPet());
 		Clase clas = this.claseService.findClaseById(claseId);
 		apClase.setClase(clas);
-		System.out.println(apClase.getPet().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
-		System.out.println(apClase.getClase().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
+		//System.out.println(apClase.getPet().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
+		//System.out.println(apClase.getClase().getType().getName()+"ASDFGHJKLÑPOIUYTRDSDFGHJUIOIUYGFDSDFGHJUIOIUYGTFDS");
 		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
 		Boolean b=true;
 		int i=0;
+		Boolean apuntada=false;
 		if(!clasesApuntadas.isEmpty()) {
-			while(b && i<clasesApuntadas.size()) {
-				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio())) {
+			while(b && i<clasesApuntadas.size() && apuntada.equals(false)) {
+				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio())
+						&& clasesApuntadas.get(i).getClase()!=apClase.getClase()) {
 					b=false;		
+				}
+				if(clasesApuntadas.get(i).getClase().equals(apClase.getClase()));{
+					apuntada=true;
 				}
 				i++;
 			}
 		}
-		
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/apuntarClases";
@@ -165,6 +167,10 @@ public class ClaseController {
 		}else if(b==false){
 			result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada",
 					"No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada");
+			return "clases/apuntarClases";
+		}else if(apuntada){
+			result.rejectValue("pet","Ya se ha apuntado a esta clase",
+					"Ya se ha apuntado a esta clase");
 			return "clases/apuntarClases";
 		}else {
 			try{
@@ -184,36 +190,26 @@ public class ClaseController {
 			
 			return "redirect:/owners/clases";
 		}
-		}
+	}
 	
 	
 	
 	//SECRETARIO
 	
 	@GetMapping(value = "/secretarios/clases")
-
 	public String listadoClasesSecretario(Map<String, Object> model, final Principal principal) {
-
 		Collection<Clase> clases= this.claseService.findAllClases();
-
 		model.put("clases", clases);
-
 		return "clases/clasesListSecretario";
-
 		}
 
 	
 
 	@GetMapping(value = "secretarios/clases/show/{claseId}")
-
 	public String mostarClaseSecretario(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
-
 		Clase clase= claseService.findClaseById(claseId);
-
 		model.put("clase", clase);
-
 		return "clases/showClaseSecretario";
-
 		}
 	
 	@GetMapping(value = "secretarios/clases/show/{claseId}/edit")
@@ -226,6 +222,17 @@ public class ClaseController {
 	@PostMapping(value = "secretarios/clases/show/{claseId}/edit")
 	public String processEditClase(@Valid Clase clase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId) {
+		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
+		boolean b=true;
+		int i=0;
+		if(!clases.isEmpty()) {
+			while(b && i<clases.size()) {
+				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())) {
+					b=false;		
+				}
+				i++;
+			}
+		}
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/crearOEditarClase";
@@ -240,6 +247,10 @@ public class ClaseController {
 		}else if(this.claseService.findByName(clase.getName()).size()>1){
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
+			return "clases/crearOEditarClase";
+		}else if(b==false){
+			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
 			return "clases/crearOEditarClase";
 		}else {
 			Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
@@ -269,6 +280,17 @@ public class ClaseController {
 	@PostMapping(value = "secretarios/clases/new")
 	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
+		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
+		boolean b=true;
+		int i=0;
+		if(!clases.isEmpty()) {
+			while(b && i<clases.size()) {
+				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())) {
+					b=false;		
+				}
+				i++;
+			}
+		}
 		clase.setSecretario(sec);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
@@ -285,7 +307,11 @@ public class ClaseController {
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
 			return "clases/crearOEditarClase";
-		} else {
+		}else if(b==false){
+			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+			return "clases/crearOEditarClase";
+		}else {
 			this.claseService.saveClase(clase);
 			return "redirect:/secretarios/clases";
 		}

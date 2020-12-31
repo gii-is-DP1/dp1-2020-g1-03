@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
@@ -57,6 +58,10 @@ public class ClaseService {
 	
 	public List<ApuntarClase> findClasesByPetId(int petId) throws DataAccessException{
 		return apuntarClaseRepository.findClasesByPetId(petId);
+	}
+	
+	public List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException{
+		return claseRepository.findClasesAdiestrador(adie);
 	}
 	
 	@Transactional()
