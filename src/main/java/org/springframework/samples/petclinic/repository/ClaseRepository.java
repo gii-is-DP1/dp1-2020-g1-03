@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Clase;
 
@@ -25,6 +26,9 @@ public interface ClaseRepository extends Repository<Clase, Integer>{
 	Clase findById(int claseId) throws DataAccessException;
 	
 	void delete(Clase clase) throws DataAccessException;
+	
+	@Query("SELECT clase FROM Clase clase WHERE clase.adiestrador LIKE ?1")
+	List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException;
 	
 	
 	//APUNTAR

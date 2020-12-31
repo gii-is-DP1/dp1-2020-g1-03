@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
@@ -24,8 +25,9 @@ public class ClaseService {
 	public static final int dias=7;
 
 	@Autowired
-	public ClaseService(ClaseRepository claseRepository) {
+	public ClaseService(ClaseRepository claseRepository, ApuntarClaseRepository apuntarClaseRepository) {
 		this.claseRepository = claseRepository;
+		this.apuntarClaseRepository=apuntarClaseRepository;
 	}
 	@Transactional()
 	public void saveClase(Clase clase) throws DataAccessException {
@@ -58,23 +60,25 @@ public class ClaseService {
 		return apuntarClaseRepository.findClasesByPetId(petId);
 	}
 	
+	public List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException{
+		return claseRepository.findClasesAdiestrador(adie);
+	}
+	
 	@Transactional()
 	public void escogerMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, DiferenciaClasesDiasException{
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
-		if(!pet.getType().equals(clase.getType())) {
+		if(pet.getType()!=clase.getType()) {
 			throw new DiferenciaTipoMascotaException();
-		}else if(clase.getNumeroPlazasDisponibles()<0){
+		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();
 		}else if(clasesApuntadas.size()>limiteClases && clasesApuntadas.get(clasesApuntadas.size()-1)
-				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias){
+				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias && clasesApuntadas!=null){
 			throw new DiferenciaClasesDiasException();
 		}else {
-//			apClase.setPet(pet);
 			apuntarClaseRepository.save(apClase);
 		}
 			
 		}
 	}
-	

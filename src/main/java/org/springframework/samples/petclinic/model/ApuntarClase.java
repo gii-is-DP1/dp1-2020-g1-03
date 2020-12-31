@@ -15,7 +15,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "apuntar_clases")
+@Table(name = "apuntar")
 public class ApuntarClase extends BaseEntity{
 	
 	
