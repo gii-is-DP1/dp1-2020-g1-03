@@ -18,10 +18,7 @@ public class VacunaValidator implements Validator{
 		}
 		if (vacuna.getFecha() == null) {
 			errors.rejectValue("fecha", REQUIRED, REQUIRED);
-		}/*
-		if(vacuna.getPet().getBirthDate().isAfter(vacuna.getFecha()))
-			errors.rejectValue("fecha", REQUIRED+"La fecha de la vacuna debe ser posterior a la de su fecha de nacimiento", REQUIRED+"La fecha de la vacuna debe ser posterior a la de su fecha de nacimiento");
-		*/
+		}
 	}
 
 	/**

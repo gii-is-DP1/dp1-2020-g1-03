@@ -130,4 +130,34 @@ public class VacunaServiceTest {
 			vacunaService.saveVacuna(vacuna2, vacuna2.getPet().getId());
 		});		
 	}
+	
+	
+	@Test
+	@Transactional
+	public void shouldThrowExceptionDistanciaEntreDiasException2() {
+		Collection<TipoEnfermedad> tipoEnfermedades = this.vacunaService.findTipoEnfermedades();
+		
+		Vacuna vacuna = new Vacuna();
+		vacuna.setTipoEnfermedad(EntityUtils.getById(tipoEnfermedades, TipoEnfermedad.class, 1));
+		vacuna.setFecha(LocalDate.of(2020, 11, 11));
+		vacuna.setDescripcion("Prueba de que se ha añadido correactamente la vacuna");
+		vacuna.setPet(this.petService.findPetById(4));
+		vacuna.setVet(this.vetService.findVetById(1));                
+        
+		try {
+            this.vacunaService.saveVacuna(vacuna, vacuna.getPet().getId());;
+        } catch (DistanciaEntreDiasException ex) {
+            ex.printStackTrace();
+        }
+		
+		Vacuna vacuna2 = new Vacuna();
+		vacuna2.setTipoEnfermedad(EntityUtils.getById(tipoEnfermedades, TipoEnfermedad.class, 2));
+		vacuna2.setFecha(LocalDate.of(2020, 11, 07));
+		vacuna2.setDescripcion("Prueba de que se ha añadido correactamente la vacuna");
+		vacuna2.setPet(this.petService.findPetById(4));
+		vacuna2.setVet(this.vetService.findVetById(1));
+		Assertions.assertThrows(DistanciaEntreDiasException.class, () ->{
+			vacunaService.saveVacuna(vacuna2, vacuna2.getPet().getId());
+		});		
+	}
 }

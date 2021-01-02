@@ -136,7 +136,6 @@ class GastoControllerTests {
 	void testShowGastoFormError() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/gasto/{gastoId}", 16))
 		.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("gasto"))
-
 			.andExpect(MockMvcResultMatchers.view().name("exception"));
 	}
 

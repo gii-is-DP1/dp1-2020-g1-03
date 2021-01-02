@@ -33,13 +33,13 @@ public class ComentarioControllerTests {
 	private static final int	TEST_VET_ID				= 1;
 	
 	@MockBean
-	private ComentarioService		comentarioService;
+	private ComentarioService	comentarioService;
 
 	@MockBean
 	private VetService	vetService;
 	
 	@MockBean
-	private OwnerService	ownerService;
+	private OwnerService ownerService;
 
 
 	@Autowired
@@ -117,7 +117,7 @@ public class ComentarioControllerTests {
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
-	void testGastoList() throws Exception {
+	void testComentarioList() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios", ComentarioControllerTests.TEST_COMENTARIO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
 

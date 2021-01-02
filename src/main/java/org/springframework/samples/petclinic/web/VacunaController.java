@@ -24,18 +24,16 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/vets/vacuna")
-public class VacunaVetController {
+public class VacunaController {
 	
-	private VacunaService vacunaService;
-	private PetService petService;
-	private VetService vetService;
+	private final VacunaService vacunaService;
+	private final PetService petService;
+	private final VetService vetService;
 
 	@Autowired
-	public VacunaVetController(VacunaService vacunaService,PetService petService,VetService vetService) {
+	public VacunaController(VacunaService vacunaService,PetService petService,VetService vetService) {
 		this.vacunaService = vacunaService;
 		this.petService=petService;
 		this.vetService=vetService;
@@ -50,44 +48,52 @@ public class VacunaVetController {
 	public void initTipoEnfermedadBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new VacunaValidator());
 	}
-	/*
-	@InitBinder("fecha")
-	public void initFechaBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new VacunaValidator());
-	}*/
-
-	@GetMapping()
+	
+	//OWNERS
+	@GetMapping(value = "/owners/{ownerId}/vacuna")
+	public String listadoVacunasOwner(Map<String, Object> model, @PathVariable("ownerId") int ownerId) {
+		Collection<Vacuna> vacunas = vacunaService.findAllVacunasByOwnerId(ownerId);
+		model.put("vacunas", vacunas);
+		return "vacunas/vacunasListOwner";
+	}
+	
+	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
+	public String mostarVacunaOwnerDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
+		Vacuna vacuna= vacunaService.findVacunaById(Id);
+		model.put("vacuna", vacuna);
+		return "vacunas/vacunasShow";
+		}
+	
+	//VETS
+	@GetMapping(value = "/vets/vacuna")
 	public String listadoVacunas(Map<String, Object> model) {
 		List<Vacuna> vacunas = vacunaService.findAllVacunas();
 		model.put("vacunas", vacunas);
 		return "vacunas/vacunasListVet";
 	}
 	
-	@GetMapping(value = "{vacunaId}")
+	@GetMapping(value = "/vets/vacuna/{vacunaId}")
 	public String mostarVacuna(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
 		Vacuna vacuna= vacunaService.findVacunaById(Id);
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShow";
 		}
 	
-	@GetMapping(value = "pets/{petId}")
+	@GetMapping(value = "/vets/vacuna/pets/{petId}")
 	public String mostarMascota(@PathVariable("petId") int Id,Map<String, Object> model) {
 		Pet pet= petService.findPetById(Id);
 		model.put("pet", pet);
 		return "vacunas/MascotaShow";
 		}
 	
-	@GetMapping(value = "/pets/find")
+	@GetMapping(value = "/vets/vacuna/pets/find")
 	public String initFindForm(Map<String, Object> model) {
 		model.put("pet", new Pet());
 		return "vacunas/EncontrarMascotas";
 	}
 
-	@GetMapping(value = "/pets")
+	@GetMapping(value = "/vets/vacuna/pets")
 	public String processFindForm(Pet pet, BindingResult result, Map<String, Object> model) {
-
-		System.out.println(pet.getType() + "Hellodah");
-		// find owners by last name
 		Collection<Pet> results = this.vacunaService.findMascotaByEspecie(pet.getType().getName());
 		if (results.isEmpty()) {
 			if (pet.getType().getName().equals("")) {
@@ -110,7 +116,7 @@ public class VacunaVetController {
 	}
 	
 	
-	@GetMapping(value = "/pets/{petId}/create")
+	@GetMapping(value = "/vets/vacuna/pets/{petId}/create")
 	public String initCreateVacuna(Map<String, Object> model,@PathVariable("petId") int Id) {
 		Vacuna vacuna = new Vacuna();
 		vacuna.setPet(this.petService.findPetById(Id));
@@ -118,7 +124,7 @@ public class VacunaVetController {
 		return "vacunas/crearVacuna";
 	}
 
-	@PostMapping(value = "/pets/{petId}/create")
+	@PostMapping(value = "/vets/vacuna/pets/{petId}/create")
 	public String processCreateVacuna(@Valid Vacuna vacuna, @PathVariable("petId") int Id,BindingResult result, final Principal principal) {
 		vacuna.setId(vacuna.getId());
 		int idVet = this.vetService.findVetIdByUsername(principal.getName());
