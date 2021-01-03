@@ -112,18 +112,36 @@ public class CompeticionController {
 	//ADIESTRADOR
 	
 	@GetMapping(value = "/secretarios/competiciones")
-	public String listadoClasesBySecretarioId(Map<String, Object> model, final Principal principal) {
+	public String listadoCompeticionesBySecretarioId(Map<String, Object> model, final Principal principal) {
 		Collection<Competicion> competiciones= competicionService.findAllCompeticiones();
 		model.put("competiciones", competiciones);
 		return "competiciones/competicionesList";
 		}
 	
 	@GetMapping(value = "/secretarios/competiciones/show/{competicionId}")
-	public String mostarClasesAdiestrador(@PathVariable("competicionId") int competicionId, Map<String, Object> model, final Principal principal) {
+	public String mostarCompeticionesSecretario(@PathVariable("competicionId") int competicionId, Map<String, Object> model, final Principal principal) {
 		Competicion competicion= competicionService.findCompeticionById(competicionId);
 		model.put("competicion", competicion);
 		return "competiciones/competicionesShow";
 		}
+	
+	//Dueño
+	
+		@GetMapping(value = "/owners/competiciones")
+		public String listadoCompeticionesByOwnerId(Map<String, Object> model, final Principal principal) {
+//			Integer ownerId=this.ownerService.findOwnerIdByUsername(principal.getName());
+//			Owner owner= this.ownerService.findOwnerById(ownerId);
+			Collection<Competicion> competiciones= competicionService.findAllCompeticiones();
+			model.put("competiciones", competiciones);
+			return "competiciones/competicionesListOwner";
+			}
+		
+		@GetMapping(value = "/owners/competiciones/show/{competicionId}")
+		public String mostarCompeticionesOwner(@PathVariable("competicionId") int competicionId, Map<String, Object> model, final Principal principal) {
+			Competicion competicion= competicionService.findCompeticionById(competicionId);
+			model.put("competicion", competicion);
+			return "competiciones/competicionesShow";
+			}
 	
 	
 	}

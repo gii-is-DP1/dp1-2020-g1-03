@@ -44,9 +44,9 @@ public class CompeticionService {
 	}
 
 
-	public Collection<Competicion> findCompeticionBySecretarioId(Integer idSecretario) throws DataAccessException{
-		return competicionRepository.findCompeticionBySecretarioId(idSecretario);
-	}
+//	public Collection<Competicion> findCompeticionByOwnerId(Integer idOwner) throws DataAccessException{
+//		return competicionRepository.findCompeticionByOwnerId(idOwner);
+//	}
 	public List<Competicion> findByName(String nombreCompeticion) throws DataAccessException{
 		return competicionRepository.findByName(nombreCompeticion);
 	}
@@ -64,8 +64,8 @@ public class CompeticionService {
 		return competicionPetRepository.findCompeticionByPetId(petId);
 	}
 	
-	public List<Competicion> findCompeticionesBySecretario(Secretario secre) throws DataAccessException{
-		return competicionRepository.findCompeticionesBySecretario(secre);
+	public List<Competicion> findCompeticionesBySecretario(Owner owner) throws DataAccessException{
+		return competicionRepository.findCompeticionesByOwner(owner);
 	}
 	
 //	@Transactional()

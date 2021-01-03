@@ -20,7 +20,7 @@ public interface CompeticionRepository extends Repository<Competicion, Integer>{
 //	int findVetIdByUsername(String user)throws DataAccessException;
 	
 	List<Competicion> findAll() throws DataAccessException;
-	Collection<Competicion> findCompeticionBySecretarioId(Integer idSecretario) throws DataAccessException;
+	//Collection<Competicion> findCompeticionByOwnerId(Integer idOwner) throws DataAccessException;
 	
 	@Query("SELECT competicion FROM Competicion competicion WHERE competicion.nombre LIKE :nombreCompeticion%")
 	List<Competicion> findByName(String nombreCompeticion) throws DataAccessException;
@@ -30,7 +30,7 @@ public interface CompeticionRepository extends Repository<Competicion, Integer>{
 	void delete(Competicion competicion) throws DataAccessException;
 	
 	@Query("SELECT competicion FROM Competicion competicion WHERE competicion.secretario LIKE ?1")
-	List<Competicion> findCompeticionesBySecretario(Secretario secre) throws DataAccessException;
+	List<Competicion> findCompeticionesByOwner(Owner owner) throws DataAccessException;
 	
 	
 	//APUNTAR
