@@ -93,9 +93,9 @@ public class Competicion extends BaseEntity {
 	@JoinColumn(name = "secretario_id")
 	private Secretario secretario;
 	
-	@OneToMany(mappedBy = "competiciones")
-	//@JoinColumn(name = "competicion_pet_id")
-	private CompeticionPet competicionPet;
+//	@OneToMany(mappedBy = "competiciones")
+//	//@JoinColumn(name = "competicion_pet_id")
+//	private CompeticionPet competicionPet;
 
 
 }

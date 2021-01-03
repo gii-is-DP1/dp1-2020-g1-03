@@ -24,5 +24,6 @@ public class CompeticionPet extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "pet_id")
     Pet pet;
+    
 }
 

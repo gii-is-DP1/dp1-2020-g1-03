@@ -74,6 +74,10 @@ public class PetService {
                 petRepository.save(pet);                
 	}
 
+	@Transactional
+	public Collection<Pet> findAllPets() throws DataAccessException{
+		return petRepository.findAll();
+	}
 
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
