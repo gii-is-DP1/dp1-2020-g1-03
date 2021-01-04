@@ -129,7 +129,7 @@ public class CompeticionController {
 		}
 	}
 	
-	//Dueño
+	//Dueño 
 	
 		@GetMapping(value = "/owners/competiciones")
 		public String listadoCompeticionesByOwnerId(Map<String, Object> model, final Principal principal) {

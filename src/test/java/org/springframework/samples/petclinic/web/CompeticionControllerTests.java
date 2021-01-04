@@ -180,7 +180,7 @@ class CompeticionControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("exception"));
 	}
 
-	// Escenario positivo
+	// Escenario positivo 
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testCompeticionListOwner() throws Exception {
