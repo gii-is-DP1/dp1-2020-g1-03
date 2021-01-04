@@ -138,11 +138,12 @@ public class ClaseController {
 		Boolean apuntada=false;
 		if(!clasesApuntadas.isEmpty()) {
 			while(b && i<clasesApuntadas.size() && apuntada.equals(false)) {
-				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio())
-						&& clasesApuntadas.get(i).getClase()!=apClase.getClase()) {
+				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio()) 
+						&& clasesApuntadas.get(i).getClase().getFechaHoraInicio().isBefore(apClase.getClase().getFechaHoraFin())
+						&& clasesApuntadas.get(i).getClase().getId()!=apClase.getClase().getId()) {
 					b=false;		
 				}
-				if(clasesApuntadas.get(i).getClase().equals(apClase.getClase()));{
+				if(clasesApuntadas.get(i).getClase().getId().equals(apClase.getClase().getId())){
 					apuntada=true;
 				}
 				i++;
@@ -257,7 +258,16 @@ public class ClaseController {
 	@GetMapping(value = "secretarios/clases/show/{claseId}/delete")
 	public String deleteClase(Map<String, Object> model,@PathVariable("claseId") int claseId) {
 		Clase clase= claseService.findClaseById(claseId);
-		this.claseService.deleteClase(clase);
+		List<ApuntarClase> clases = claseService.findMascotasApuntadasEnClaseByClaseId(claseId);
+		if(clases.isEmpty() || clases==null) {
+			this.claseService.deleteClase(clase);
+		}else {
+			for(int i=0; i<clases.size(); i++) {
+				this.claseService.deleteApuntarClase(clases.get(i));
+			}
+			this.claseService.deleteClase(clase);
+		}
+		
 		return "redirect:/secretarios/clases";
 	}
 	

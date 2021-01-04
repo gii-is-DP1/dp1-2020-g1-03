@@ -9,6 +9,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Clase;
+import org.springframework.samples.petclinic.model.Pet;
 
 public interface ClaseRepository extends Repository<Clase, Integer>{
 	
@@ -31,7 +32,9 @@ public interface ClaseRepository extends Repository<Clase, Integer>{
 	List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException;
 	
 	
-	//APUNTAR
+	
+	
+	
 	
 	
 }

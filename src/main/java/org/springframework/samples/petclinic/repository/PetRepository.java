@@ -61,7 +61,7 @@ public interface PetRepository extends Repository<Pet, Integer> {
 
 	Collection<Pet> findAll() throws DataAccessException;
 	
-	@Query("SELECT pet.name FROM Pet pet WHERE pet.owner.id LIKE ?1")
+	@Query("SELECT pet.name, pet.owner.id FROM Pet pet WHERE pet.owner.id LIKE ?1")
 	List<String> findNameMascota(int idOwner)throws DataAccessException;
 
 }

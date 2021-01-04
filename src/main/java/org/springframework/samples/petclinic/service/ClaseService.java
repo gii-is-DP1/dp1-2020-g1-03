@@ -73,12 +73,22 @@ public class ClaseService {
 			throw new DiferenciaTipoMascotaException();
 		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();
-		}else if(clasesApuntadas.size()>limiteClases && clasesApuntadas.get(clasesApuntadas.size()-1)
-				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())>dias && clasesApuntadas!=null){
+		}else if(clasesApuntadas.size()+1>limiteClases && clasesApuntadas.get(clasesApuntadas.size()-1)
+				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())<dias && clasesApuntadas!=null){
+			
 			throw new DiferenciaClasesDiasException();
 		}else {
 			apuntarClaseRepository.save(apClase);
 		}
 			
 		}
+	
+	public List<ApuntarClase> findMascotasApuntadasEnClaseByClaseId(int claseId) throws DataAccessException{
+		return apuntarClaseRepository.findMascotasApuntadasEnClaseByClaseId(claseId);
+	}
+	
+	@Transactional()
+	public void deleteApuntarClase(ApuntarClase apClase) throws DataAccessException{
+		 this.apuntarClaseRepository.delete(apClase);
+	}
 	}

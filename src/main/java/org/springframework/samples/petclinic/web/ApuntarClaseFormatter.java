@@ -28,10 +28,13 @@ public class ApuntarClaseFormatter implements Formatter<Pet>{
 		return pet.getName();
 	}
 
+	@Override
 	public Pet parse(String text, Locale locale) throws ParseException {
 		Collection<Pet> findPets = this.peService.findAllPets();
+		String[] split = text.split(",");
+		Integer id = Integer.parseInt(split[1]);
 		for (Pet pet : findPets) {
-			if (pet.getName().equals(text)) {
+			if (pet.getName().equals(split[0]) && pet.getOwner().getId().equals(id)){
 				return pet;
 			}
 		}
