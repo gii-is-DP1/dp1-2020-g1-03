@@ -30,6 +30,7 @@ public interface ClaseRepository extends Repository<Clase, Integer>{
 	
 	@Query("SELECT clase FROM Clase clase WHERE clase.adiestrador LIKE ?1")
 	List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException;
+
 	
 	
 	

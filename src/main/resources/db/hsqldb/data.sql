@@ -60,6 +60,9 @@ INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
 INSERT INTO users(username,password,enabled) VALUES ('adiestrador1','adiestrador1',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (87,'adiestrador1','adiestrador');
 
+INSERT INTO users(username,password,enabled) VALUES ('adiestrador2','adiestrador2',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (88,'adiestrador2','adiestrador');
+
 INSERT INTO users(username,password,enabled) VALUES ('secretario1','secretario1',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (5,'secretario1','secretario');
 
@@ -146,8 +149,13 @@ INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_
 INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
 --INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
+<<<<<<< HEAD
 
+=======
+INSERT INTO adiestrador VALUES(2,'Manuel','Castroviejo','competencia','adiestrador2');
+>>>>>>> branch 'dancasnar2' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
 --INSERT INTO adiestrador(id,first_name,last_name,competencias) VALUES (1,'Daniel','Castroviejo','Competencia1');
+<<<<<<< HEAD
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota, adiestrador_id) VALUES (1,'Clase1','2020-12-14 15:30', '2020-12-14 16:30', 10, 8, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (2,'Clase2','2020-01-14 15:30', '2020-01-14 16:30', 10, 8, 1, 1, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (3,'Clase3','2021-01-14 15:00', '2021-01-14 16:00', 10, 8, 1, 2, 1);
@@ -159,7 +167,17 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (9,'Clase9','2021-02-18 15:00', '2021-02-18 16:00', 10, 10, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (10,'Clase10','2021-02-18 16:30', '2021-02-18 18:00', 10, 10, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (11,'Clase11','2021-02-18 17:30', '2021-02-18 18:30', 10, 10, 1, 2, 1);
+=======
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (1,'Clase1','2021-01-14 15:30', '2021-01-14 16:30', 10, 8, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (2,'Clase2','2020-01-14 15:30', '2020-01-14 16:30', 10, 8, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (3,'Clase3','2021-01-14 15:00', '2021-01-14 16:00', 10, 8, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (4,'Clase4','2021-02-14 15:00', '2021-02-14 16:00', 10, 0, 1, 2, 1);
+>>>>>>> branch 'dancasnar2' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
 
+<<<<<<< HEAD
 
 INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
 
+=======
+INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
+>>>>>>> branch 'dancasnar2' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
