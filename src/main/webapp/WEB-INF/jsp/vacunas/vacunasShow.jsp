@@ -25,6 +25,10 @@
             <th>Nombre del Veterinario</th>
             <td><c:out value="${vacuna.vet.firstName} ${vacuna.vet.lastName}"/></td>
         </tr>
+        <tr>
+            <th>Nombre de la Mascota</th>
+            <td><c:out value="${vacuna.pet.name}"/></td>
+        </tr>
     </table>
     
     <spring:url value="/vets/vacuna" var="vacunasUrl">          	
