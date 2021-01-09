@@ -106,6 +106,7 @@ public class CompeticionController {
 	}
 
 	@GetMapping(value = "/secretarios/competiciones/show/{competicionId}")
+
 	public String mostarCompeticionesSecretario(@PathVariable("competicionId") int competicionId,
 			Map<String, Object> model, final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
