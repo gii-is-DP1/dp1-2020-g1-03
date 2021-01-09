@@ -41,5 +41,4 @@ public class EconomistaController {
 		this.economistaService = economistaService;
 	}
 
-
 }

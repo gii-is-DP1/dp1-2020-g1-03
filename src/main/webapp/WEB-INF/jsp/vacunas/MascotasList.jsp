@@ -5,28 +5,31 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="vacunas">
+<petclinic:layout pageName="pets">
     <h2>Vacunas</h2>
 
-    <table id="vacunasTable" class="table table-striped">
+    <table id="petsTable" class="table table-striped">
         <thead>
         <tr>
             <th>Nombre</th>
-            <th>Fecha</th>
+            <th>Especie</th>
+          	<th>Dueño</th> 
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${vacunas}" var="vacuna">
+        <c:forEach items="${pets}" var="pet">
             <tr>
                 <td>
-                	<spring:url value="/owners/{ownerId}/vacuna/{vacunaId}" var="vacunasUrl">
-                	<spring:param name="vacunaId" value="${vacuna.id}"/>
-                	<spring:param name="ownerId" value="${vacuna.pet.owner.id}"/>
+                	<spring:url value="/vets/vacuna/pets/{petId}" var="vacunasUrl">
+                	<spring:param name="petId" value="${pet.id}"/>
                     </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.tipoEnfermedad.name}"/></a>
+                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${pet.name}"/></a>
                 </td>
                 <td>
-                    <c:out value="${vacuna.fecha}"/>
+                    <c:out value="${pet.type}"/>
+                </td>
+                <td>
+                    <c:out value="${pet.owner.firstName} ${pet.owner.lastName}"/>
                 </td>
             </tr>
         </c:forEach>

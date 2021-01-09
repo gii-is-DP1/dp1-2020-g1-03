@@ -90,6 +90,10 @@ INSERT INTO types VALUES (4, 'snake');
 INSERT INTO types VALUES (5, 'bird');
 INSERT INTO types VALUES (6, 'hamster');
 
+INSERT INTO tipo_enfermedades VALUES (1, 'Rabia');
+INSERT INTO tipo_enfermedades VALUES (2, 'Sarna');
+INSERT INTO tipo_enfermedades VALUES (3, 'Parvovirus');
+
 INSERT INTO owners VALUES (1, 'George', 'Franklin', '110 W. Liberty St.', 'Madison', '6085551023', 'owner1');
 INSERT INTO owners VALUES (2, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie', '6085551749', 'owner2');
 INSERT INTO owners VALUES (3, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland', '6085558763', 'owner3');
@@ -149,6 +153,7 @@ INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES 
 
 
 
+
 INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (1,'CompeticionPrueba',12, '2021-02-19', '2021-02-27','Galletas de perro', 1);
 INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (2,'CompeticionPrueba2',14, '2021-01-08', '2021-02-11','Collar de perro rojo', 1);
 INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (3,'CompeticionPrueba3',12, '2021-02-20', '2021-02-21','Galletas de perro', 1);
@@ -176,6 +181,7 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (9,'Clase9','2021-02-18 15:00', '2021-02-18 16:00', 10, 10, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (10,'Clase10','2021-02-18 16:30', '2021-02-18 18:00', 10, 10, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (11,'Clase11','2021-02-18 17:30', '2021-02-18 18:30', 10, 10, 1, 2, 1);
+
 
 
 

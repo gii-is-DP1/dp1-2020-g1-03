@@ -10,8 +10,8 @@
 
     <table class="table table-striped">
         <tr>
-            <th>Titulo</th>
-            <td><b><c:out value="${vacuna.nombre}"/></b></td>
+            <th>Nombre</th>
+            <td><b><c:out value="${vacuna.tipoEnfermedad.name}"/></b></td>
         </tr>
         <tr>
             <th>Fecha</th>
@@ -25,7 +25,15 @@
             <th>Nombre del Veterinario</th>
             <td><c:out value="${vacuna.vet.firstName} ${vacuna.vet.lastName}"/></td>
         </tr>
+        <tr>
+            <th>Nombre de la Mascota</th>
+            <td><c:out value="${vacuna.pet.name}"/></td>
+        </tr>
     </table>
+    
+    <spring:url value="/vets/vacuna" var="vacunasUrl">          	
+                    </spring:url>
+                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="Volver"/></a>
 
 
     <br/>
