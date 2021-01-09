@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2002-2013 the original author or authors.
  *
@@ -80,25 +81,26 @@ class SecretarioServiceTests {
 
 
 	@Test
-	void shouldFindEconomistaWithCorrectId() {
+	void shouldFindSecretarioWithCorrectId() {
 		Secretario secretario = this.secretarioService.findSecretarioById(1);
 		Assertions.assertEquals(secretario.getProgramasDominados(), "Word");
 		Assertions.assertEquals(secretario.getFirstName(), "Pedro");
 	}
 
 	@Test
-	void shouldNotFindEconomistaWithIncorrectId() {
+	void shouldNotFindSecretarioWithIncorrectId() {
 		Assertions.assertNull(this.secretarioService.findSecretarioById(100));
 	}
 	
 
 	@Test
-	void shouldFindAllGastos() {
-		Collection<Secretario> economistas = this.secretarioService.findSecretarios();
+	void shouldFindAllSecretarios() {
+		Collection<Secretario> secretarios = this.secretarioService.findSecretarios();
 
-		Assertions.assertEquals(economistas.size(), 1);
+		Assertions.assertEquals(secretarios.size(), 1);
 	}
 
 
 
 }
+

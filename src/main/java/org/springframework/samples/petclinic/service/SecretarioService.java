@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
@@ -39,4 +40,5 @@ public class SecretarioService {
 	public Collection<Secretario> findSecretarios() {
 		return secretarioRepository.findAll();
 	}	
+
 }

@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
@@ -22,3 +23,4 @@ public interface SecretarioRepository extends Repository<Secretario, Integer>{
 
 	Collection<Secretario> findAll()throws DataAccessException;
 }
+
