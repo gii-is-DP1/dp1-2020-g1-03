@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -53,5 +54,11 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	 * @see BaseEntity#isNew
 	 */
 	void save(Pet pet) throws DataAccessException;
+	
+	Collection<Pet> findAll() throws DataAccessException;
+	
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id =:ownerId")
+	Collection<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException;
+
 
 }
