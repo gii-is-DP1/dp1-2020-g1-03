@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,8 +24,7 @@ public class ClaseServiceTests {
 	@Autowired
 	protected ClaseService claseService;
 	protected AdiestradorService adiestradorService;
-	
-	
+
 	@Test
 	@Transactional
 	public void shouldUpdateClase() throws Exception {
@@ -56,44 +56,67 @@ public class ClaseServiceTests {
 //		this.claseService.deleteClase(clase);
 //		Assert.assertTrue(clase.equals(null));
 //	}
+
 	@Test
-	void shouldFindClaseAdiestradorById() throws Exception{
+	void shouldFindAllClases() {
+		Collection<Clase> clases = this.claseService.findAllClases();
+		Assert.assertEquals(clases.size(), 11);
+	}
+
+	@Test
+	void shouldFindClasesWithCorrectId() {
+		Clase clase = this.claseService.findClaseById(2);
+		Assert.assertEquals(clase.getName(), "Clase2");
+		Assert.assertEquals(clase.getNumeroPlazasDisponibles().toString(), "8");
+	}
+
+	@Test
+	void shouldNotFindClasesWithCorrectId() {
+		Assert.assertNull(this.claseService.findClaseById(100));
+	}
+
+	@Test
+	void shouldFindClasesByAdiestradorId() {
+		Assert.assertNotNull(this.claseService.findClaseByAdiestradorId(1));
+	}
+
+	@Test
+	void shouldNotFindClasesByAdiestradorId() {
 		Collection<Clase> clase = this.claseService.findClaseByAdiestradorId(1);
-		Assert.assertTrue(clase.size()==(5));
+		List<Clase> listaClase = new ArrayList<>(clase);
+		Assert.assertNotEquals(listaClase.get(0).getAdiestrador().getId().toString(), "2");
 	}
-	
+
 	@Test
-	void shouldFindClaseByName() throws Exception{
-		List<Clase> clase = this.claseService.findByName("Clase1");
-		Assert.assertTrue(clase.size()==1);
+	void shouldFindClasesByName() {
+		Assert.assertNotNull(this.claseService.findByName("Clase2"));
 	}
-	
+
 	@Test
-	void shouldFindClaseById() throws Exception{
+	void shouldFindClaseById() throws Exception {
 		Clase clase = this.claseService.findClaseById(1);
-		Assert.assertTrue(clase.getId()==1);
+		Assert.assertTrue(clase.getId() == 1);
 	}
-	
+
 	@Test
-	void shouldFindClaseByPetId() throws Exception{
-		List<ApuntarClase> clase = this.claseService.findClasesByPetId(4);
-		Assert.assertTrue(clase.size()==1);
+	void shouldFindClasesByPetId() {
+		Assert.assertNotNull(this.claseService.findClasesByPetId(2));
 	}
-	//ERROR
+
+	// ERROR
 	@Test
-	void shouldFindClaseByAdiestrador() throws Exception{
+	void shouldFindClaseByAdiestrador() throws Exception {
 		Adiestrador ad = this.adiestradorService.findAdiestradorById(87);
 		List<Clase> clases = this.claseService.findClasesAdiestrador(ad);
-		Assert.assertTrue(clases.size()==5);
+		Assert.assertTrue(clases.size() == 5);
 	}
-	
+
 	@Test
 	@Transactional
-	void shouldApuntarMascota() throws Exception{
+	void shouldApuntarMascota() throws Exception {
 		Clase clase = this.claseService.findClaseById(5);
-		clase.setNumeroPlazasDisponibles(clase.getNumeroPlazasDisponibles()-1);
+		clase.setNumeroPlazasDisponibles(clase.getNumeroPlazasDisponibles() - 1);
 		this.claseService.saveClase(clase);
-		Assert.assertTrue(clase.getNumeroPlazasDisponibles()==6);
+		Assert.assertTrue(clase.getNumeroPlazasDisponibles() == 6);
 	}
 }
-
