@@ -96,7 +96,7 @@ class CompeticionServiceTests {
 	void shouldFindAllCompeticiones() {
 		Collection<Competicion> gastos = this.competicionService.findAllCompeticiones();
 
-		Assertions.assertEquals(gastos.size(), 2);
+		Assertions.assertEquals(gastos.size(), 3);
 	}
 
 
@@ -105,7 +105,7 @@ class CompeticionServiceTests {
 	public void shouldUpdateInicioDate() throws Exception {
 		Competicion competicion1 = this.competicionService.findCompeticionById(1);
 
-		LocalDateTime newDate = LocalDateTime.parse("2021-12-15T10:30");
+		LocalDate newDate = LocalDate.of(2021,12,15);
 		competicion1.setFechaHoraInicio(newDate);
 		this.competicionService.saveCompeticion(competicion1);
 

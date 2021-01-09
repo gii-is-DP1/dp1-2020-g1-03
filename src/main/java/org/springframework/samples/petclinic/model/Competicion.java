@@ -81,7 +81,6 @@ public class Competicion extends BaseEntity {
 	@Future
   @NotNull
 	private LocalDate fechaHoraFin;
-\
 
 	/**
 	 * Holds value of property description.

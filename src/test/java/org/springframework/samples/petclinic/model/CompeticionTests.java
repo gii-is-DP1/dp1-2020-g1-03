@@ -35,8 +35,8 @@ class CompeticionTests {
 		
 		competicion.setNombre("Prueba todo correcto");
 		competicion.setCantidad(1200);
-		competicion.setFechaHoraInicio(LocalDateTime.of(2021, 11, 11, 10, 00));
-		competicion.setFechaHoraFin(LocalDateTime.of(2021, 11, 11, 13, 00));;
+		competicion.setFechaHoraInicio(LocalDate.of(2021, 11, 11));
+		competicion.setFechaHoraFin(LocalDate.of(2021, 11, 11));;
 		competicion.setSecretario(secretario);
 		competicion.setPremios("Premio pruebas");
 		
@@ -54,8 +54,8 @@ class CompeticionTests {
 		
 		competicion.setNombre("Prueba no todo correcto");
 		competicion.setCantidad(1200);
-		competicion.setFechaHoraInicio(LocalDateTime.of(2021, 11, 11, 10, 00));
-		competicion.setFechaHoraFin(LocalDateTime.of(2021, 11, 11, 13, 00));;
+		competicion.setFechaHoraInicio(LocalDate.of(2021, 11, 11));
+		competicion.setFechaHoraFin(LocalDate.of(2021, 11, 11));;
 		competicion.setSecretario(secretario);
 		competicion.setPremios(null);
 		
@@ -74,8 +74,8 @@ class CompeticionTests {
 		
 		competicion.setNombre("Prueba no todo correcto");
 		competicion.setCantidad(1200);
-		competicion.setFechaHoraInicio(LocalDateTime.of(2019, 11, 11, 10, 00));
-		competicion.setFechaHoraFin(LocalDateTime.of(2019, 11, 11, 13, 00));;
+		competicion.setFechaHoraInicio(LocalDate.of(2019, 11, 11));
+		competicion.setFechaHoraFin(LocalDate.of(2019, 11, 11));;
 		competicion.setSecretario(secretario);
 		competicion.setPremios("Premio pruebas");
 		

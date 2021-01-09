@@ -78,9 +78,9 @@ class CompeticionControllerTests {
 	
 	private Secretario			error;
 
-	private LocalDateTime		fechaInicio = LocalDateTime.parse("2020-10-04T10:00");
+	private LocalDate		fechaInicio = LocalDate.of(2020,10,4);
 	
-	private LocalDateTime		fechaFin = LocalDateTime.parse("2020-10-04T14:00");
+	private LocalDate		fechaFin = LocalDate.of(2020,10,4);
 
 	private Competicion 		competicion2;
 
