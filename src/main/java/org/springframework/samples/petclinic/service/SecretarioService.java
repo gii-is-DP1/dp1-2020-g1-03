@@ -22,7 +22,6 @@ public class SecretarioService {
 	public Secretario findSecretarioByUsername(String user) throws DataAccessException {
 		return secretarioRepository.findSecretarioByUsername(user);
 	}
-	
 
 	@Transactional
 	public void saveSecretario(Secretario secretario) throws DataAccessException {

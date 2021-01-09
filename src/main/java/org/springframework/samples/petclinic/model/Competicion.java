@@ -70,14 +70,14 @@ public class Competicion extends BaseEntity {
 	private Integer cantidad;
 	
 	@Column(name = "fecha_hora_inicio")        
-	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-	@Past
-	private LocalDateTime fechaHoraInicio;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Future
+	private LocalDate fechaHoraInicio;
 	
 	@Column(name = "fecha_hora_fin")        
-	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
-	@Past
-	private LocalDateTime fechaHoraFin;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Future
+	private LocalDate fechaHoraFin;
 
 	/**
 	 * Holds value of property description.

@@ -98,7 +98,7 @@ INSERT INTO owners VALUES (15, 'abrgarvil', 'Garcia', 'Reina Mercedes', 'Sevilla
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 1);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (6, 'George', '2010-01-20', 4, 5);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (7, 'Samantha', '2012-09-04', 1, 6);
@@ -137,8 +137,9 @@ INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES 
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
 
 
-INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (1,'CompeticionPrueba',12, '2021-02-19 20:20', '2021-02-19 22:20','Galletas de perro', 1);
-INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (2,'CompeticionPrueba2',14, '2021-02-10 10:20', '2021-02-11 12:20','Collar de perro rojo', 1);
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (1,'CompeticionPrueba',12, '2021-02-19', '2021-02-27','Galletas de perro', 1);
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (2,'CompeticionPrueba2',14, '2021-01-08', '2021-02-11','Collar de perro rojo', 1);
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (3,'CompeticionPrueba3',12, '2021-02-20', '2021-02-21','Galletas de perro', 1);
 
 
 

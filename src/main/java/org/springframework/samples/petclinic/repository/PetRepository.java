@@ -56,5 +56,9 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	void save(Pet pet) throws DataAccessException;
 	
 	Collection<Pet> findAll() throws DataAccessException;
+	
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id =:ownerId")
+	Collection<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException;
+
 
 }

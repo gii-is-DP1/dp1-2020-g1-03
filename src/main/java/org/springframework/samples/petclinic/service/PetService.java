@@ -22,6 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.repository.CompeticionPetRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -41,7 +42,6 @@ public class PetService {
 	private PetRepository petRepository;
 	
 	private VisitRepository visitRepository;
-	
 
 	@Autowired
 	public PetService(PetRepository petRepository,
@@ -82,5 +82,8 @@ public class PetService {
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
 	}
-
+	
+	public Collection<Pet> findPetsByOwnerId(int ownerId){
+		return this.petRepository.findPetsByOwnerId(ownerId);
+	}
 }

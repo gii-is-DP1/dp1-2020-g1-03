@@ -31,10 +31,14 @@
             <td><c:out value="${competicion.premios}"/></td>
         </tr>
     </table>
-     <spring:url value="/secretarios/competiciones/edit/{competicionId}" var="editUrl">
+     <spring:url value="/owners/competiciones/show/{competicionId}/inscribir" var="editUrl">
         <spring:param name="competicionId" value="${competicion.id}"/>
     </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar competicion</a>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Inscribir mascota</a>
+    <spring:url value="/owners/competiciones/show/{competicionId}/pets" var="editUrl2">
+        <spring:param name="competicionId" value="${competicion.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl2)}" class="btn btn-default">Ver mascotas inscritas</a>
     <br/>
     <br/>
     <br/>
