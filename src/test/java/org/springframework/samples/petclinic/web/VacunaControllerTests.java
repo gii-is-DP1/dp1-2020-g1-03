@@ -165,12 +165,11 @@ public class VacunaControllerTests {
 	@Test
 	void testShowPet() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/vets/vacuna/pets/{petId}", VacunaControllerTests.TEST_PET_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("pet"))
 				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("name", Matchers.is("Basil"))))
-				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("type", Matchers.is("hamster"))))
-				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("birthDate", Matchers.is("2012-08-06"))))
-				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("owner.firstName", Matchers.is("Betty"))))
-				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("owner.lastName", Matchers.is("Davis"))))
+				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("type", Matchers.is(pet1.getType()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("birthDate", Matchers.is(LocalDate.of(2012, 8, 06)))))
+				.andExpect(MockMvcResultMatchers.model().attribute("pet", Matchers.hasProperty("owner", Matchers.is(pet1.getOwner()))))
 				.andExpect(MockMvcResultMatchers.view().name("vacunas/MascotaShow"));
 	}
     
