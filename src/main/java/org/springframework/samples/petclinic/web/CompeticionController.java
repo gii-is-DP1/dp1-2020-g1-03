@@ -110,8 +110,12 @@ public class CompeticionController {
 	public String mostarCompeticionesSecretario(@PathVariable("competicionId") int competicionId,
 			Map<String, Object> model, final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
+		if(competicion.getNombre()==null) {
+			return "exception";
+		} else {
 		model.put("competicion", competicion);
 		return "competiciones/competicionesShow";
+	}
 	}
 
 	// Dueño
@@ -129,8 +133,12 @@ public class CompeticionController {
 	public String mostarCompeticionesOwner(@PathVariable("competicionId") int competicionId, Map<String, Object> model,
 			final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
+		if(competicion.getNombre()==null) {
+			return "exception";
+		} else {
 		model.put("competicion", competicion);
 		return "competiciones/competicionesShowOwner";
+	}
 	}
 
 	@GetMapping(value = "/owners/competiciones/show/{competicionId}/inscribir")

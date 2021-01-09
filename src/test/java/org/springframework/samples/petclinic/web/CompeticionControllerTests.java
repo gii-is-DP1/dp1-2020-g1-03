@@ -27,6 +27,7 @@ import org.springframework.samples.petclinic.model.Economista;
 import org.springframework.samples.petclinic.model.Gasto;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Secretario;
+import org.springframework.samples.petclinic.service.CompeticionPetService;
 import org.springframework.samples.petclinic.service.CompeticionService;
 import org.springframework.samples.petclinic.service.EconomistaService;
 import org.springframework.samples.petclinic.service.GastoService;
@@ -65,6 +66,9 @@ class CompeticionControllerTests {
 	
 	@MockBean
 	private OwnerService	ownerService;
+	
+	@MockBean
+	private  CompeticionPetService competicionPetService;
 
 
 	@Autowired
@@ -167,7 +171,7 @@ class CompeticionControllerTests {
 			.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("competicion"))
 			.andExpect(MockMvcResultMatchers.model().attribute("competicion", Matchers.hasProperty("nombre", Matchers.is("nombre1"))))
 			.andExpect(MockMvcResultMatchers.model().attribute("competicion", Matchers.hasProperty("cantidad", Matchers.is(250))))
-			.andExpect(MockMvcResultMatchers.view().name("competiciones/competicionesShow"));
+			.andExpect(MockMvcResultMatchers.view().name("competiciones/competicionesShowOwner"));
 	}
 
 
