@@ -23,15 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompeticionService {
 	
 	private CompeticionRepository competicionRepository;
-	private CompeticionPetRepository competicionPetRepository;
 //	public static final int limiteClases=3;
 //	public static final int dias=7;
 
 	@Autowired
-	public CompeticionService(CompeticionRepository competicionRepository, CompeticionPetRepository competicionPetRepository) {
-		this.competicionRepository = competicionRepository;
-		this.competicionPetRepository=competicionPetRepository;
-		
+	public CompeticionService(CompeticionRepository competicionRepository) {
+		this.competicionRepository = competicionRepository;		
 	}
 	@Transactional()
 	public void saveCompeticion(Competicion competicion) throws DataAccessException {
@@ -60,13 +57,10 @@ public class CompeticionService {
 		return competicionRepository.findById(competicionId);
 	}
 	
-	public List<CompeticionPet> findCompeticionByPetId(int petId) throws DataAccessException{
-		return competicionPetRepository.findCompeticionByPetId(petId);
-	}
-	
 	public List<Competicion> findCompeticionesBySecretario(Owner owner) throws DataAccessException{
 		return competicionRepository.findCompeticionesByOwner(owner);
 	}
+	
 	
 //	@Transactional()
 //	public void escogerMascota(CompeticionPet compPet) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, DiferenciaClasesDiasException{
