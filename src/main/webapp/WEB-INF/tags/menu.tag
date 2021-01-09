@@ -88,6 +88,18 @@
 						<span>Ingresos</span>
 					</petclinic:menuItem>
 				</sec:authorize>	
+				<sec:authorize access="hasAnyAuthority('secretario')">
+					<petclinic:menuItem active="${name eq 'competiciones'}" url="/secretarios/competiciones" title="Competiciones">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Competiciones</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'competiciones'}" url="/owners/competiciones" title="Competiciones">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Competiciones</span>
+					</petclinic:menuItem>
+				</sec:authorize>
 
 			</ul>
 
