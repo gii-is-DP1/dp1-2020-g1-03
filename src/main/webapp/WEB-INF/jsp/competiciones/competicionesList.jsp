@@ -35,5 +35,8 @@
         </c:forEach>
         </tbody>
     </table>
+    <spring:url value="/secretarios/competiciones/new/" var="editUrl">
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Crear competicion</a>
 
 </petclinic:layout>
