@@ -53,8 +53,23 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	 * @param pet the <code>Pet</code> to save
 	 * @see BaseEntity#isNew
 	 */
+	
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id LIKE ?1")
+	List<Pet> findMascotasOwner(int idOwner) throws DataAccessException;
+	
 	void save(Pet pet) throws DataAccessException;
 	
 	Collection<Pet> findAll() throws DataAccessException;
+
+	
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id =:ownerId")
+	Collection<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException;
+
+
+	Collection<Pet> findAll() throws DataAccessException;
+	
+	@Query("SELECT pet.name, pet.owner.id FROM Pet pet WHERE pet.owner.id LIKE ?1")
+	List<String> findNameMascota(int idOwner)throws DataAccessException;
+
 
 }

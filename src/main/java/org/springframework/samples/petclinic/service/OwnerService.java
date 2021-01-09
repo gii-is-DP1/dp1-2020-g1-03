@@ -61,7 +61,7 @@ public class OwnerService {
 		return ownerRepository.findById(id);
 	}
 	@Transactional(readOnly = true)
-	public int findOwnerIdByUsername(String user) throws DataAccessException {
+	public Integer findOwnerIdByUsername(String user) throws DataAccessException {
 		return ownerRepository.findOwnerIdByUsername(user);
 	}
 	@Transactional(readOnly = true)
@@ -77,8 +77,5 @@ public class OwnerService {
 		userService.saveUser(owner.getUser());
 		//creating authorities
 		authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
-	}		
-	//public int findComentarioByOwnerName(String user) throws DataAccessException {
-		//return this.ownerRepository.findOwnerIdByUsername(user);
-	//}	
+	}	
 }

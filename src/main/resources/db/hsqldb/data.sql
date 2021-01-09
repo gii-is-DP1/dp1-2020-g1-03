@@ -57,6 +57,14 @@ INSERT INTO authorities(id,username,authority) VALUES (8,'abrgarvil','owner');
 INSERT INTO users(username,password,enabled) VALUES ('dancasnar1','dancasnar1',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (9,'dancasnar1','owner');
 
+INSERT INTO users(username,password,enabled) VALUES ('adiestrador1','adiestrador1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (87,'adiestrador1','adiestrador');
+
+INSERT INTO users(username,password,enabled) VALUES ('adiestrador2','adiestrador2',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (88,'adiestrador2','adiestrador');
+
+INSERT INTO users(username,password,enabled) VALUES ('secretario1','secretario1',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (5,'secretario1','secretario');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
@@ -101,8 +109,11 @@ INSERT INTO owners VALUES (15, 'abrgarvil', 'Garcia', 'Reina Mercedes', 'Sevilla
 
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3);
+
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 1, 1);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (78, 'Rosy', '2011-04-17', 2, 3);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 1);
+
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (6, 'George', '2010-01-20', 4, 5);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (7, 'Samantha', '2012-09-04', 1, 6);
@@ -122,6 +133,8 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 13, '2013-01-04'
 
 INSERT INTO economista VALUES (1, 'Jose', 'Escobito', 'Muchos', 'economista1');
 
+INSERT INTO secretario VALUES (1, 'Pedro', 'Escobar', 'Word', 'secretario1');
+
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Material esterilizante', 250, '2020-10-04', 'Gasto correspondiente a la compra de material esterilizante para la clinica',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Sueldos', 10250, '2020-10-11', 'Gasto correspondiente a los sueldos de todos los trabajadores de la clinica del mes de Octubre',1);
 INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
@@ -138,9 +151,39 @@ INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioP
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (1, 'Vacunas', 1250, '2020-10-13', 'Ingreso correspondiente a las vacunas puestas a las mascotas de la clinica del mes de Octubre',1);
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (2, 'Clases', 800, '2020-10-14', 'Ingresos correspondiente a las clases impartidas en el mes de Noviembre',1);
 
-INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (1, 1, '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 1, 1);
-INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (2, 3, '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 1);
 
 
 
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (1,'CompeticionPrueba',12, '2021-02-19', '2021-02-27','Galletas de perro', 1);
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (2,'CompeticionPrueba2',14, '2021-01-08', '2021-02-11','Collar de perro rojo', 1);
+INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,premios,secretario_id) VALUES (3,'CompeticionPrueba3',12, '2021-02-20', '2021-02-21','Galletas de perro', 1);
+
+
+
+
+INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
+INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
+--INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
+
+
+
+INSERT INTO adiestrador VALUES(2,'Manuel','Castroviejo','competencia','adiestrador2');
+
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota, adiestrador_id) VALUES (1,'Clase1','2020-12-14 15:30', '2020-12-14 16:30', 10, 8, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (2,'Clase2','2020-01-14 15:30', '2020-01-14 16:30', 10, 8, 1, 1, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (3,'Clase3','2021-01-14 15:00', '2021-01-14 16:00', 10, 8, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (4,'Clase4','2021-02-14 15:00', '2021-02-14 16:00', 10, 0, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (5,'Clase5','2021-02-14 15:00', '2021-02-14 16:00', 10, 7, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (6,'Clase6','2021-02-15 15:00', '2021-02-15 16:00', 10, 6, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (7,'Clase7','2021-02-16 15:00', '2021-02-16 16:00', 10, 3, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (8,'Clase8','2021-02-17 15:00', '2021-02-17 16:00', 10, 5, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (9,'Clase9','2021-02-18 15:00', '2021-02-18 16:00', 10, 10, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (10,'Clase10','2021-02-18 16:30', '2021-02-18 18:00', 10, 10, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (11,'Clase11','2021-02-18 17:30', '2021-02-18 18:30', 10, 10, 1, 2, 1);
+
+
+
+
+INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
 

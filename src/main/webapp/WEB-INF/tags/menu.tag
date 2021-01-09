@@ -47,7 +47,28 @@
 						<span>Comentarios</span>
 					</petclinic:menuItem>
 				</sec:authorize>
-
+				
+				<sec:authorize access="hasAnyAuthority('adiestrador')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/adiestradores/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('secretario')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/secretarios/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'clases'}" url="/owners/clases" title="Clases">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Clases</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
 				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
 					title="trigger a RuntimeException to see how it is handled">
 					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
@@ -67,6 +88,18 @@
 						<span>Ingresos</span>
 					</petclinic:menuItem>
 				</sec:authorize>	
+				<sec:authorize access="hasAnyAuthority('secretario')">
+					<petclinic:menuItem active="${name eq 'competiciones'}" url="/secretarios/competiciones" title="Competiciones">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Competiciones</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'competiciones'}" url="/owners/competiciones" title="Competiciones">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Competiciones</span>
+					</petclinic:menuItem>
+				</sec:authorize>
 
 			</ul>
 
