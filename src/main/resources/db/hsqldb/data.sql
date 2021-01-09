@@ -161,8 +161,10 @@ INSERT INTO competiciones(id,nombre,cantidad,fecha_hora_inicio,fecha_hora_fin,pr
 
 
 
-INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (1, 'Rabia', '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 0, 1, 1);
-INSERT INTO vacunas(id, nombre, fecha, descripcion, tipoenfermedad, pet_id, vet_id) VALUES (2, 'Parvovirus', '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 2, 1);
+INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (1, 1, '2020-01-01', 'Se le ha añadido la vacuna contra la rabia', 1, 1);
+INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (2, 3, '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 1);
+
+
 --INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
 

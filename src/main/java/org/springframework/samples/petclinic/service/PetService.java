@@ -89,10 +89,6 @@ public class PetService {
 	public List<Pet> findMascotasOwner(int idOwner) throws DataAccessException{
 		return petRepository.findMascotasOwner(idOwner);
 	}
-	@Transactional
-	public Collection<Pet> findAllPets() throws DataAccessException{
-		return petRepository.findAll();
-	}
 	
 	public Collection<String> findNameMascota(int idOwner) throws DataAccessException{
 		return petRepository.findNameMascota(idOwner);

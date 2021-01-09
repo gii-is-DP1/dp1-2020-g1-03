@@ -43,8 +43,7 @@
                     </c:forEach>
                 </td>
                 <td>
-                <spring:url value="/owners/{ownerId}/comentarios" var="comentariosUrl">
-                        <spring:param name="ownerId" value="${owner.id}"/>
+                <spring:url value="/owners/comentarios" var="comentariosUrl">
                 </spring:url>
                 <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Listar comentarios"/></a>
                 </td>
