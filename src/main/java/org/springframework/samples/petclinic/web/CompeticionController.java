@@ -145,6 +145,8 @@ public class CompeticionController {
 	public String initInscribePet(@PathVariable("competicionId") int competicionId, Map<String, Object> model,
 			final Principal principal) {
 		CompeticionPet competicionPet = new CompeticionPet();
+		Competicion comp = this.competicionService.findCompeticionById(competicionId);
+		competicionPet.setCompeticion(comp);
 		model.put("competicionPet", competicionPet);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		Collection<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
