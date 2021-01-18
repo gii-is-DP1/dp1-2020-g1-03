@@ -11,7 +11,7 @@ import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.stereotype.Component;
-@Component
+
 public class CompeticionPetFormatter implements Formatter<Pet>{
 
 	private final PetService peService;

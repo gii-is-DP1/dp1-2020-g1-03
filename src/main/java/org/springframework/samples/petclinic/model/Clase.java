@@ -47,7 +47,6 @@ public class Clase extends BaseEntity{
 	private Integer numeroPlazasDisponibles;
 	
 	@Column(name = "categoria")
-	@NotNull
 	private CategoriaClase categoriaClase;
 	
 	@ManyToOne

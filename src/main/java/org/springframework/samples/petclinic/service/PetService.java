@@ -90,13 +90,13 @@ public class PetService {
 		return petRepository.findMascotasOwner(idOwner);
 	}
 	
-	public Collection<String> findNameMascota(int idOwner) throws DataAccessException{
-		return petRepository.findNameMascota(idOwner);
-  }
 
-	public Collection<Pet> findPetsByOwnerId(int ownerId){
+	public List<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException{
 		return this.petRepository.findPetsByOwnerId(ownerId);
 
+	}
+	public List<String> findNameMascota(int idOwner) throws DataAccessException{
+		return this.petRepository.findNameMascota(idOwner);
 	}
 }
 

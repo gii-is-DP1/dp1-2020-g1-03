@@ -8,6 +8,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class ApuntarClase extends BaseEntity{
 	
 	
 	@ManyToOne
+	@NotNull
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
 	

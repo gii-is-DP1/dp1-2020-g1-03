@@ -58,7 +58,6 @@ public class CompeticionController {
 	private final PetService petService;
 	private final OwnerService ownerService;
 	private final CompeticionPetService competicionPetService;
-
 	@Autowired
 	public CompeticionController(CompeticionService competicionService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService, CompeticionPetService competicionPetService) {
@@ -72,8 +71,10 @@ public class CompeticionController {
 
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new CompeticionPetValidator());
+	   dataBinder.setValidator(new CompeticionPetValidator());
+	   dataBinder.addCustomFormatter(new CompeticionPetFormatter(petService, ownerService));
 	}
+
 
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {

@@ -48,6 +48,10 @@
 <spring:param name="claseId" value="${clase.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(apuntarUrl)}" class="btn btn-default">Apuntar mascota</a>
+    <spring:url value="/owners/clases/show/{claseId}/pets" var="editUrl2">
+        <spring:param name="claseId" value="${clase.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl2)}" class="btn btn-default">Ver mascotas apuntadas</a>
     <br/>
     <br/>
     <br/>
