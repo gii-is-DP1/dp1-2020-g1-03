@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
 package org.springframework.samples.petclinic.repository;
 
 import java.util.List;
@@ -20,41 +20,17 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 
-/**
- * Spring Data JPA specialization of the {@link CitaRepository} interface
- *
- * @author Michael Isvy
- * @since 15.1.2013
- */
 public interface CitaRepository extends Repository<Cita, Integer> {
 
-//	/**
-//	 * Retrieve all <code>PetType</code>s from the data store.
-//	 * @return a <code>Collection</code> of <code>PetType</code>s
-//	 */
-////	@Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
-////	List<PetType> findPetTypes() throws DataAccessException;
-//	
-//	/**
-//	 * Retrieve a <code>Pet</code> from the data store by id.
-//	 * @param id the id to search for
-//	 * @return the <code>Pet</code> if found
-//	 * @throws org.springframework.dao.DataRetrievalFailureException if not found
-//	 */
-//	Cita findById(int id) throws DataAccessException;
-//
-//	/**
-//	 * Save a <code>Pet</code> to the data store, either inserting or updating it.
-//	 * @param pet the <code>Pet</code> to save
-//	 * @see BaseEntity#isNew
-//	 */
-//	void save(Cita cita) throws DataAccessException;
-//
-//	List<Cita> findAllCitas() throws DataAccessException;
 
-}
+	Cita findById(int id) throws DataAccessException;
+
+	void save(Cita cita) throws DataAccessException;
+	
+	List<Cita> findAllCitas() throws DataAccessException;
+	
+}*/

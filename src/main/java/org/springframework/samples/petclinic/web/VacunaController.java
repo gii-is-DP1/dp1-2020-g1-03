@@ -135,7 +135,6 @@ public class VacunaController {
 			System.out.println(result.getAllErrors());
 			return "vacunas/crearVacuna";
 		}else if(vacuna.getFecha().compareTo(vacuna.getPet().getBirthDate())<0) {
-			System.out.println("Fecha de vacuna anterior a fecha de nacimiento de la mascota");
 			result.rejectValue("fecha", "distancia", "Fecha de vacuna anterior a fecha de nacimiento de la mascota");
 			return "vacunas/crearVacuna";
 		} 

@@ -15,6 +15,8 @@ import org.springframework.samples.petclinic.repository.ClaseRepository;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
+import org.springframework.samples.petclinic.service.exceptions.MacostaYaApuntadaException;
+import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeClasesException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
@@ -30,7 +32,7 @@ public class ClaseService {
 		this.apuntarClaseRepository=apuntarClaseRepository;
 	}
 	@Transactional()
-	public void saveClase(Clase clase) throws DataAccessException {
+	public void saveClase(Clase clase) throws DataAccessException{
 		claseRepository.save(clase);                
 	}
 	
@@ -65,10 +67,27 @@ public class ClaseService {
 	}
 	
 	@Transactional()
-	public void escogerMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, DiferenciaClasesDiasException{
+	public void escogerMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, 
+	DiferenciaClasesDiasException, SolapamientoDeClasesException, MacostaYaApuntadaException{
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
+		Boolean b=true;
+		int i=0;
+		Boolean apuntada=false;
+		if(!clasesApuntadas.isEmpty()) {
+			while(b && i<clasesApuntadas.size() && apuntada.equals(false)) {
+				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio()) 
+						&& clasesApuntadas.get(i).getClase().getFechaHoraInicio().isBefore(apClase.getClase().getFechaHoraFin())
+						&& clasesApuntadas.get(i).getClase().getId()!=apClase.getClase().getId()) {
+					b=false;		
+				}
+				if(clasesApuntadas.get(i).getClase().getId().equals(apClase.getClase().getId())){
+					apuntada=true;
+				}
+				i++;
+			}
+		}
 		if(pet.getType()!=clase.getType()) {
 			throw new DiferenciaTipoMascotaException();
 		}else if(clase.getNumeroPlazasDisponibles()<=0){
@@ -77,11 +96,15 @@ public class ClaseService {
 				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())<dias && clasesApuntadas!=null){
 			
 			throw new DiferenciaClasesDiasException();
+		}else if(b==false){
+			throw new SolapamientoDeClasesException();
+		}else if(apuntada){
+			throw new MacostaYaApuntadaException();
 		}else {
 			apuntarClaseRepository.save(apClase);
 		}
 			
-		}
+	}
 	
 	public List<ApuntarClase> findMascotasApuntadasEnClaseByClaseId(int claseId) throws DataAccessException{
 		return apuntarClaseRepository.findMascotasApuntadasEnClaseByClaseId(claseId);
