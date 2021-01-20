@@ -54,6 +54,12 @@
 						<span>Clases</span>
 					</petclinic:menuItem>
 				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('adiestrador')">
+					<petclinic:menuItem active="${name eq 'tutorias'}" url="/adiestradores/tutorias" title="Tutorias">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Tutorias</span>
+					</petclinic:menuItem>
+				</sec:authorize>				
 				
 				<sec:authorize access="hasAnyAuthority('secretario')">
 					<petclinic:menuItem active="${name eq 'clases'}" url="/secretarios/clases" title="Clases">
