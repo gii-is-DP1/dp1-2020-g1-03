@@ -48,6 +48,27 @@
 					</petclinic:menuItem>
 				</sec:authorize>
 				
+				<sec:authorize access="hasAnyAuthority('vet')">
+					<petclinic:menuItem active="${name eq 'citas'}" url="/vets/citas" title="Citas">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Citas</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'citas'}" url="/owners/citas" title="Citas">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Citas</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('secretario')">
+					<petclinic:menuItem active="${name eq 'citas'}" url="/secretarios/citas" title="Citas">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Citas</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
 				<sec:authorize access="hasAnyAuthority('adiestrador')">
 					<petclinic:menuItem active="${name eq 'clases'}" url="/adiestradores/clases" title="Clases">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>

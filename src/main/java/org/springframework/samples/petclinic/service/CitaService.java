@@ -21,10 +21,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.CitaMascota;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
 import org.springframework.samples.petclinic.repository.CitaRepository;
+//import org.springframework.samples.petclinic.repository.CitaRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -41,45 +45,45 @@ import org.springframework.util.StringUtils;
 @Service
 public class CitaService {
 
-//	private CitaRepository citaRepository;
-//	
-//	//private VisitRepository visitRepository;
-//	
-//
-//	@Autowired
-//	public CitaService(PetRepository petRepository,
-//			VisitRepository visitRepository) {
-//		this.citaRepository = citaRepository;
-//	}
-//
-////	@Transactional(readOnly = true)
-////	public Collection<PetType> findPetTypes() throws DataAccessException {
-////		return citaRepository.findPetTypes();
-////	}
-//	
-//
-//	@Transactional(readOnly = true)
-//	public Cita findPetById(int id) throws DataAccessException {
-//		return citaRepository.findById(id);
-//	}
-//
-//	@Transactional(rollbackFor = DuplicatedPetNameException.class)
-//	public void saveCita(Cita cita) throws DataAccessException {//, DuplicatedPetNameException
-////		Cita otherCita=cita.getOwner().getPetwithIdDifferent(cita.getTitulo(), cita.getId());
-////            if (StringUtils.hasLength(cita.getTitulo()) &&  (otherCita!= null && otherCita.getId()!=cita.getId())) {            	
-////            	throw new DuplicatedPetNameException();
-////            }else
-//            	citaRepository.save(cita);                
-//	}
-//
-//	public List<Cita> findAllCitas() {
-//		// TODO Auto-generated method stub
-//		return citaRepository.findAllCitas();
-//	}
-//
-//
-////	public Collection<Visit> findVisitsByPetId(int petId) {
-////		return visitRepository.findByPetId(petId);
-////	}
+	private CitaRepository citaRepository;
+	private CitaMascotaRepository citaMascotaRepository;
+
+	
+
+	@Autowired
+	public CitaService(CitaRepository citaRepository,
+			CitaMascotaRepository citaMascotaRepository) {
+		this.citaRepository = citaRepository;
+		this.citaMascotaRepository=citaMascotaRepository;
+	}
+
+	
+	public List<Cita> findCitasByVet(Vet vet) throws DataAccessException{
+		return citaRepository.findCitasByVet(vet);
+	}
+
+	@Transactional(rollbackFor = DuplicatedPetNameException.class)
+	public void saveCita(Cita cita) throws DataAccessException {//, DuplicatedPetNameException
+            	citaRepository.save(cita);                
+	}
+
+	public List<Cita> findAllCitas() {
+		// TODO Auto-generated method stub
+		return citaRepository.findAll();
+	}
+	
+	public Cita findCitaById(int citaId) throws DataAccessException{
+		return citaRepository.findById(citaId);
+	}
+	
+	public List<CitaMascota> findCitaMascotaByCitaId (int citaId) throws DataAccessException{
+		return citaMascotaRepository.findCitaMascotaByCitaId(citaId);
+	}
+	
+	public List<Cita> findCitasByOwnerId (int ownerId) throws DataAccessException{
+		return citaMascotaRepository.findCitasByOwnerId(ownerId);
+	}
+
+
 
 }

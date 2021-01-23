@@ -24,6 +24,7 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Vet;
 
 /**
  * Spring Data JPA specialization of the {@link CitaRepository} interface
@@ -33,28 +34,13 @@ import org.springframework.samples.petclinic.model.PetType;
  */
 public interface CitaRepository extends Repository<Cita, Integer> {
 
-//	/**
-//	 * Retrieve all <code>PetType</code>s from the data store.
-//	 * @return a <code>Collection</code> of <code>PetType</code>s
-//	 */
-////	@Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
-////	List<PetType> findPetTypes() throws DataAccessException;
-//	
-//	/**
-//	 * Retrieve a <code>Pet</code> from the data store by id.
-//	 * @param id the id to search for
-//	 * @return the <code>Pet</code> if found
-//	 * @throws org.springframework.dao.DataRetrievalFailureException if not found
-//	 */
-//	Cita findById(int id) throws DataAccessException;
-//
-//	/**
-//	 * Save a <code>Pet</code> to the data store, either inserting or updating it.
-//	 * @param pet the <code>Pet</code> to save
-//	 * @see BaseEntity#isNew
-//	 */
-//	void save(Cita cita) throws DataAccessException;
-//
-//	List<Cita> findAllCitas() throws DataAccessException;
+	Cita findById(int citaId) throws DataAccessException;
+	
+	void save(Cita cita) throws DataAccessException;
 
+	@Query("SELECT cita FROM Cita cita WHERE cita.vet LIKE ?1")
+	List<Cita> findCitasByVet(Vet vet) throws DataAccessException;
+	
+	List<Cita> findAll() throws DataAccessException;
+	
 }

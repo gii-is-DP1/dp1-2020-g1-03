@@ -189,3 +189,7 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 
 INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
 
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2020-01-14 15:30',2,'Mi perros están malitos',1);
+
+INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (1,4,1);
+INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (2,3,1);
