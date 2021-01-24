@@ -84,6 +84,8 @@ public class CitaService {
 		return citaMascotaRepository.findCitasByOwnerId(ownerId);
 	}
 
-
+	public List<Cita> findCitasSinVet() throws DataAccessException{
+		return citaRepository.findCitasSinVet();
+	}
 
 }

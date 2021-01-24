@@ -13,6 +13,7 @@
         <tr>	
             <th>Fecha y hora</th>
             <th>Razon</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>

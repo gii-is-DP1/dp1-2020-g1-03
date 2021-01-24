@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.CitaMascota;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
 import org.springframework.samples.petclinic.service.OwnerService;
@@ -94,6 +95,43 @@ public class CitaController {
 		model.put("mascotas", mascotas);
 		model.put("cita", cita);
 		return "citas/showCitaOwner";
+	}
+	
+	
+	@GetMapping(value = "/secretarios/citas")
+	public String listadoCitasSecretarios(Map<String, Object> model, Principal principal) {
+		List<Cita> citas= citaService.findAllCitas();
+		model.put("citas", citas);
+		return "citas/citasSecretarioList";
+	}
+	
+	@GetMapping(value = "/secretarios/citas/sinVet")
+	public String listadoCitasSecretariosSinVet(Map<String, Object> model, Principal principal) {
+		List<Cita> citas= citaService.findCitasSinVet(); //QUERY
+		model.put("citas", citas);
+		return "citas/citasSecretarioSinVetList";
+	}
+	
+	@GetMapping(value = "/secretarios/citas/{citaId}")
+	public String mostarCitaSecretario(Map<String, Object> model, Principal principal, @PathVariable("citaId") int citaId) {
+		Cita cita= this.citaService.findCitaById(citaId);
+		List<CitaMascota> mascotas= this.citaService.findCitaMascotaByCitaId(citaId);
+		Owner owner= mascotas.get(0).getPet().getOwner();
+		model.put("owner",owner);
+		model.put("mascotas", mascotas);
+		model.put("cita", cita);
+		return "citas/showCitaSecretario";
+	}
+	
+	@GetMapping(value = "/secretarios/citas/sinVet/{citaId}")
+	public String mostarCitaSecretarioSinVet(Map<String, Object> model, Principal principal, @PathVariable("citaId") int citaId) {
+		Cita cita= this.citaService.findCitaById(citaId);
+		List<CitaMascota> mascotas= this.citaService.findCitaMascotaByCitaId(citaId);
+		Owner owner= mascotas.get(0).getPet().getOwner();
+		model.put("owner",owner);
+		model.put("mascotas", mascotas);
+		model.put("cita", cita);
+		return "citas/showCitaSecretario";
 	}
 
 }

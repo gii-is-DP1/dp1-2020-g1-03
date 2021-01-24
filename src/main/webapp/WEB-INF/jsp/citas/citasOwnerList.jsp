@@ -14,6 +14,7 @@
         	<th>Estado</th>
             <th>Fecha y hora</th>
             <th>Razon</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>

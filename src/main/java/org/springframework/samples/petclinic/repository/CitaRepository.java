@@ -43,4 +43,7 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	List<Cita> findAll() throws DataAccessException;
 	
+	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL")
+	List<Cita> findCitasSinVet() throws DataAccessException;
+	
 }
