@@ -28,7 +28,7 @@
                     <c:out value="${comentario.cuerpo}"/>
                 </td>
                 <td>
-                    <c:out value="${comentario.vet.firstName}"/>
+                    <c:out value="${comentario.vet.firstName}"/>,<c:out value="${comentario.vet.lastName}"/>
                 </td>
             </tr>
         </c:forEach>

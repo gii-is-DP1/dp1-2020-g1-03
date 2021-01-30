@@ -143,8 +143,8 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (1,'ComentarioPrueba', 'Esto es un comentario de prueba', 2, 1);
-INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
-INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
+--INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
+--INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (3,'ComentarioPrueba', 'Esto es un comentario de prueba', 3, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioPrueba', 'Esto es un comentario de prueba', 4, 1);
 
@@ -191,7 +191,10 @@ INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
 
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2020-01-14 15:30',2,'Mi perros están malitos',1);
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon) VALUES (2,'Cita2','2020-01-17 15:30',0,'Mi perros están malitos');
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (3,'Cita3','2020-01-15 15:30',2,'Mi perros están malitos',4);
 
 INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (1,4,1);
 INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (2,3,1);
+INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (4,1,1);
 INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (3,78,2);
+INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (5,1,3);

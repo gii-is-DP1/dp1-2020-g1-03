@@ -22,7 +22,7 @@ public class ApuntarClaseFormatter implements Formatter<Pet>{
 	public ApuntarClaseFormatter(PetService petService, OwnerService owService) {
 		this.peService = petService;
 		this.owService = owService;
-	}
+	} 
 	@Override
 	public String print(Pet pet, Locale locale) {
 		return pet.getName();

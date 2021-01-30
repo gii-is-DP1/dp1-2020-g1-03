@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Vet;
@@ -45,5 +46,6 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL")
 	List<Cita> findCitasSinVet() throws DataAccessException;
+	
 	
 }

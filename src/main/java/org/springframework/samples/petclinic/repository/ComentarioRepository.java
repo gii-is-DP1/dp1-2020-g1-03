@@ -25,4 +25,7 @@ public interface ComentarioRepository extends Repository<Comentario, Integer>{
 	Collection<Comentario> findComentariosByOwnerId(Integer idOwner) throws DataAccessException;
 	
 	Comentario findById(int comentarioId) throws DataAccessException;
+	
+	@Query("SELECT COUNT (comentario.id) FROM Comentario comentario WHERE comentario.vet.id LIKE ?1 AND comentario.owner.id LIKE ?1")
+	int findComentariosOwnerConVet(int idVet, int idOwner) throws DataAccessException;
 }

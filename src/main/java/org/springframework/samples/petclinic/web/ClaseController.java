@@ -58,7 +58,14 @@ public class ClaseController {
 		dataBinder.setValidator(new ApuntarClaseValidator());
 		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
 	}
-	
+	@InitBinder("fechaHoraInicio")
+	public void initFechaHoraInicioBinder(WebDataBinder dataBinder) {
+		dataBinder.addCustomFormatter(new FechaHoraFormatter());
+	}
+	@InitBinder("fechaHoraFin")
+	public void initFechaHoraFinBinder(WebDataBinder dataBinder) {
+		dataBinder.addCustomFormatter(new FechaHoraFormatter());
+	}
 	
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
@@ -164,7 +171,7 @@ public class ClaseController {
 					"La clase ya ha comenzado o ha terminado");
 			
 			return "clases/apuntarClases";
-			
+		
 		}else if(b==false){
 			result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada",
 					"No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada");

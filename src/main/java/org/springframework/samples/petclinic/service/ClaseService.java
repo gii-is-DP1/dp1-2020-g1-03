@@ -69,7 +69,7 @@ public class ClaseService {
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
-		if(pet.getType()!=clase.getType()) {
+		if(pet.getType()!=clase.getType()) { 
 			throw new DiferenciaTipoMascotaException();
 		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();

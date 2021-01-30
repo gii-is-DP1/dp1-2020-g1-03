@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <th>Veterianario</th>
-            <td><c:out value="${comentario.vet.firstName}"/></td>
+            <td><c:out value="${comentario.vet.firstName}"/>,<c:out value="${comentario.vet.lastName}"/></td>
         </tr>
     </table><%-- 
     <spring:url value="/owners/comentarios/edit/{comentarioId}/{vetId}" var="editUrl">
