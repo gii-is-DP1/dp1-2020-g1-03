@@ -23,6 +23,7 @@ import org.springframework.samples.petclinic.service.ClaseService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
+import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
@@ -176,7 +177,13 @@ public class ClaseController {
 	        }
 			
 			apClase.getClase().setNumeroPlazasDisponibles(apClase.getClase().getNumeroPlazasDisponibles()-1);
-			this.claseService.saveClase(apClase.getClase());
+			try{
+				this.claseService.saveClase(apClase.getClase());
+			}catch(ClasePisadaDelAdiestradorException ex6){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			
 			return "redirect:/owners/clases";
 		}
@@ -225,19 +232,7 @@ public class ClaseController {
 	
 	@PostMapping(value = "secretarios/clases/show/{claseId}/edit")
 	public String processEditClase(@Valid Clase clase, BindingResult result,final Principal principal, 
-			@PathVariable("claseId") int claseId) {
-		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
-		boolean b=true;
-		int i=0;
-		if(!clases.isEmpty()) {
-			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
-						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
-					b=false;		
-				}
-				i++;
-			}
-		}
+			@PathVariable("claseId") int claseId) throws DataAccessException, ClasePisadaDelAdiestradorException{
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/crearOEditarClase";
@@ -253,15 +248,17 @@ public class ClaseController {
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
 			return "clases/crearOEditarClase";
-		}else if(b==false){
-			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
-					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
-			return "clases/crearOEditarClase";
 		}else {
 			Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
 			clase.setSecretario(sec);
 			clase.setId(claseId);
-			this.claseService.saveClase(clase);
+			try{
+				this.claseService.saveClase(clase);
+			}catch(ClasePisadaDelAdiestradorException ex){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			return "redirect:/secretarios/clases/show/{claseId}";
 		}
 	}
@@ -292,7 +289,7 @@ public class ClaseController {
 	}
 
 	@PostMapping(value = "secretarios/clases/new")
-	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) {
+	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) throws DataAccessException, ClasePisadaDelAdiestradorException {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
 		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
 		boolean b=true;
@@ -322,12 +319,14 @@ public class ClaseController {
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
 			return "clases/crearOEditarClase";
-		}else if(b==false){
-			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
-					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
-			return "clases/crearOEditarClase";
 		}else {
-			this.claseService.saveClase(clase);
+			try{
+				this.claseService.saveClase(clase);
+			}catch(ClasePisadaDelAdiestradorException ex){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			return "redirect:/secretarios/clases";
 		}
 	}

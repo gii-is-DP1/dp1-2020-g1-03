@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.AdiestradorRepository;
 import org.springframework.samples.petclinic.repository.ApuntarClaseRepository;
 import org.springframework.samples.petclinic.repository.ClaseRepository;
+import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
@@ -32,7 +33,21 @@ public class ClaseService {
 		this.apuntarClaseRepository=apuntarClaseRepository;
 	}
 	@Transactional()
-	public void saveClase(Clase clase) throws DataAccessException{
+	public void saveClase(Clase clase) throws DataAccessException, ClasePisadaDelAdiestradorException{
+		List<Clase>clases=findClasesAdiestrador(clase.getAdiestrador());
+		boolean b=true;
+		int i=0;
+		if(!clases.isEmpty()) {
+			while(b && i<clases.size()) {
+				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
+						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
+					b=false;		
+				}
+				i++;
+			}
+		}if(b==false) {
+			throw new ClasePisadaDelAdiestradorException();
+		}
 		claseRepository.save(clase);                
 	}
 	
