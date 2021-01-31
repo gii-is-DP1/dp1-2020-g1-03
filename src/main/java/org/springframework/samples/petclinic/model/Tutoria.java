@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -25,13 +27,20 @@ public class Tutoria extends NamedEntity {
 	private String titulo;
 	
 	@Column(name = "fecha_hora")
-	@NotEmpty
-	@DateTimeFormat(pattern ="yyyy-MM-dd hh:mm")
+	@DateTimeFormat(pattern ="yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 	
 	@Column(name = "razon")
 	@NotEmpty
 	private String razon;
+	
+	@ManyToOne
+	@JoinColumn(name = "pet_id")
+	private Pet pet;
+
+	@ManyToOne
+	@JoinColumn(name = "adiestrador_id")
+	private Adiestrador adiestrador;
 	
 
 }

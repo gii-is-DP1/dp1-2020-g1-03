@@ -20,7 +20,7 @@
         <c:forEach items="${tutorias}" var="tutoria">
             <tr>
                 <td>
-                	<spring:url value="/adiestradores/tutorias/{tutoriaId}" var="tutoriaUrl">
+                	<spring:url value="/adiestradores/tutorias/show/{tutoriaId}" var="tutoriaUrl">
                         <spring:param name="tutoriaId" value="${tutoria.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(tutoriaUrl)}"><c:out value="${tutoria.titulo}"/></a>
@@ -35,5 +35,7 @@
         </c:forEach>
         </tbody>
     </table>
-
+<spring:url value="/adiestradores/tutorias/pets/find" var="editUrl">
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Crear tutoria</a>
 </petclinic:layout>
