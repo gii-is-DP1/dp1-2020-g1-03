@@ -22,9 +22,16 @@ public interface TutoriaRepository extends Repository<Tutoria,Integer> {
 	@Query("SELECT DISTINCT pet FROM Pet pet WHERE pet.name LIKE ?1")
 	Collection<Pet> findMascotaByName(String name) throws DataAccessException;
 	
-	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE ?1")
-	int findTutoriasByAdiestradorId(LocalDateTime fechaHora) throws DataAccessException;
+	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE :fechaHora AND tutoria.adiestrador.id LIKE :adiestradorId")
+	int findTutoriasByAdiestradorId(LocalDateTime fechaHora, int adiestradorId) throws DataAccessException;
 	
-	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE DATE(tutoria.fechaHora) LIKE ?1 AND tutoria.adiestrador.id LIKE ?1")
-	int numeroTutoriasEnUnDia(LocalDate fecha, int adiestradorId) throws DataAccessException;
+	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE DAY(tutoria.fechaHora) LIKE :day AND MONTH(tutoria.fechaHora) LIKE :month "
+			+ "AND YEAR(tutoria.fechaHora) LIKE :year AND tutoria.adiestrador.id LIKE :adiestradorId")
+	int numeroTutoriasEnUnDiaAdiestrador(int day, int month, int year, int adiestradorId) throws DataAccessException;
+	
+	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE :fechaHora AND tutoria.pet.owner.id LIKE :ownerId")
+	int numeroTutoriasEnUnDiaOwner(LocalDateTime fechaHora, int ownerId) throws DataAccessException;
+	
+	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE :fechaHora AND tutoria.pet.id LIKE :petId")
+	int numeroTutoriasEnUnDiaPet(LocalDateTime fechaHora, int petId) throws DataAccessException;
 }

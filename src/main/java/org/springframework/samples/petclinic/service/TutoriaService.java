@@ -1,5 +1,4 @@
 package org.springframework.samples.petclinic.service;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Tutoria;
 import org.springframework.samples.petclinic.repository.TutoriaRepository;
 import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoriaException;
+import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoriaPetException;
 import org.springframework.samples.petclinic.service.exceptions.NumeroTutoriasMaximoPorDiaException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class TutoriaService {
 	}
 	
 	
-	@Transactional()
+	
 	public Tutoria findTutoriaById(int id) throws DataAccessException {
 		return tutoriaRepository.findById(id);
 	}
@@ -35,13 +35,17 @@ public class TutoriaService {
 	}
 	
 	@Transactional()
-	public void saveTutoria(Tutoria tutoria, boolean b) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException{
-		int tutorias = tutoriaRepository.findTutoriasByAdiestradorId(tutoria.getFechaHora());
-		int numeroTutoriasPorDia = tutoriaRepository.numeroTutoriasEnUnDia(tutoria.getFechaHora().toLocalDate(), tutoria.getAdiestrador().getId());
-		if(tutorias>=1&&b==false) {
+	public void saveTutoria(Tutoria tutoria, boolean b) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException{
+		int tutoriasAdiestrador = tutoriaRepository.findTutoriasByAdiestradorId(tutoria.getFechaHora(),tutoria.getAdiestrador().getId());
+		int numeroTutoriasPorDia = tutoriaRepository.numeroTutoriasEnUnDiaAdiestrador(tutoria.getFechaHora().getDayOfMonth(),
+				tutoria.getFechaHora().getMonthValue(),tutoria.getFechaHora().getYear(), tutoria.getAdiestrador().getId());
+		int tutoriasPet = tutoriaRepository.numeroTutoriasEnUnDiaPet(tutoria.getFechaHora(), tutoria.getPet().getId());
+		if(tutoriasAdiestrador>=1&&b==false) {
 			throw new MismaHoraTutoriaException();
-		}else if(tutoriasMaximoPorDia<numeroTutoriasPorDia){
+		}else if(tutoriasMaximoPorDia<=numeroTutoriasPorDia){
 			throw new NumeroTutoriasMaximoPorDiaException();
+		}else if(tutoriasPet>=1&&b==false) {
+			throw new MismaHoraTutoriaPetException();
 		}else {
 			this.tutoriaRepository.save(tutoria);
 		}

@@ -12,11 +12,15 @@
     </h2>
     <form:form modelAttribute="tutoria" class="form-horizontal" id="add-tutoria-form">
     	<input type="hidden" name="id" value="${tutoria.id}"/>
+    	<div class="form-group has-feedback">
+       <div class="control-group">
            <div class="form-group">
                     <label class="col-sm-2 control-label">Mascota</label>
                     <div class="col-sm-10">
-                        <c:out value="${tutoria.pet.name}"/><br>
+                        <c:out value="${tutoria.pet.name}"/>
                     </div>
+            </div>
+            </div>
             <petclinic:inputField label="Titulo" name="titulo"/>
             <petclinic:inputField label="Fecha" name="fechaHora"/>
             <petclinic:inputField label="Razon" name="razon"/>

@@ -10,21 +10,19 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Adiestrador;
-import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Tutoria;
 import org.springframework.samples.petclinic.service.AdiestradorService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.TutoriaService;
 import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoriaException;
+import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoriaPetException;
 import org.springframework.samples.petclinic.service.exceptions.NumeroTutoriasMaximoPorDiaException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class TutoriaController {
@@ -41,14 +39,14 @@ public class TutoriaController {
 	}
 	@GetMapping(value = "/adiestradores/tutorias")
 	public String listadoTutorias(Map<String, Object> model) {
-		List<Tutoria> tutorias = tutoriaService.findAllTutorias();
+		List<Tutoria> tutorias = this.tutoriaService.findAllTutorias();
 		model.put("tutorias", tutorias);
 		return "tutorias/tutoriasList";
 	}
 	
 	@GetMapping(value = "/adiestradores/tutorias/show/{tutoriaId}")
 	public String mostrarTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int Id) {
-		Tutoria tutoria = tutoriaService.findTutoriaById(Id);
+		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowAdiestrador";
 	}
@@ -99,6 +97,7 @@ public class TutoriaController {
 	public String initCreateTutoria(Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
 		Tutoria tutoria = new Tutoria();
 		tutoria.setPet(this.petService.findPetById(Id));
+		tutoria.setId(tutoria.getId());
 		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorById(idAdiestrador);
 		tutoria.setAdiestrador(adiestrador);
@@ -108,7 +107,9 @@ public class TutoriaController {
 
 	@PostMapping(value = "adiestradores/tutorias/pets/{petId}/new")
 	public String processCreateTutoria(@Valid Tutoria tutoria,@PathVariable("petId") int Id, @Valid BindingResult result,final Principal principal) 
-			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException {
+			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
+		tutoria.setId(tutoria.getId());
+		tutoria.setPet(this.petService.findPetById(Id));
 		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorById(idAdiestrador);
 		tutoria.setAdiestrador(adiestrador);
@@ -122,9 +123,13 @@ public class TutoriaController {
 				result.rejectValue("fechaHora","No se puede crear la tutoría ya que hay una existente en dicha hora, violación regla de negocio",
 						"No se puede crear la tutoría ya que hay una existente en dicha hora, violación regla de negocio");
 				return "tutorias/crearOEditarTutoria";
-			}catch(NumeroTutoriasMaximoPorDiaException ex) {
+			}catch(NumeroTutoriasMaximoPorDiaException ex2) {
 				result.rejectValue("fechaHora","No se puede crear la tutoría ya que ha cumplido el máximo de tutorías permitido por día, violación regla de negocio",
 						"No se puede crear la tutoría ya que ha cumplido el máximo de tutorías permitido por día, violación regla de negocio");
+				return "tutorias/crearOEditarTutoria";
+			}catch(MismaHoraTutoriaPetException ex4) {
+				result.rejectValue("fechaHora","No se puede crear la tutoría ya que hay una existente en dicha hora por parte de la mascota, violación regla de negocio",
+						"No se puede crear la tutoría ya que hay una existente en dicha hora por parte de la mascota, violación regla de negocio");
 				return "tutorias/crearOEditarTutoria";
 			}
 			return "redirect:/adiestradores/tutorias";
@@ -132,16 +137,17 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
-	public String initEditClase(@PathVariable("tutoriaId") int tutoriaId, Map<String, Object> model ) {
-		Tutoria tutoria = tutoriaService.findTutoriaById(tutoriaId);
+	public String initEditTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int Id) {
+		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
 		model.put("tutoria", tutoria);
+		System.out.println(tutoria.toString()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		return "tutorias/crearOEditarTutoria";
 	}
 	
 	@PostMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
-	public String processEditClase(@Valid Tutoria tutoria, BindingResult result,final Principal principal, 
-			@PathVariable("tutoriaId") int tutoriaId) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException {
-		
+	public String processEditTutoria(@Valid Tutoria tutoria, BindingResult result,final Principal principal, 
+			@PathVariable("tutoriaId") int tutoriaId) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
+		System.out.println(tutoria.toString()+"WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "tutorias/crearOEditarTutoria";
@@ -152,9 +158,13 @@ public class TutoriaController {
 				result.rejectValue("fechaHora","No se puede cambiar la hora de la tutoría ya que hay una existente en dicha hora, violación regla de negocio",
 						"No se puede cambiar la hora de la tutoría ya que hay una existente en dicha hora, violación regla de negocio");
 				return "tutorias/crearOEditarTutoria";
-			}catch(NumeroTutoriasMaximoPorDiaException ex) {
+			}catch(NumeroTutoriasMaximoPorDiaException ex2) {
 				result.rejectValue("fechaHora","No se puede crear la tutoría ya que ha cumplido el máximo de tutorías permitido por día, violación regla de negocio",
 						"No se puede crear la tutoría ya que ha cumplido el máximo de tutorías permitido por día, violación regla de negocio");
+				return "tutorias/crearOEditarTutoria";
+			}catch(MismaHoraTutoriaPetException ex4) {
+				result.rejectValue("fechaHora","No se puede crear la tutoría ya que hay una existente en dicha hora por parte de la mascota, violación regla de negocio",
+						"No se puede crear la tutoría ya que hay una existente en dicha hora por parte de la mascota, violación regla de negocio");
 				return "tutorias/crearOEditarTutoria";
 			}
 			return "redirect:/adiestradores/tutorias";

@@ -10,8 +10,8 @@
 
     <table class="table table-striped">
         <tr>
-            <th>Nombre</th>
-            <td><b><c:out value="${tutoria.name}"/></b></td>
+            <th>Titulo</th>
+            <td><b><c:out value="${tutoria.titulo}"/></b></td>
         </tr>
         <tr>
             <th>Fecha y Hora</th>

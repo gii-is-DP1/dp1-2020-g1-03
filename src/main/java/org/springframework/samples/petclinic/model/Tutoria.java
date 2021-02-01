@@ -23,7 +23,6 @@ import lombok.Setter;
 public class Tutoria extends NamedEntity {
 	
 	@Column(name = "titulo")
-	@NotEmpty
 	private String titulo;
 	
 	@Column(name = "fecha_hora")
@@ -31,7 +30,6 @@ public class Tutoria extends NamedEntity {
 	private LocalDateTime fechaHora;
 	
 	@Column(name = "razon")
-	@NotEmpty
 	private String razon;
 	
 	@ManyToOne

@@ -167,7 +167,7 @@ INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) V
 
 --INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
-INSERT INTO tutorias(titulo,fecha_hora,razon) VALUES('TutoriaPrueba', '2021-01-14 15:30', 'Probando las tutorias');
+INSERT INTO tutorias(id,titulo,fecha_hora,razon,pet_id,adiestrador_id) VALUES(1,'TutoriaPrueba', '2021-01-14 15:30', 'Probando las tutorias',3,1);
 
 
 INSERT INTO adiestrador VALUES(2,'Manuel','Castroviejo','competencia','adiestrador2');
