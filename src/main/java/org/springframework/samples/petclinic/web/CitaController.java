@@ -16,14 +16,23 @@
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.CitaMascota;
+import org.springframework.samples.petclinic.model.Clase;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
@@ -31,8 +40,13 @@ import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
+import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
+import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -58,6 +72,18 @@ public class CitaController {
 		this.secretarioService = secretarioService;
 		this.petService = petService;
 		this.ownerService = ownerService;
+	}
+	
+	@InitBinder("pet")
+	public void initPetBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new ApuntarClaseValidator());
+		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
+	}
+	
+	
+	@ModelAttribute("types")
+	public Collection<PetType> populatePetTypes() {
+		return this.petService.findPetTypes();
 	}
 	
 	@GetMapping(value = "/vets/citas")
@@ -95,6 +121,41 @@ public class CitaController {
 		model.put("mascotas", mascotas);
 		model.put("cita", cita);
 		return "citas/showCitaOwner";
+	}
+	
+	@GetMapping(value = "/owners/citas/new")
+	public String initCreateCitaOwner(Map<String, Object> model, final Principal principal) {
+		Cita cita = new Cita();
+		System.out.println("Owner: "+ this.ownerService.findOwnerIdByUsername(principal.getName()));//OwnerByUsername(principal.getName()));
+		Integer ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		CitaMascota citaMascota= new CitaMascota();
+		citaMascota.setCita(cita);
+		//cita.setO(sec);
+		model.put("citaMascota", citaMascota);
+		System.out.println("List: "+this.petService.findPetsByOwnerId(ownerId));
+		List<Pet> items = this.petService.findPetsByOwnerId(ownerId);
+		model.put("items", items);
+		return "citas/crearOEditarCitaOwner";
+	}
+
+	@PostMapping(value = "/owners/citas/new")
+	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
+			throws DataAccessException {
+		Cita cita=citaMascota.getCita();
+		System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ cita.getFechaHora());
+		//citaMascota.setPet(citaMascota.getPet());
+		
+		//this.claseService.findClaseById(claseId);
+		cita.setEstado(Estado.PENDIENTE);
+		citaMascota.setCita(cita);
+		
+		this.citaService.saveCita(cita);
+		System.out.println("Cita 2: "+cita.getTitulo()+ " "+ cita.getFechaHora());
+		citaMascota.setCita(cita);
+		this.citaService.saveCitaMascota(citaMascota);
+		//List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
+		
+		return "redirect:/owners/citas";
 	}
 	
 	

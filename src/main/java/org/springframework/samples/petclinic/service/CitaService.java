@@ -62,9 +62,14 @@ public class CitaService {
 		return citaRepository.findCitasByVet(vet);
 	}
 
-	@Transactional(rollbackFor = DuplicatedPetNameException.class)
+	@Transactional()
 	public void saveCita(Cita cita) throws DataAccessException {//, DuplicatedPetNameException
             	citaRepository.save(cita);                
+	}
+	
+	@Transactional()
+	public void saveCitaMascota(CitaMascota citaMascota) throws DataAccessException {//, DuplicatedPetNameException
+            	citaMascotaRepository.save(citaMascota);                
 	}
 
 	public List<Cita> findAllCitas() {

@@ -27,7 +27,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,12 +54,13 @@ public class Cita extends NamedEntity {
 	private String titulo;
 
 	@Column(name = "fecha_hora")
-	@NotEmpty
+	@NotNull
+	@Future
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 
 	@Column(name = "estado")
-	@NotEmpty
+	@NotNull
 	private Estado estado;
 	
 	@Column(name = "razon")
