@@ -165,7 +165,7 @@ public class CitaController {
 		model.put("citas", citas);
 		return "citas/citasSecretarioList";
 	}
-	
+	 
 	@GetMapping(value = "/secretarios/citas/sinVet")
 	public String listadoCitasSecretariosSinVet(Map<String, Object> model, Principal principal) {
 		List<Cita> citas= citaService.findCitasSinVet(); //QUERY
