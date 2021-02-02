@@ -92,8 +92,8 @@ public class ComentarioController {
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
 		}
-	@GetMapping(value = "/owners/comentarios/show/{comentarioId}")
-	public String mostarComentariosDeOwner(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
+	@GetMapping(value = "/owners/comentarios/show/{comentarioId}/{ownerId}")
+	public String mostarComentariosDeOwner(@PathVariable("comentarioId") int comentarioId,@PathVariable("ownerId") int ownerId, Map<String, Object> model, final Principal principal) {
 		
 		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
 		model.put("comentario", comentario);
@@ -125,7 +125,7 @@ public class ComentarioController {
 		}
 		else {
 			try{
-				this.comentarioService.saveComentario(comentario, true);
+				this.comentarioService.saveComentario(comentario);
 			}catch(ComentariosMaximoPorCitaException ex){
 	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
 	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
@@ -160,7 +160,7 @@ public class ComentarioController {
 			return "comentarios/crearOEditarComentario";
 		} else {
 			try{
-				this.comentarioService.saveComentario(comentario, false);
+				this.comentarioService.saveComentario(comentario);
 			}catch(ComentariosMaximoPorCitaException ex){
 	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
 	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");

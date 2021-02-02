@@ -46,7 +46,8 @@ public class Clase extends BaseEntity{
 	@PositiveOrZero
 	private Integer numeroPlazasDisponibles;
 	
-	@Column(name = "categoria")
+	@ManyToOne
+	@JoinColumn(name = "categoria")
 	private CategoriaClase categoriaClase;
 	
 	@ManyToOne

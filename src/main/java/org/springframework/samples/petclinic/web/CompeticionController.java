@@ -72,7 +72,6 @@ public class CompeticionController {
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
 	   dataBinder.setValidator(new CompeticionPetValidator());
-	   dataBinder.addCustomFormatter(new CompeticionPetFormatter(petService, ownerService));
 	}
 
 
@@ -150,7 +149,7 @@ public class CompeticionController {
 		competicionPet.setCompeticion(comp);
 		model.put("competicionPet", competicionPet);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Collection<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		return "competiciones/competicionesInscribePet";
 	}

@@ -42,13 +42,12 @@ public class ComentarioService {
 		return ownerRepository.findById(id);
 	}
 	@Transactional()
-	public void saveComentario(Comentario comentario, boolean b) throws DataAccessException,  ComentariosMaximoPorCitaException{
+	public void saveComentario(Comentario comentario) throws DataAccessException,  ComentariosMaximoPorCitaException{
 		int idVet = comentario.getVet().getId();
 		int idOwner = comentario.getOwner().getId();
 		int citasOwnerConVet = this.citaMascotaRepository.findCitasOwnerConVet(idVet, idOwner);
 		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(idVet, idOwner);
-		System.out.println(citasOwnerConVet+" WESDFCGVHJIOKJUHYGTFDRESRDFGH "+comentariosHechosOwnerAVet);
-		if((comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0) && b==false) {
+		if(comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0) {
 			throw new ComentariosMaximoPorCitaException();
 		}
 		comentarioRepository.save(comentario);               

@@ -13,7 +13,7 @@ import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.stereotype.Component;
 
-
+@Component
 public class ApuntarClaseFormatter implements Formatter<Pet>{
 	private final PetService peService;
 	private final OwnerService owService;
@@ -30,9 +30,12 @@ public class ApuntarClaseFormatter implements Formatter<Pet>{
 
 	@Override
 	public Pet parse(String text, Locale locale) throws ParseException {
-		Collection<Pet> findPets = this.peService.findAllPets();
+		String[] split = text.split(",");
+		String nombre = split[0].trim();
+		Integer idOwner = Integer.parseInt(split[1]);
+		Collection<Pet> findPets = this.peService.findPetsByOwnerId(idOwner);
 		for (Pet pet : findPets) {
-			if (pet.getName().equals(text)) {
+			if (pet.getName().equals(nombre)) {
 				return pet;
 			}
 		}

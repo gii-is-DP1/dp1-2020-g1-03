@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.ApuntarClase;
+import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
@@ -58,6 +59,8 @@ public class ClaseController {
 		dataBinder.setValidator(new ApuntarClaseValidator());
 		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
 	}
+	
+	
 	@InitBinder("fechaHoraInicio")
 	public void initFechaHoraInicioBinder(WebDataBinder dataBinder) {
 		dataBinder.addCustomFormatter(new FechaHoraFormatter());
@@ -76,6 +79,12 @@ public class ClaseController {
 	public Collection<String> populateAdiestradores() {
 		return this.adiestradorService.findNameAndLastnameAdiestrador();
 	}
+	
+	@ModelAttribute("categoriaClase")
+	public Collection<CategoriaClase> categoriasClase() {
+		return this.claseService.findAllCategoriasClase();
+	}
+	
 	
 	
 //	@ModelAttribute("pets")
@@ -135,15 +144,18 @@ public class ClaseController {
 		apClase.setClase(clas);
 		model.put("apuntarClase", apClase);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		return "clases/apuntarClases";
 	}
 	
 	@PostMapping(value = "owners/clases/show/apuntar/{claseId}")
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
-			@PathVariable("claseId") int claseId) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
+			@PathVariable("claseId") int claseId, Map<String, Object> model) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
 		apClase.setPet(apClase.getPet());
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(ownerId);
+		model.put("pets", pets);
 		Clase clas = this.claseService.findClaseById(claseId);
 		apClase.setClase(clas);
 		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());

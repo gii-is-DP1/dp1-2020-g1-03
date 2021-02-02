@@ -90,6 +90,11 @@ INSERT INTO types VALUES (4, 'snake');
 INSERT INTO types VALUES (5, 'bird');
 INSERT INTO types VALUES (6, 'hamster');
 
+
+INSERT INTO categorias_clase VALUES (1,'Adiestrar');
+INSERT INTO categorias_clase VALUES (2,'Mascota de caza');
+INSERT INTO categorias_clase VALUES (3,'Trucos básicos');
+
 INSERT INTO tipo_enfermedades VALUES (1, 'Rabia');
 INSERT INTO tipo_enfermedades VALUES (2, 'Sarna');
 INSERT INTO tipo_enfermedades VALUES (3, 'Parvovirus');
@@ -143,7 +148,7 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (1,'ComentarioPrueba', 'Esto es un comentario de prueba', 2, 1);
---INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
+INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
 --INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (3,'ComentarioPrueba', 'Esto es un comentario de prueba', 3, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioPrueba', 'Esto es un comentario de prueba', 4, 1);

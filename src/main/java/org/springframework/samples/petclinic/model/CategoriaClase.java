@@ -1,5 +1,10 @@
 package org.springframework.samples.petclinic.model;
 
-public enum CategoriaClase {
-ADIESTRAR, MASCOTAS_DE_CAZA,TRUCOS_BASICOS
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "categorias_clase")
+public class CategoriaClase extends NamedEntity{
+//ADIESTRAR, MASCOTAS_DE_CAZA,TRUCOS_BASICOS
 }

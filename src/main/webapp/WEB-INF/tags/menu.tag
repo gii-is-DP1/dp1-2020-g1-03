@@ -41,8 +41,8 @@
 					<span>Veterinarians</span>
 				</petclinic:menuItem>
 				
-				<sec:authorize access="hasAnyAuthority('owner')">
-					<petclinic:menuItem active="${name eq 'comentarios'}" url="/owners/comentarios" title="Comentarios">
+				<sec:authorize access="hasAnyAuthority('veterinarian')">
+					<petclinic:menuItem active="${name eq 'comentarios'}" url="/vets/comentarios" title="Comentarios">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 						<span>Comentarios</span>
 					</petclinic:menuItem>
