@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
 import org.springframework.samples.petclinic.model.Pet;
@@ -35,6 +36,8 @@ import org.springframework.samples.petclinic.service.CompeticionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
+import org.springframework.samples.petclinic.service.exceptions.MascotaYaApuntadaCompeticionException;
+import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeCompeticionesException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -157,53 +160,73 @@ public class CompeticionController {
 
 	@PostMapping(value = "/owners/competiciones/show/{competicionId}/inscribir")
 	public String processInscribePet(@PathVariable("competicionId") int competicionId,
-			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal) {
+			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal) throws DataAccessException,
+	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException {
 		competicionPet.setPet(competicionPet.getPet());
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
-		List<CompeticionPet> competicionesApuntadas = this.competicionPetService
-				.findCompeticionByPetId(competicionPet.getPet().getId());
-		Boolean b = true;
-		int i = 0;
-		Boolean apuntada = false;
-		if (!competicionesApuntadas.isEmpty()) {
-			while (b && i < competicionesApuntadas.size() && apuntada.equals(false)) {
-				if (competicionesApuntadas.get(i).getCompeticion().getFechaHoraFin()
-						.isAfter(competicionPet.getCompeticion().getFechaHoraInicio())
-						|| competicionesApuntadas.get(i).getCompeticion().getFechaHoraInicio()
-								.isBefore(competicionPet.getCompeticion().getFechaHoraFin())
-						&& (competicionesApuntadas.get(i).getCompeticion().getId() != competicionPet.getCompeticion()
-								.getId())) {
-					b = false;
-				}
-				if (competicionesApuntadas.get(i).getCompeticion().getId()
-						.equals(competicionPet.getCompeticion().getId())) {
-					apuntada = true;
-				}
-				i++;
-			}
-		}
+		List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
+//		Boolean b = true;
+//		int i = 0;
+//		Boolean apuntada = false;
+//		if (!competicionesApuntadas.isEmpty()) {
+//			while (b && i < competicionesApuntadas.size() && apuntada.equals(false)) {
+//				if (competicionesApuntadas.get(i).getCompeticion().getFechaHoraFin()
+//						.isAfter(competicionPet.getCompeticion().getFechaHoraInicio())
+//						|| competicionesApuntadas.get(i).getCompeticion().getFechaHoraInicio()
+//								.isBefore(competicionPet.getCompeticion().getFechaHoraFin())
+//						&& (competicionesApuntadas.get(i).getCompeticion().getId() != competicionPet.getCompeticion()
+//								.getId())) {
+//					b = false;
+//				}
+//				if (competicionesApuntadas.get(i).getCompeticion().getId()
+//						.equals(competicionPet.getCompeticion().getId())) {
+//					apuntada = true;
+//				}
+//				i++;
+//			}
+//		}
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
-			return "exception";
-		} else if (competicionPet.getCompeticion().getFechaHoraInicio().isBefore(LocalDate.now())) {
+			System.out.println("Errores: "+result.getAllErrors());
+			return "competiciones/competicionesInscribePet";
+		}else if (competicionPet.getCompeticion().getFechaHoraInicio().isBefore(LocalDate.now())) {
 			result.rejectValue("pet", "La competicion ya ha comenzado", "La competicion ya ha comenzado");
 
-			return "exception";
+			return "competiciones/competicionesInscribePet";
 
-		} else if (b == false) {
-			result.rejectValue("pet",
-					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada",
-					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada");
-			return "exception";
-		} else if (apuntada) {
-			result.rejectValue("pet", "Ya se ha apuntado a esta competicion", "Ya se ha apuntado a esta competicion");
-			return "exception";
 		} else {
-			this.competicionPetService.saveCompeticionPet(competicionPet);
+			System.out.println("Elseeeee");
+			try{
+				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
+	        }catch(SolapamientoDeCompeticionesException ex4){
+	        	System.out.println("EX4444444444");
+	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada",
+						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada");
+				return "competiciones/competicionesInscribePet";
+	        }catch(MascotaYaApuntadaCompeticionException ex5){
+	        	System.out.println("EX5555555555");
+	        	result.rejectValue("pet","Ya se ha apuntado a esta competición",
+						"Ya se ha apuntado a esta competición");
+				return "competiciones/competicionesInscribePet";
+	        }
+			//System.out.println("LLEGAAAA");
+			this.competicionPetService.saveCompeticionPet(competicionPet);
 			return "redirect:/owners/competiciones/show/" + competicionId;
 		}
+		//else if (b == false) {
+//			result.rejectValue("pet",
+//					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada",
+//					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada");
+//			return "exception";
+//		} else if (apuntada) {
+//			result.rejectValue("pet", "Ya se ha apuntado a esta competicion", "Ya se ha apuntado a esta competicion");
+//			return "exception";
+//		} else {
+//			this.competicionPetService.saveCompeticionPet(competicionPet);
+//
+//			return "redirect:/owners/competiciones/show/" + competicionId;
+//		}
 	}
 
 	@GetMapping(value = "/secretarios/competiciones/new")
