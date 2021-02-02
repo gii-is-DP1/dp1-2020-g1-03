@@ -80,6 +80,12 @@ public class CitaController {
 		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
 	}
 	
+	@InitBinder("fecha")
+	public void initFechaBinder(WebDataBinder dataBinder) {
+		//dataBinder.setValidator(new ApuntarClaseValidator());
+		dataBinder.addCustomFormatter(new FechaFormatter(citaService));
+	}
+	
 	
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
@@ -91,6 +97,9 @@ public class CitaController {
 		int idVet=this.vetService.findVetIdByUsername(principal.getName());
 		Vet vet= this.vetService.findVetById(idVet);
 		List<Cita> citas= citaService.findCitasByVet(vet);
+//		for(int i=0;i<citas.size();i++) {
+//			
+//		}
 		model.put("citas", citas);
 		return "citas/citasList";
 	}
@@ -126,13 +135,13 @@ public class CitaController {
 	@GetMapping(value = "/owners/citas/new")
 	public String initCreateCitaOwner(Map<String, Object> model, final Principal principal) {
 		Cita cita = new Cita();
-		System.out.println("Owner: "+ this.ownerService.findOwnerIdByUsername(principal.getName()));//OwnerByUsername(principal.getName()));
+		//System.out.println("Owner: "+ this.ownerService.findOwnerIdByUsername(principal.getName()));//OwnerByUsername(principal.getName()));
 		Integer ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		CitaMascota citaMascota= new CitaMascota();
 		citaMascota.setCita(cita);
 		//cita.setO(sec);
 		model.put("citaMascota", citaMascota);
-		System.out.println("List: "+this.petService.findPetsByOwnerId(ownerId));
+		//System.out.println("List: "+this.petService.findPetsByOwnerId(ownerId));
 		List<Pet> items = this.petService.findPetsByOwnerId(ownerId);
 		model.put("items", items);
 		return "citas/crearOEditarCitaOwner";
@@ -142,7 +151,7 @@ public class CitaController {
 	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
 			throws DataAccessException {
 		Cita cita=citaMascota.getCita();
-		System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ cita.getFechaHora());
+		//System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ cita.getFechaHora());
 		//citaMascota.setPet(citaMascota.getPet());
 		
 		//this.claseService.findClaseById(claseId);

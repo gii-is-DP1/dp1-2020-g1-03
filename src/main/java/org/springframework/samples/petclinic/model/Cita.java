@@ -32,6 +32,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 /*
@@ -56,7 +59,8 @@ public class Cita extends NamedEntity {
 	@Column(name = "fecha_hora")
 	@NotNull
 	@Future
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)//pattern = "yyyy-MM-dd HH:mm")
+	//@JsonFormat(pattern = "yyyy-MM-dd hh:mm")
 	private LocalDateTime fechaHora;
 
 	@Column(name = "estado")
