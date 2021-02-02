@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoria
 import org.springframework.samples.petclinic.service.exceptions.NumeroTutoriasMaximoPorDiaException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class TutoriaService {
 	
@@ -24,9 +25,8 @@ public class TutoriaService {
 	}
 	
 	
-	
-	public Tutoria findTutoriaById(int id) throws DataAccessException {
-		return tutoriaRepository.findById(id);
+	public Tutoria findTutoriaById(int tutoriaId) throws DataAccessException {
+		return tutoriaRepository.findTutoriaById(tutoriaId);
 	}
 	
 	
@@ -40,7 +40,7 @@ public class TutoriaService {
 		int numeroTutoriasPorDia = tutoriaRepository.numeroTutoriasEnUnDiaAdiestrador(tutoria.getFechaHora().getDayOfMonth(),
 				tutoria.getFechaHora().getMonthValue(),tutoria.getFechaHora().getYear(), tutoria.getAdiestrador().getId());
 		int tutoriasPet = tutoriaRepository.numeroTutoriasEnUnDiaPet(tutoria.getFechaHora(), tutoria.getPet().getId());
-		if(tutoriasAdiestrador>=1&&b==false) {
+		if((tutoriasAdiestrador>=1&&b==false) || (b==true&&tutoriasAdiestrador>1)) {
 			throw new MismaHoraTutoriaException();
 		}else if(tutoriasMaximoPorDia<=numeroTutoriasPorDia){
 			throw new NumeroTutoriasMaximoPorDiaException();

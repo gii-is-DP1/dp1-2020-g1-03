@@ -15,7 +15,7 @@ public interface TutoriaRepository extends Repository<Tutoria,Integer> {
 	
 	void save(Tutoria tutoria) throws DataAccessException;
 	
-	Tutoria findById(int id) throws DataAccessException;
+	Tutoria findById(int tutoriaId) throws DataAccessException;
 	
 	List<Tutoria> findAll() throws DataAccessException;
 	
@@ -34,4 +34,6 @@ public interface TutoriaRepository extends Repository<Tutoria,Integer> {
 	
 	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE :fechaHora AND tutoria.pet.id LIKE :petId")
 	int numeroTutoriasEnUnDiaPet(LocalDateTime fechaHora, int petId) throws DataAccessException;
+
+	Tutoria findTutoriaById(int tutoriaId) throws DataAccessException;
 }

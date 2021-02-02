@@ -45,8 +45,9 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/adiestradores/tutorias/show/{tutoriaId}")
-	public String mostrarTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int Id) {
+	public String mostrarTutoria(@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+		System.out.println(tutoria.getId()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowAdiestrador";
 	}
@@ -137,17 +138,21 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
-	public String initEditTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int Id) {
-		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+	public String initEditTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int tutoriaId) {
+		Tutoria tutoria = this.tutoriaService.findTutoriaById(tutoriaId);
 		model.put("tutoria", tutoria);
-		System.out.println(tutoria.toString()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
+		System.out.println(tutoria.getPet()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		return "tutorias/crearOEditarTutoria";
 	}
 	
 	@PostMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
 	public String processEditTutoria(@Valid Tutoria tutoria, BindingResult result,final Principal principal, 
 			@PathVariable("tutoriaId") int tutoriaId) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
-		System.out.println(tutoria.toString()+"WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
+		System.out.println(tutoria.getAdiestrador());
+		Tutoria tutoria2 = this.tutoriaService.findTutoriaById(tutoriaId);
+		tutoria.setAdiestrador(tutoria2.getAdiestrador());
+		tutoria.setPet(tutoria2.getPet());
+		
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "tutorias/crearOEditarTutoria";

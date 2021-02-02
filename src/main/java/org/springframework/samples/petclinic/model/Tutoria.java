@@ -20,7 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "tutorias")
-public class Tutoria extends NamedEntity {
+public class Tutoria extends BaseEntity {
 	
 	@Column(name = "titulo")
 	private String titulo;
