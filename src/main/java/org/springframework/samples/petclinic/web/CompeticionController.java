@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -245,8 +246,22 @@ public class CompeticionController {
 			System.out.println(result.getAllErrors());
 			return "competiciones/competicionesCreateOrUpdate";
 		} else {
-			this.competicionService.saveCompeticion(competicion);
-			return "redirect:/secretarios/competiciones";
+			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+				result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+				result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+				return "competiciones/competicionesCreateOrUpdate";
+			}else {
+				if(competicion.getFechaHoraInicio().isAfter(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+					result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isAfter(LocalDate.now())){
+					result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else {
+					this.competicionService.saveCompeticion(competicion);
+					return "redirect:/secretarios/competiciones";
+				}
+			}
 		}
 	}
 
