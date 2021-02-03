@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -151,7 +152,7 @@ public class CitaController {
 	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
 			throws DataAccessException {
 		Cita cita=citaMascota.getCita();
-		//System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ cita.getFechaHora());
+		//System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ citaMascota.getCita().getFechaHora());
 		//citaMascota.setPet(citaMascota.getPet());
 		
 		//this.claseService.findClaseById(claseId);
@@ -159,11 +160,14 @@ public class CitaController {
 		citaMascota.setCita(cita);
 		
 		this.citaService.saveCita(cita);
-		System.out.println("Cita 2: "+cita.getTitulo()+ " "+ cita.getFechaHora());
+		//System.out.println("Cita 2: "+cita.getTitulo()+ " "+ cita.getFechaHora());
 		citaMascota.setCita(cita);
 		this.citaService.saveCitaMascota(citaMascota);
 		//List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
-		
+		if(cita.getFechaHora().isBefore(LocalDateTime.now())) {
+			result.rejectValue("cita.fechaHora", "La fecha no puede ser una fecha pasada", "La fecha no puede ser una fecha pasada");
+			return "citas/crearOEditarCitaOwner";
+		}
 		return "redirect:/owners/citas";
 	}
 	
