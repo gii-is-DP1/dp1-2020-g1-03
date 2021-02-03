@@ -92,9 +92,6 @@ public class ClaseService {
 	public void deleteApuntarClase(ApuntarClase apClase) throws DataAccessException{
 		 this.apuntarClaseRepository.delete(apClase);
 	}
-	public Pet findPetByClasePetId(int idClasePet) {
-		return this.apuntarClaseRepository.findPetByClasePetId(idClasePet);
-	}
 	
 	@Transactional()
 	public List<CategoriaClase> findAllCategoriasClase(){

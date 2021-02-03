@@ -87,16 +87,7 @@ public class ClaseController {
 	
 	
 	
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
+
 	
 	//ADIESTRADOR
 	
@@ -215,14 +206,11 @@ public class ClaseController {
 	@GetMapping(value = "/owners/clases/show/{claseId}/pets")
 	public String listadoPetsEnClases(@PathVariable("claseId") int claseId,
 			Map<String, Object> model, final Principal principal) {
-		List<ApuntarClase> clases = new ArrayList<>(
+		List<ApuntarClase> mascotasEnClase = new ArrayList<>(
 				this.claseService.findMascotasApuntadasEnClaseByClaseId(claseId));
 		List<Pet> pets = new ArrayList<>();
-		Pet aux;
-		for (int i = 0; i < clases.size(); i++) {
-			int idClasePet = clases.get(i).getClase().getId();
-			aux = this.claseService.findPetByClasePetId(idClasePet);
-			pets.add(aux);
+		for (int i = 0; i < mascotasEnClase.size(); i++) {
+			pets.add(mascotasEnClase.get(i).getPet());
 		}
 		model.put("pets", pets);
 		return "clases/mascotasApuntadas";
