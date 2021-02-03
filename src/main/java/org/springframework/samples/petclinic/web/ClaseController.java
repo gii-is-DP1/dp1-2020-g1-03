@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -42,6 +44,8 @@ public class ClaseController {
 	private final SecretarioService secretarioService;
 	private final PetService petService;
 	private final OwnerService ownerService;
+	private static final Logger logger =
+			Logger.getLogger(ClaseController.class.getName());
 	
 	@Autowired
 	public ClaseController(ClaseService claseService, AdiestradorService adiestradorService, SecretarioService secretarioService, 
@@ -70,19 +74,6 @@ public class ClaseController {
 		return this.adiestradorService.findNameAndLastnameAdiestrador();
 	}
 	
-	
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
-	
-	//ADIESTRADOR
 	
 	@GetMapping(value = "/adiestradores/clases")
 	public String listadoClasesByAdiestradorId(Map<String, Object> model, final Principal principal) {
@@ -157,7 +148,7 @@ public class ClaseController {
 			}
 		}
 		if(result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "clases/apuntarClases";
 		}else if(apClase.getClase().getFechaHoraInicio().isBefore(LocalDateTime.now())){
 			result.rejectValue("pet","La clase ya ha comenzado o ha terminado",

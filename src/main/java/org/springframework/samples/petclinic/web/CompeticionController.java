@@ -22,10 +22,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.validation.Valid;
 
+//import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
@@ -48,6 +52,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import lombok.extern.java.Log;
+
 /**
  * @author Juergen Hoeller
  * @author Ken Krebs
@@ -62,6 +68,8 @@ public class CompeticionController {
 	private final PetService petService;
 	private final OwnerService ownerService;
 	private final CompeticionPetService competicionPetService;
+	private static final Logger logger =
+			Logger.getLogger(CompeticionController.class.getName());
 	@Autowired
 	public CompeticionController(CompeticionService competicionService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService, CompeticionPetService competicionPetService) {
@@ -97,6 +105,7 @@ public class CompeticionController {
 			Map<String, Object> model, final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
 		if(competicion.getNombre()==null) {
+			logger.log(Level.WARNING, "Competición vacia");
 			return "exception";
 		} else {
 		model.put("competicion", competicion);
@@ -116,6 +125,7 @@ public class CompeticionController {
 			final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
 		if(competicion.getNombre()==null) {
+			logger.log(Level.WARNING, "Competición vacia");
 			return "exception";
 		} else {
 		model.put("competicion", competicion);
@@ -145,7 +155,7 @@ public class CompeticionController {
 		competicionPet.setCompeticion(comp);
 		List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
 		if (result.hasErrors()) {
-			System.out.println("Errores: "+result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "competiciones/competicionesInscribePet";
 		}else if (competicionPet.getCompeticion().getFechaHoraInicio().isBefore(LocalDate.now())) {
 			result.rejectValue("pet", "La competicion ya ha comenzado", "La competicion ya ha comenzado");

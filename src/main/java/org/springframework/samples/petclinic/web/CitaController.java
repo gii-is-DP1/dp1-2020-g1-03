@@ -83,7 +83,6 @@ public class CitaController {
 	
 	@InitBinder("fecha")
 	public void initFechaBinder(WebDataBinder dataBinder) {
-		//dataBinder.setValidator(new ApuntarClaseValidator());
 		dataBinder.addCustomFormatter(new FechaFormatter(citaService));
 	}
 	
@@ -98,9 +97,6 @@ public class CitaController {
 		int idVet=this.vetService.findVetIdByUsername(principal.getName());
 		Vet vet= this.vetService.findVetById(idVet);
 		List<Cita> citas= citaService.findCitasByVet(vet);
-//		for(int i=0;i<citas.size();i++) {
-//			
-//		}
 		model.put("citas", citas);
 		return "citas/citasList";
 	}
@@ -136,13 +132,10 @@ public class CitaController {
 	@GetMapping(value = "/owners/citas/new")
 	public String initCreateCitaOwner(Map<String, Object> model, final Principal principal) {
 		Cita cita = new Cita();
-		//System.out.println("Owner: "+ this.ownerService.findOwnerIdByUsername(principal.getName()));//OwnerByUsername(principal.getName()));
 		Integer ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		CitaMascota citaMascota= new CitaMascota();
 		citaMascota.setCita(cita);
-		//cita.setO(sec);
 		model.put("citaMascota", citaMascota);
-		//System.out.println("List: "+this.petService.findPetsByOwnerId(ownerId));
 		List<Pet> items = this.petService.findPetsByOwnerId(ownerId);
 		model.put("items", items);
 		return "citas/crearOEditarCitaOwner";
@@ -152,18 +145,11 @@ public class CitaController {
 	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
 			throws DataAccessException {
 		Cita cita=citaMascota.getCita();
-		//System.out.println("Cita: "+citaMascota.getCita().getTitulo()+ " "+ citaMascota.getCita().getFechaHora());
-		//citaMascota.setPet(citaMascota.getPet());
-		
-		//this.claseService.findClaseById(claseId);
 		cita.setEstado(Estado.PENDIENTE);
 		citaMascota.setCita(cita);
-		
 		this.citaService.saveCita(cita);
-		//System.out.println("Cita 2: "+cita.getTitulo()+ " "+ cita.getFechaHora());
 		citaMascota.setCita(cita);
 		this.citaService.saveCitaMascota(citaMascota);
-		//List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
 		if(cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("cita.fechaHora", "La fecha no puede ser una fecha pasada", "La fecha no puede ser una fecha pasada");
 			return "citas/crearOEditarCitaOwner";

@@ -25,6 +25,9 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.samples.petclinic.service.EconomistaService;
 import org.springframework.samples.petclinic.service.GastoService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,7 +41,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @RequestMapping("/economistas/gasto")
 public class GastoController {
 
-	//private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
+	private static final Logger logger =
+			Logger.getLogger(GastoController.class.getName());
 
 	private final GastoService gastoService;
         private final EconomistaService economistaService;
@@ -48,21 +52,15 @@ public class GastoController {
 		this.gastoService = gastoService;
                 this.economistaService = economistaService;
 	}
-	
-//	@ModelAttribute("economista")
-//	public Owner findOwner(@PathVariable("economistaId") int economistaId) {
-//		return this.economistaService.findEconomistaById(economistaId);
-//	}
+
 
 	@GetMapping()
 	public String listadoGastos(Map<String, Object> model, Principal principal) {
-		//String vista="owners/{ownerId}/listadoCitas";
 		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
 			List<Gasto> gastos= gastoService.findAllGastosS();
 			model.put("gastos", gastos);
 			return "gastos/gastosList";
 		} else {
-			//ModelAndView exception = new ModelAndView("exception");
 			return "exception";
 		}
 		
@@ -74,6 +72,7 @@ public class GastoController {
 		Gasto gasto= gastoService.findGastoById(gastoId);
 		System.out.println(gasto);
 		if(gasto==null) {
+			logger.log(Level.WARNING, "Gasto vacio");
 			return "exception";
 		} else {
 		model.put("gasto", gasto);
@@ -92,6 +91,7 @@ public class GastoController {
 	public String processEditGasto(final Principal principal,@Valid Gasto gasto, BindingResult result,
 			@PathVariable("gastoId") int gastoId) {
 		if (result.hasErrors()) {
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "gastos/crearOEditarGasto";
 		}
 		else {
@@ -117,6 +117,7 @@ public class GastoController {
 	@PostMapping(value = "/new")
 	public String processCrearGasto(final Principal principal,@Valid Gasto gasto, BindingResult result) {
 		if (result.hasErrors()) {
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "gastos/crearOEditarGasto";
 		}
 		else {
