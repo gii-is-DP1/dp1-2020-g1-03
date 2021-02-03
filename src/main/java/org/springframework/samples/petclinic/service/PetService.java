@@ -24,7 +24,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.repository.CompeticionPetRepository;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -81,20 +80,23 @@ public class PetService {
 		return petRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Collection<Visit> findVisitsByPetId(int petId) {
 		return visitRepository.findByPetId(petId);
 	}
 	
-
+	@Transactional(readOnly = true)
 	public List<Pet> findMascotasOwner(int idOwner) throws DataAccessException{
 		return petRepository.findMascotasOwner(idOwner);
 	}
 	
-
+	@Transactional(readOnly = true)
 	public List<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException{
 		return this.petRepository.findPetsByOwnerId(ownerId);
 
 	}
+	
+	@Transactional(readOnly = true)
 	public List<String> findNameMascota(int idOwner) throws DataAccessException{
 		return this.petRepository.findNameMascota(idOwner);
 	}

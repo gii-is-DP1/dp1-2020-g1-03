@@ -20,7 +20,7 @@ public class VacunaService {
 	
 	private VacunaRepository vacunaRepository;
 	
-	public static final Integer dias=7;
+	public static final Integer DÍAS_ENTRE_VACUNAS=7;
 
 	@Autowired
 	public VacunaService(VacunaRepository vacunaRepository,PetRepository petRepository,VetRepository vetRepository) {
@@ -39,7 +39,7 @@ public class VacunaService {
 		vacunaRepository.save(vacuna);
 		}else {
 			Vacuna ultVacuna=ultVacunas.get(ultVacunas.size()-1);
-			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<dias) {
+			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<DÍAS_ENTRE_VACUNAS) {
 				throw new DistanciaEntreDiasException();
 			}else {
 				vacunaRepository.save(vacuna);
@@ -48,11 +48,12 @@ public class VacunaService {
 		}               
 	}
 	
-
+	@Transactional(readOnly = true)
 	public List<Vacuna> findAllVacunas() throws DataAccessException {
 		return this.vacunaRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Collection<Vacuna> findAllVacunasByOwnerId(int ownerId) throws DataAccessException{
 		return vacunaRepository.findVacunasByOwnerId(ownerId);
 	}

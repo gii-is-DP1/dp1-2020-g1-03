@@ -7,16 +7,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.Adiestrador;
-import org.springframework.samples.petclinic.model.ApuntarClase;
+import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
-import org.springframework.samples.petclinic.model.Pet;
 
 public interface ClaseRepository extends Repository<Clase, Integer>{
 	
 	void save(Clase clase) throws DataAccessException;
 	
-//	@Query("SELECT id FROM Vet vet WHERE vet.user.username LIKE :user%")
-//	int findVetIdByUsername(String user)throws DataAccessException;
 	
 	List<Clase> findAll() throws DataAccessException;
 	Collection<Clase> findClaseByAdiestradorId(Integer idAdiestrador) throws DataAccessException;
@@ -31,6 +28,8 @@ public interface ClaseRepository extends Repository<Clase, Integer>{
 	@Query("SELECT clase FROM Clase clase WHERE clase.adiestrador LIKE ?1")
 	List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException;
 
+	@Query("SELECT categoriaClase FROM CategoriaClase categoriaClase")
+	List<CategoriaClase> findAllCategoriasClases() throws DataAccessException;
 
 
 	

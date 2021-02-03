@@ -2,16 +2,18 @@ package org.springframework.samples.petclinic.model;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -26,7 +28,7 @@ import lombok.Setter;
 @Table(name = "clases")
 public class Clase extends BaseEntity{
 	
-	@Column(name = "name")
+	
 	@NotEmpty
 	private String name;
 	
@@ -46,7 +48,8 @@ public class Clase extends BaseEntity{
 	@PositiveOrZero
 	private Integer numeroPlazasDisponibles;
 	
-	@Column(name = "categoria")
+	@ManyToOne
+	@JoinColumn(name = "categoria")
 	private CategoriaClase categoriaClase;
 	
 	@ManyToOne
@@ -58,8 +61,13 @@ public class Clase extends BaseEntity{
 	private Adiestrador adiestrador;
 	
 	@ManyToOne
-	@JoinColumn(name = "secretario")
+	@JoinColumn(name = "secretario_id")
 	private Secretario secretario;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "clases_pets", joinColumns = @JoinColumn(name = "clase_id"),
+			inverseJoinColumns = @JoinColumn(name = "pet_id"))
+	private Set<Pet> pets;
 	
 	public long numeroDiasEntreDosFechas(LocalDateTime fecha2){
 		   return DAYS.between(this.fechaHoraFin, fecha2);

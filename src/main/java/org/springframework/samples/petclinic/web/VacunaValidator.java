@@ -15,7 +15,6 @@ public class VacunaValidator implements Validator{
 	public void validate(Object obj, Errors errors) {
 		Vacuna vacuna = (Vacuna) obj;
 
-		// type validation
 		if (vacuna.isNew() && vacuna.getTipoEnfermedad() == null) {
 			errors.rejectValue("tipoEnfermedad", REQUIRED, REQUIRED);
 		}
@@ -28,9 +27,6 @@ public class VacunaValidator implements Validator{
 		}
 	}
 
-	/**
-	 * This Validator validates *just* Pet instances
-	 */
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return Vacuna.class.isAssignableFrom(clazz);

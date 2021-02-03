@@ -1,14 +1,11 @@
 
 package org.springframework.samples.petclinic.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Gasto;
 import org.springframework.samples.petclinic.model.Ingreso;
-import org.springframework.samples.petclinic.repository.EconomistaRepository;
 import org.springframework.samples.petclinic.repository.IngresoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +32,7 @@ public class IngresoService {
 		ingresoRepository.save(ingreso);                
 	}
 
-
+	@Transactional(readOnly = true)
 	public List<Ingreso> findAllIngresos() {
 		return ingresoRepository.findAll();
 	}

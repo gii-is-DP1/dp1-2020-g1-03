@@ -12,20 +12,10 @@ public class AdiestradorService {
 	private AdiestradorRepository adiestradorRepository;	
 	
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private AuthoritiesService authoritiesService;
-
-	@Autowired
 	public AdiestradorService(AdiestradorRepository adiestradorRepository) {
 		this.adiestradorRepository = adiestradorRepository;
 	}	
 
-	@Transactional(readOnly = true)
-	public Adiestrador findAdiestradorById(int id) throws DataAccessException {
-		return adiestradorRepository.findById(id);
-	}
 	@Transactional(readOnly = true)
 	public int findAdiestradorIdByUsername(String user) throws DataAccessException {
 		return adiestradorRepository.findAdiestradorIdByUsername(user);
@@ -33,15 +23,15 @@ public class AdiestradorService {
 
 	@Transactional
 	public void saveAdiestrador(Adiestrador adiestrador) throws DataAccessException {
-		//creating owner
-		adiestradorRepository.save(adiestrador);		
-		//creating user
+		adiestradorRepository.save(adiestrador);			
 	}		
 	
+	@Transactional(readOnly = true)
 	public Collection<Adiestrador> findAllAdiestradores() {
 		return adiestradorRepository.findAll();
 	}
 	
+	@Transactional(readOnly = true)
 	public Collection<String> findNameAndLastnameAdiestrador() throws DataAccessException{
 		return adiestradorRepository.findNameAndLastnameAdiestrador();
 	}

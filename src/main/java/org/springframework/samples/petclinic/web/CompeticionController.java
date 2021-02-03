@@ -1,18 +1,4 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
@@ -51,15 +37,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import lombok.extern.java.Log;
 
-/**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
- */
 @Controller
 public class CompeticionController {
 
@@ -83,7 +62,6 @@ public class CompeticionController {
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
 	   dataBinder.setValidator(new CompeticionPetValidator());
-	   dataBinder.addCustomFormatter(new CompeticionPetFormatter(petService, ownerService));
 	}
 
 
@@ -91,6 +69,11 @@ public class CompeticionController {
 	public Collection<PetType> populatePetTypes() {
 		return this.petService.findPetTypes();
 	}
+
+
+
+	// SECRETARIO
+
 
 	@GetMapping(value = "/secretarios/competiciones")
 	public String listadoCompeticionesBySecretarioId(Map<String, Object> model, final Principal principal) {
@@ -141,7 +124,7 @@ public class CompeticionController {
 		competicionPet.setCompeticion(comp);
 		model.put("competicionPet", competicionPet);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Collection<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		return "competiciones/competicionesInscribePet";
 	}
@@ -232,7 +215,7 @@ public class CompeticionController {
 		competicion.setSecretario(secretario);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors() + "Errores");
-			return "/secretarios/competicionesCreateOrUpdate";
+			return "/secretarios/competicionesCreateOrUpdate"; 
 		} else {
 			competicion.setId(competicionId);
 			this.competicionService.saveCompeticion(competicion);
@@ -243,7 +226,6 @@ public class CompeticionController {
 	@GetMapping(value = "/owners/competiciones/show/{competicionId}/pets")
 	public String listadoPetsEnCompeticiones(@PathVariable("competicionId") int competicionId,
 			Map<String, Object> model, final Principal principal) {
-		Competicion competicion = this.competicionService.findCompeticionById(competicionId);
 		List<CompeticionPet> competicionPets = new ArrayList<>(
 				this.competicionPetService.findCompeticionPetByCompeticionId(competicionId));
 		List<Pet> pets = new ArrayList<>();

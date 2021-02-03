@@ -60,8 +60,7 @@ public class Owner extends Person {
 	@Digits(fraction = 0, integer = 10)
 	private String telephone;
 	
-//	@OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-//	private Set<Cita> citas;
+
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
 	private Set<Pet> pets;

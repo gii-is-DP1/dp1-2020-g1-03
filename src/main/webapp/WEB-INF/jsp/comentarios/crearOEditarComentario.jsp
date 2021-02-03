@@ -17,7 +17,15 @@
         <div class="form-group has-feedback">
             <petclinic:inputField label="Titulo" name="titulo"/>
             <petclinic:inputField label="Cuerpo" name="cuerpo"/>
-            <petclinic:inputField label="Vet" name="vet"/>
+            <div class="control-group">
+            <c:choose>
+            <c:when test="${comentario['new']}">
+                    <petclinic:selectField name="vet" label="Veterinario" names="${vets}" size="10"/>
+                    </c:when>
+                    <c:otherwise>
+                    </c:otherwise>
+                    </c:choose>
+                </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
