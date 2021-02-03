@@ -23,6 +23,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 
 /**
@@ -63,4 +64,7 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	
 	@Query("SELECT id FROM Owner owner WHERE owner.user.username LIKE ?1")
 	Integer findOwnerIdByUsername(String user) throws DataAccessException;
+	
+	@Query("SELECT owner FROM Owner owner WHERE owner.user.username LIKE :username%")
+	Owner findOwnerByUsername(String username) throws DataAccessException;
 }

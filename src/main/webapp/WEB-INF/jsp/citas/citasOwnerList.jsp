@@ -39,5 +39,7 @@
         </c:forEach>
         </tbody>
     </table>
+    <spring:url value="/owners/citas/new" var="citaUrl"></spring:url>
+          <a href="${fn:escapeXml(citaUrl)}">Crear cita</a>
 
 </petclinic:layout>

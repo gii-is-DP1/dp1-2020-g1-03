@@ -2,13 +2,21 @@
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.CitaMascota;
+import org.springframework.samples.petclinic.model.Clase;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
@@ -16,6 +24,9 @@ import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
+import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
+import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +43,23 @@ public class CitaController {
 		this.citaService = citaService;
 		this.vetService=vetService;
 		this.ownerService = ownerService;
+	}
+	
+	@InitBinder("pet")
+	public void initPetBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new ApuntarClaseValidator());
+		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
+	}
+	
+	@InitBinder("fecha")
+	public void initFechaBinder(WebDataBinder dataBinder) {
+		dataBinder.addCustomFormatter(new FechaFormatter(citaService));
+	}
+	
+	
+	@ModelAttribute("types")
+	public Collection<PetType> populatePetTypes() {
+		return this.petService.findPetTypes();
 	}
 	
 	@GetMapping(value = "/vets/citas")
@@ -71,6 +99,34 @@ public class CitaController {
 		return "citas/showCitaOwner";
 	}
 	
+	@GetMapping(value = "/owners/citas/new")
+	public String initCreateCitaOwner(Map<String, Object> model, final Principal principal) {
+		Cita cita = new Cita();
+		Integer ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		CitaMascota citaMascota= new CitaMascota();
+		citaMascota.setCita(cita);
+		model.put("citaMascota", citaMascota);
+		List<Pet> items = this.petService.findPetsByOwnerId(ownerId);
+		model.put("items", items);
+		return "citas/crearOEditarCitaOwner";
+	}
+
+	@PostMapping(value = "/owners/citas/new")
+	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
+			throws DataAccessException {
+		Cita cita=citaMascota.getCita();
+		cita.setEstado(Estado.PENDIENTE);
+		citaMascota.setCita(cita);
+		this.citaService.saveCita(cita);
+		citaMascota.setCita(cita);
+		this.citaService.saveCitaMascota(citaMascota);
+		if(cita.getFechaHora().isBefore(LocalDateTime.now())) {
+			result.rejectValue("cita.fechaHora", "La fecha no puede ser una fecha pasada", "La fecha no puede ser una fecha pasada");
+			return "citas/crearOEditarCitaOwner";
+		}
+		return "redirect:/owners/citas";
+	}
+	
 	
 	@GetMapping(value = "/secretarios/citas")
 	public String listadoCitasSecretarios(Map<String, Object> model, Principal principal) {
@@ -78,7 +134,7 @@ public class CitaController {
 		model.put("citas", citas);
 		return "citas/citasSecretarioList";
 	}
-	
+	 
 	@GetMapping(value = "/secretarios/citas/sinVet")
 	public String listadoCitasSecretariosSinVet(Map<String, Object> model, Principal principal) {
 		List<Cita> citas= citaService.findCitasSinVet(); 

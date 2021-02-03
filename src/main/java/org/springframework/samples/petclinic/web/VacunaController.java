@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -31,7 +33,8 @@ public class VacunaController {
 	private final VacunaService vacunaService;
 	private final PetService petService;
 	private final VetService vetService;
-
+	private static final Logger logger =
+			Logger.getLogger(VacunaController.class.getName());
 	@Autowired
 	public VacunaController(VacunaService vacunaService,PetService petService,VetService vetService) {
 		this.vacunaService = vacunaService;
@@ -132,7 +135,7 @@ public class VacunaController {
 		vacuna.setVet(vet);
 		vacuna.setPet(this.petService.findPetById(Id));
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "vacunas/crearVacuna";
 		}else if(vacuna.getFecha().compareTo(vacuna.getPet().getBirthDate())<0) {
 			result.rejectValue("fecha", "distancia", "Fecha de vacuna anterior a fecha de nacimiento de la mascota");

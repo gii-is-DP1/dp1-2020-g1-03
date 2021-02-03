@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,9 +15,11 @@ public class CompeticionService {
 	
 	private CompeticionRepository competicionRepository;
 
+
 	@Autowired
 	public CompeticionService(CompeticionRepository competicionRepository) {
-		this.competicionRepository = competicionRepository;		
+		this.competicionRepository = competicionRepository;	
+		this.competicionPetRepository = competicionPetRepository;
 	}
 	@Transactional()
 	public void saveCompeticion(Competicion competicion) throws DataAccessException {
@@ -44,4 +47,50 @@ public class CompeticionService {
 	}
 	
 	
+
+	
+	@Transactional()
+	public void escogerMascota(CompeticionPet compPet, List<CompeticionPet> competicionesApuntadas) throws DataAccessException,
+	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException{
+		//System.out.println("Service");
+		Pet pet = compPet.getPet();
+		System.out.println("Pet: " +pet.getId());
+		Competicion competicion = compPet.getCompeticion();
+		//List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
+		System.out.println("Comp apuntadas: "+ competicionesApuntadas);
+		//List<CompeticionPet> competicionesApuntadas = this.competicionPetRepository.findCompeticionByPetId(compPet.getPet().getId());
+		
+		Boolean b=true;
+		int i=0;
+		Boolean apuntada=false;
+		if (!competicionesApuntadas.isEmpty()) {
+			while (b && i < competicionesApuntadas.size() && apuntada.equals(false)) {
+				if (competicionesApuntadas.get(i).getCompeticion().getFechaHoraFin()
+						.isAfter(compPet.getCompeticion().getFechaHoraInicio())
+						|| competicionesApuntadas.get(i).getCompeticion().getFechaHoraInicio()
+						.isBefore(compPet.getCompeticion().getFechaHoraFin())
+					&& (competicionesApuntadas.get(i).getCompeticion().getId() != compPet.getCompeticion()
+					.getId())) {
+					b = false;
+				}
+				if (competicionesApuntadas.get(i).getCompeticion().getId()
+						.equals(compPet.getCompeticion().getId())) {
+					apuntada = true;
+				}
+				i++;
+			}
+		}
+		System.out.println("Importa");
+		if (b == false) {
+			throw new SolapamientoDeCompeticionesException();
+		} else if (apuntada) {
+			throw new MascotaYaApuntadaCompeticionException();
+		} else {
+			System.out.println("Pet: "+ compPet.getPet()+" Competición: "+ compPet.getCompeticion().getNombre());
+			competicionPetRepository.save(compPet);
+		}
+
 	}
+	
+}
+

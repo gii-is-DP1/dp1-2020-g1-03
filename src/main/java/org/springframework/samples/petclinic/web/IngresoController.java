@@ -4,6 +4,8 @@ package org.springframework.samples.petclinic.web;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -26,6 +28,8 @@ public class IngresoController {
 
 	private final IngresoService ingresoService;
 	private final EconomistaService economistaService;
+	private static final Logger logger =
+			Logger.getLogger(IngresoController.class.getName());
 
 	@Autowired
 	public IngresoController(IngresoService ingresoService, EconomistaService economistaService) {
@@ -46,6 +50,7 @@ public class IngresoController {
 	public String mostarIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
 		Ingreso ingreso = ingresoService.findIngresoById(ingresoId);
 		if(ingreso==null) {
+			logger.log(Level.WARNING, "Ingreso vacio");
 			return "exception";
 		}else {
 			model.put("ingreso", ingreso);
@@ -65,7 +70,7 @@ public class IngresoController {
 	public String processEditIngreso(final Principal principal, @Valid Ingreso ingreso, BindingResult result,
 			@PathVariable("ingresoId") int ingresoId) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "ingresos/crearOEditarIngreso";
 		} else {
 			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
@@ -87,7 +92,7 @@ public class IngresoController {
 	@PostMapping(value = "/create")
 	public String processCreateIngreso(@Valid Ingreso ingreso, BindingResult result) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "ingresos/crearOEditarIngreso";
 		} else {
 			this.ingresoService.saveIngreso(ingreso);

@@ -321,4 +321,5 @@ public class ClaseController {
 			return "redirect:/secretarios/clases";
 		}
 	}
+
 }

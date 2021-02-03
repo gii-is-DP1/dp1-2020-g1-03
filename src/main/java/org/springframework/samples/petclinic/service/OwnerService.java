@@ -51,6 +51,11 @@ public class OwnerService {
 		return ownerRepository.findOwnerIdByUsername(user);
 	}
 	@Transactional(readOnly = true)
+	public Owner findOwnerByUsername(String user) throws DataAccessException {
+		return ownerRepository.findOwnerByUsername(user);
+	}
+	
+	@Transactional(readOnly = true)
 	public Collection<Owner> findOwnerByLastName(String lastName) throws DataAccessException {
 		return ownerRepository.findByLastName(lastName);
 	}

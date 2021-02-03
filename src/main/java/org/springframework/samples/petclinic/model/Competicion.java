@@ -35,13 +35,14 @@ public class Competicion extends BaseEntity {
 	@Column(name = "fecha_hora_inicio")        
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Future
-    @NotNull
+
+
+  @NotNull
 	private LocalDate fechaHoraInicio;
 	
 	@Column(name = "fecha_hora_fin")        
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Future
+
 	@NotNull
 	private LocalDate fechaHoraFin;
 
