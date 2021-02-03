@@ -219,14 +219,14 @@ public class CompeticionController {
 	}
 
 	@GetMapping(value = "/secretarios/competiciones/edit/{competicionId}")
-	public String initEditComentario(@PathVariable("competicionId") int competicionId, Map<String, Object> model) {
+	public String initEditCompeticion(@PathVariable("competicionId") int competicionId, Map<String, Object> model) {
 		Competicion competicion = this.competicionService.findCompeticionById(competicionId);
 		model.put("competicion", competicion);
 		return "competiciones/competicionesCreateOrUpdate";
 	}
 
 	@PostMapping(value = "/secretarios/competiciones/edit/{competicionId}")
-	public String processEditComentario(final Principal principal, @Valid Competicion competicion, BindingResult result,
+	public String processEditCompeticion(final Principal principal, @Valid Competicion competicion, BindingResult result,
 			@PathVariable("competicionId") int competicionId) {
 		Secretario secretario = this.secretarioService.findSecretarioByUsername(principal.getName());
 		competicion.setSecretario(secretario);
