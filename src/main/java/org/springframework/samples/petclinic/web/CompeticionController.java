@@ -66,7 +66,6 @@ public class CompeticionController {
 	public CompeticionController(CompeticionService competicionService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService, CompeticionPetService competicionPetService) {
 		this.competicionService = competicionService;
-		// this.adiestradorService = adiestradorService;
 		this.secretarioService = secretarioService;
 		this.petService = petService;
 		this.ownerService = ownerService;
@@ -84,24 +83,6 @@ public class CompeticionController {
 	public Collection<PetType> populatePetTypes() {
 		return this.petService.findPetTypes();
 	}
-
-//	@ModelAttribute("adiestradores")
-//	public Collection<String> populateAdiestradores() {
-//		return this.secretarioService.findNameAndLastnameAdiestrador();
-//	}
-
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
-
-	// ADIESTRADOR
 
 	@GetMapping(value = "/secretarios/competiciones")
 	public String listadoCompeticionesBySecretarioId(Map<String, Object> model, final Principal principal) {
@@ -123,12 +104,8 @@ public class CompeticionController {
 	}
 	}
 
-	// Dueño
-
 	@GetMapping(value = "/owners/competiciones")
 	public String listadoCompeticionesByOwnerId(Map<String, Object> model, final Principal principal) {
-//			Integer ownerId=this.ownerService.findOwnerIdByUsername(principal.getName());
-//			Owner owner= this.ownerService.findOwnerById(ownerId);
 		Collection<Competicion> competiciones = competicionService.findAllCompeticiones();
 		model.put("competiciones", competiciones);
 		return "competiciones/competicionesListOwner";
@@ -167,26 +144,6 @@ public class CompeticionController {
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
 		List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
-//		Boolean b = true;
-//		int i = 0;
-//		Boolean apuntada = false;
-//		if (!competicionesApuntadas.isEmpty()) {
-//			while (b && i < competicionesApuntadas.size() && apuntada.equals(false)) {
-//				if (competicionesApuntadas.get(i).getCompeticion().getFechaHoraFin()
-//						.isAfter(competicionPet.getCompeticion().getFechaHoraInicio())
-//						|| competicionesApuntadas.get(i).getCompeticion().getFechaHoraInicio()
-//								.isBefore(competicionPet.getCompeticion().getFechaHoraFin())
-//						&& (competicionesApuntadas.get(i).getCompeticion().getId() != competicionPet.getCompeticion()
-//								.getId())) {
-//					b = false;
-//				}
-//				if (competicionesApuntadas.get(i).getCompeticion().getId()
-//						.equals(competicionPet.getCompeticion().getId())) {
-//					apuntada = true;
-//				}
-//				i++;
-//			}
-//		}
 		if (result.hasErrors()) {
 			System.out.println("Errores: "+result.getAllErrors());
 			return "competiciones/competicionesInscribePet";
@@ -201,33 +158,19 @@ public class CompeticionController {
 				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
 	        }catch(SolapamientoDeCompeticionesException ex4){
-	        	System.out.println("EX4444444444");
+	        	//System.out.println("EX4444444444");
 	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada",
 						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada");
 				return "competiciones/competicionesInscribePet";
 	        }catch(MascotaYaApuntadaCompeticionException ex5){
-	        	System.out.println("EX5555555555");
+	        	//System.out.println("EX5555555555");
 	        	result.rejectValue("pet","Ya se ha apuntado a esta competición",
 						"Ya se ha apuntado a esta competición");
 				return "competiciones/competicionesInscribePet";
 	        }
-			//System.out.println("LLEGAAAA");
 			this.competicionPetService.saveCompeticionPet(competicionPet);
 			return "redirect:/owners/competiciones/show/" + competicionId;
 		}
-		//else if (b == false) {
-//			result.rejectValue("pet",
-//					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada",
-//					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada");
-//			return "exception";
-//		} else if (apuntada) {
-//			result.rejectValue("pet", "Ya se ha apuntado a esta competicion", "Ya se ha apuntado a esta competicion");
-//			return "exception";
-//		} else {
-//			this.competicionPetService.saveCompeticionPet(competicionPet);
-//
-//			return "redirect:/owners/competiciones/show/" + competicionId;
-//		}
 	}
 
 	@GetMapping(value = "/secretarios/competiciones/new")
