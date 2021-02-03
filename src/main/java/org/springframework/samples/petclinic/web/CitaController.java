@@ -18,6 +18,8 @@ import org.springframework.samples.petclinic.model.CitaMascota;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
 import org.springframework.samples.petclinic.service.OwnerService;
@@ -28,6 +30,8 @@ import org.springframework.samples.petclinic.service.exceptions.DiferenciaClases
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -36,6 +40,7 @@ public class CitaController {
 	private final CitaService citaService;
 	private final VetService vetService;
 	private final OwnerService ownerService;
+	private final PetService petService;
 	
 	@Autowired
 	public CitaController(CitaService citaService,VetService vetService,SecretarioService secretarioService,
@@ -43,12 +48,13 @@ public class CitaController {
 		this.citaService = citaService;
 		this.vetService=vetService;
 		this.ownerService = ownerService;
+		this.petService = petService;
 	}
 	
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new ApuntarClaseValidator());
-		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
+		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService));
 	}
 	
 	@InitBinder("fecha")

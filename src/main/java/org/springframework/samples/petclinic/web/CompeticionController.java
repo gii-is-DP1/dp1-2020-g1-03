@@ -131,8 +131,11 @@ public class CompeticionController {
 
 	@PostMapping(value = "/owners/competiciones/show/{competicionId}/inscribir")
 	public String processInscribePet(@PathVariable("competicionId") int competicionId,
-			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal) throws DataAccessException,
+			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal, Map<String, Object> model) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException {
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(ownerId);
+		model.put("pets", pets);
 		competicionPet.setPet(competicionPet.getPet());
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);

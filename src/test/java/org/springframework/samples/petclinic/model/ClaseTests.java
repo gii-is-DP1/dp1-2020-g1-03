@@ -31,7 +31,7 @@ public class ClaseTests {
 		clase.setFechaHoraFin(LocalDateTime.of(2020, 1, 4, 13, 00));
 		clase.setNumeroPlazasTotal(20);
 		clase.setNumeroPlazasDisponibles(15);
-		clase.setCategoriaClase(CategoriaClase.TRUCOS_BASICOS);
+		clase.setCategoriaClase(new CategoriaClase());
 		clase.setAdiestrador(adiestrador);
 		clase.setSecretario(secretario);
 
@@ -52,7 +52,7 @@ public class ClaseTests {
 		clase.setFechaHoraFin(LocalDateTime.of(2020, 1, 4, 13, 00));
 		clase.setNumeroPlazasTotal(20);
 		clase.setNumeroPlazasDisponibles(15);
-		clase.setCategoriaClase(CategoriaClase.TRUCOS_BASICOS);
+		clase.setCategoriaClase(new CategoriaClase());
 
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Clase>> constraintViolations = validator.validate(clase);

@@ -7,13 +7,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
+import org.springframework.samples.petclinic.model.CompeticionPet;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.repository.CompeticionPetRepository;
 import org.springframework.samples.petclinic.repository.CompeticionRepository;
+import org.springframework.samples.petclinic.service.exceptions.MascotaYaApuntadaCompeticionException;
+import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeCompeticionesException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CompeticionService {
 	
 	private CompeticionRepository competicionRepository;
+	private CompeticionPetRepository competicionPetRepository;
 
 
 	@Autowired

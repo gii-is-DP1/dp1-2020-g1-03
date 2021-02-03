@@ -30,14 +30,12 @@ public class Cita extends NamedEntity {
 
 	@Column(name = "fecha_hora")
 	@NotNull
-	//@Future
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")//pattern = "yyyy-MM-dd HH:mm")
-	//@JsonFormat(pattern = "yyyy-MM-dd hh:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 
 
 	
-	@NotEmpty
+	//@NotEmpty
 	private Estado estado;
 	
 	
