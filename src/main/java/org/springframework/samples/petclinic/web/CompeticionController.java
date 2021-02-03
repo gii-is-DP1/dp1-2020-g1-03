@@ -1,18 +1,4 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
@@ -44,12 +30,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-/**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
- */
 @Controller
 public class CompeticionController {
 
@@ -62,7 +42,6 @@ public class CompeticionController {
 	public CompeticionController(CompeticionService competicionService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService, CompeticionPetService competicionPetService) {
 		this.competicionService = competicionService;
-		// this.adiestradorService = adiestradorService;
 		this.secretarioService = secretarioService;
 		this.petService = petService;
 		this.ownerService = ownerService;
@@ -80,23 +59,8 @@ public class CompeticionController {
 		return this.petService.findPetTypes();
 	}
 
-//	@ModelAttribute("adiestradores")
-//	public Collection<String> populateAdiestradores() {
-//		return this.secretarioService.findNameAndLastnameAdiestrador();
-//	}
 
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
-
-	// ADIESTRADOR
+	// SECRETARIO
 
 	@GetMapping(value = "/secretarios/competiciones")
 	public String listadoCompeticionesBySecretarioId(Map<String, Object> model, final Principal principal) {
@@ -122,8 +86,6 @@ public class CompeticionController {
 
 	@GetMapping(value = "/owners/competiciones")
 	public String listadoCompeticionesByOwnerId(Map<String, Object> model, final Principal principal) {
-//			Integer ownerId=this.ownerService.findOwnerIdByUsername(principal.getName());
-//			Owner owner= this.ownerService.findOwnerById(ownerId);
 		Collection<Competicion> competiciones = competicionService.findAllCompeticiones();
 		model.put("competiciones", competiciones);
 		return "competiciones/competicionesListOwner";
@@ -240,7 +202,7 @@ public class CompeticionController {
 		competicion.setSecretario(secretario);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors() + "Errores");
-			return "/secretarios/competicionesCreateOrUpdate";
+			return "/secretarios/competicionesCreateOrUpdate"; 
 		} else {
 			competicion.setId(competicionId);
 			this.competicionService.saveCompeticion(competicion);
@@ -251,7 +213,6 @@ public class CompeticionController {
 	@GetMapping(value = "/owners/competiciones/show/{competicionId}/pets")
 	public String listadoPetsEnCompeticiones(@PathVariable("competicionId") int competicionId,
 			Map<String, Object> model, final Principal principal) {
-		Competicion competicion = this.competicionService.findCompeticionById(competicionId);
 		List<CompeticionPet> competicionPets = new ArrayList<>(
 				this.competicionPetService.findCompeticionPetByCompeticionId(competicionId));
 		List<Pet> pets = new ArrayList<>();

@@ -13,7 +13,6 @@ import org.springframework.samples.petclinic.model.Ingreso;
 import org.springframework.samples.petclinic.service.EconomistaService;
 
 import org.springframework.samples.petclinic.service.IngresoService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,21 +35,15 @@ public class IngresoController {
 
 	@GetMapping()
 	public String listadoIngresos(Map<String, Object> model, Principal principal) {
-		// String vista="owners/{ownerId}/listadoCitas";
-		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
 			List<Ingreso> ingresos = ingresoService.findAllIngresos();
 			model.put("ingresos", ingresos);
 			return "ingresos/ingresosList";
-		}else {
-			//ModelAndView exception = new ModelAndView("exception");
-			return "exception";			
-		}
+		
 
 	}
 
 	@GetMapping(value = "{ingresoId}")
 	public String mostarIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
-		// String vista="owners/{ownerId}/listadoCitas";
 		Ingreso ingreso = ingresoService.findIngresoById(ingresoId);
 		if(ingreso==null) {
 			return "exception";
@@ -64,7 +57,6 @@ public class IngresoController {
 	@GetMapping(value = "/{ingresoId}/edit")
 	public String initEditIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
 		Ingreso ingreso = this.ingresoService.findIngresoById(ingresoId);
-		System.out.println(ingreso + "INGRESO");
 		model.put("ingreso", ingreso);
 		return "ingresos/crearOEditarIngreso";
 	}
@@ -79,7 +71,6 @@ public class IngresoController {
 			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
 			Economista econ = this.economistaService.findEconomistaById(idEcon);
 			ingreso.setEconomista(econ);
-			System.out.println(ingreso.getEconomista());
 			ingreso.setId(ingresoId);
 			this.ingresoService.saveIngreso(ingreso);
 			return "redirect:/economistas/ingreso/{ingresoId}";

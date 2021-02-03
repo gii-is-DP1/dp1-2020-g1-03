@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.samples.petclinic.model.Comentario;
-import org.springframework.samples.petclinic.model.CompeticionPet;
-import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -20,7 +18,6 @@ public class ComentarioValidator implements Validator {
 		Comentario com = (Comentario) obj;
 		
 
-		// type validation
 		if (com.getVet().isNew() && com.getVet() == null) {
 			errors.rejectValue("vet", REQUIRED, REQUIRED);
 		}

@@ -14,8 +14,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
-import org.springframework.samples.petclinic.model.Competicion;
-import org.springframework.samples.petclinic.model.CompeticionPet;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
@@ -60,7 +58,7 @@ public class ClaseController {
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new ApuntarClaseValidator());
-		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService, ownerService));
+		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService));
 	}
 	
 	
@@ -98,8 +96,6 @@ public class ClaseController {
 	public String listadoClasesByAdiestradorId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
 		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
-		System.out.println(idAdiestrador);
-		System.out.println("ID DEL Adiestrador"+idAdiestrador);
 		Collection<Clase> clases= claseService.findClaseByAdiestradorId(idAdiestrador);
 		model.put("clases", clases);
 		return "clases/clasesList";
@@ -145,15 +141,12 @@ public class ClaseController {
 	
 	@PostMapping(value = "owners/clases/show/apuntar/{claseId}")
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
-			@PathVariable("claseId") int claseId, Map<String, Object> model) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
+			@PathVariable("claseId") int claseId, Map<String, Object> model) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException, ClasePisadaDelAdiestradorException {
 		apClase.setPet(apClase.getPet());
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		Clase clas = this.claseService.findClaseById(claseId);
-		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
-		model.put("pets", pets);
 		apClase.setClase(clas);
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
@@ -165,7 +158,7 @@ public class ClaseController {
 			return "clases/apuntarClases";
 		}else {
 			try{
-				this.claseService.escogerMascota(apClase);
+				this.claseService.apuntarMascota(apClase);
 			}catch(DiferenciaTipoMascotaException ex){
             result.rejectValue("pet", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio");
             return "clases/apuntarClases";
@@ -185,14 +178,6 @@ public class ClaseController {
 				return "clases/apuntarClases";
 	        }
 			
-			apClase.getClase().setNumeroPlazasDisponibles(apClase.getClase().getNumeroPlazasDisponibles()-1);
-			try{
-				this.claseService.saveClase(apClase.getClase());
-			}catch(ClasePisadaDelAdiestradorException ex6){
-				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
-						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
-            return "clases/crearOEditarClase";
-	        }
 			
 			return "redirect:/owners/clases";
 		}

@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Comentario;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComentarioService {
 	
 	private ComentarioRepository comentarioRepository;
-	private VetRepository vetRepository;
 	private OwnerRepository ownerRepository;
 	private CitaMascotaRepository citaMascotaRepository;
 	
@@ -27,7 +24,6 @@ public class ComentarioService {
 	public ComentarioService(ComentarioRepository comentarioRepository,
 			VetRepository vetRepository, OwnerRepository ownerRepository, CitaMascotaRepository citaMascotaRepository) {
 		this.comentarioRepository = comentarioRepository;
-		this.vetRepository = vetRepository;
 		this.ownerRepository = ownerRepository;
 		this.citaMascotaRepository = citaMascotaRepository;
 	}
@@ -53,16 +49,17 @@ public class ComentarioService {
 		comentarioRepository.save(comentario);               
 	}
 
-
+	@Transactional(readOnly = true)
 	public Collection<Comentario> findAllComentariosByVetId(int vetId) throws DataAccessException{
 		return comentarioRepository.findComentariosByVetId(vetId);
 	}
+	
+	@Transactional(readOnly = true)
 	public Collection<Comentario> findAllComentariosByOwnerId(int ownerId) throws DataAccessException{
 		return comentarioRepository.findComentariosByOwnerId(ownerId);
 	}
-//	public int findVetIdByUsername(String user) throws DataAccessException {
-//		return this.comentarioRepository.findVetIdByUsername(user);
-//	}
+	
+	@Transactional(readOnly = true)
 	public Comentario findComentarioByComentarioId(int comentarioId) throws DataAccessException{
 		return comentarioRepository.findById(comentarioId);
 	}

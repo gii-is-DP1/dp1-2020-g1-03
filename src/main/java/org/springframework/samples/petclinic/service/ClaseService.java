@@ -10,7 +10,6 @@ import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.repository.AdiestradorRepository;
 import org.springframework.samples.petclinic.repository.ApuntarClaseRepository;
 import org.springframework.samples.petclinic.repository.ClaseRepository;
 import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
@@ -40,8 +39,9 @@ public class ClaseService {
 		int i=0;
 		if(!clases.isEmpty()) {
 			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
-						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
+				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio()) 
+						&& clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())
+						&& clases.get(i).getId()!=clase.getId()) {
 					b=false;		
 				}
 				i++;
@@ -57,34 +57,40 @@ public class ClaseService {
 		claseRepository.delete(clase);
 	}
 
-
+	@Transactional(readOnly = true)
 	public Collection<Clase> findClaseByAdiestradorId(Integer idAdiestrador) throws DataAccessException{
 		return claseRepository.findClaseByAdiestradorId(idAdiestrador);
 	}
+	
+	@Transactional(readOnly = true)
 	public List<Clase> findByName(String nombreClase) throws DataAccessException{
 		return claseRepository.findByName(nombreClase);
 	}
+	
+	@Transactional(readOnly = true)
 	public Collection<Clase> findAllClases() throws DataAccessException{
-
 		return claseRepository.findAll();
 
 	}
 	
+	@Transactional(readOnly = true)
 	public Clase findClaseById(int claseId) throws DataAccessException{
 		return claseRepository.findById(claseId);
 	}
 	
+	@Transactional(readOnly = true)
 	public List<ApuntarClase> findClasesByPetId(int petId) throws DataAccessException{
 		return apuntarClaseRepository.findClasesByPetId(petId);
 	}
 	
+	@Transactional(readOnly = true)
 	public List<Clase> findClasesAdiestrador(Adiestrador adie) throws DataAccessException{
 		return claseRepository.findClasesAdiestrador(adie);
 	}
 	
 	@Transactional()
-	public void escogerMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, 
-	DiferenciaClasesDiasException, SolapamientoDeClasesException, MacostaYaApuntadaException{
+	public void apuntarMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, 
+	DiferenciaClasesDiasException, SolapamientoDeClasesException, MacostaYaApuntadaException, ClasePisadaDelAdiestradorException{
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
@@ -120,11 +126,16 @@ public class ClaseService {
 		}else if(apuntada){
 			throw new MacostaYaApuntadaException();
 		}else {
-			apuntarClaseRepository.save(apClase);
-		}
+			apClase.getClase().setNumeroPlazasDisponibles(apClase.getClase().getNumeroPlazasDisponibles()-1);
+			saveClase(apClase.getClase());
+			this.apuntarClaseRepository.save(apClase);
 			
+			
+			}
+		}	
 	}
 	
+	@Transactional(readOnly = true)
 	public List<ApuntarClase> findMascotasApuntadasEnClaseByClaseId(int claseId) throws DataAccessException{
 		return apuntarClaseRepository.findMascotasApuntadasEnClaseByClaseId(claseId);
 	}
@@ -134,7 +145,7 @@ public class ClaseService {
 		 this.apuntarClaseRepository.delete(apClase);
 	}
 	
-	@Transactional()
+	@Transactional(readOnly = true)
 	public List<CategoriaClase> findAllCategoriasClase(){
 		return this.claseRepository.findAllCategoriasClases();
 	}

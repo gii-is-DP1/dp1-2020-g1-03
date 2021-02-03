@@ -20,9 +20,6 @@ public class FechaHoraFormatter implements Formatter<LocalDateTime>{
 		LocalDateTime fechaHora=LocalDateTime.parse(text);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.US);
 		fechaHora.format(formatter);
-		if(fechaHora==null) {
-			throw new ParseException("type not found: " + text, 0);
-		}
 		return fechaHora;
 	}
 
