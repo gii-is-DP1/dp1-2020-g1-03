@@ -24,9 +24,12 @@ import org.springframework.samples.petclinic.service.ClaseService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
+import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
+import org.springframework.samples.petclinic.service.exceptions.MacostaYaApuntadaException;
+import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeClasesException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -148,24 +151,10 @@ public class ClaseController {
 		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		Clase clas = this.claseService.findClaseById(claseId);
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		model.put("pets", pets);
 		apClase.setClase(clas);
-		List<ApuntarClase> clasesApuntadas = this.claseService.findClasesByPetId(apClase.getPet().getId());
-		Boolean b=true;
-		int i=0;
-		Boolean apuntada=false;
-		if(!clasesApuntadas.isEmpty()) {
-			while(b && i<clasesApuntadas.size() && apuntada.equals(false)) {
-				if(clasesApuntadas.get(i).getClase().getFechaHoraFin().isAfter(apClase.getClase().getFechaHoraInicio()) 
-						&& clasesApuntadas.get(i).getClase().getFechaHoraInicio().isBefore(apClase.getClase().getFechaHoraFin())
-						&& clasesApuntadas.get(i).getClase().getId()!=apClase.getClase().getId()) {
-					b=false;		
-				}
-				if(clasesApuntadas.get(i).getClase().getId().equals(apClase.getClase().getId())){
-					apuntada=true;
-				}
-				i++;
-			}
-		}
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/apuntarClases";
@@ -174,30 +163,36 @@ public class ClaseController {
 					"La clase ya ha comenzado o ha terminado");
 			
 			return "clases/apuntarClases";
-		
-		}else if(b==false){
-			result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada",
-					"No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada");
-			return "clases/apuntarClases";
-		}else if(apuntada){
-			result.rejectValue("pet","Ya se ha apuntado a esta clase",
-					"Ya se ha apuntado a esta clase");
-			return "clases/apuntarClases";
 		}else {
 			try{
 				this.claseService.escogerMascota(apClase);
 			}catch(DiferenciaTipoMascotaException ex){
             result.rejectValue("pet", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio", "El tipo de la mascota no es el adecuado para esta clase, violación de la regla de negocio");
             return "clases/apuntarClases";
-        }catch(DiferenciaClasesDiasException ex2){
-            result.rejectValue("pet", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio");
-            return "clases/apuntarClases";
-        }catch(LimiteAforoClaseException ex3){
-            result.rejectValue("pet", "Aforo completo de la clase, violación de regla de negocio", "Aforo completo de la clase, violación de regla de negocio");
-            return "clases/apuntarClases";
-        }	
+	        }catch(DiferenciaClasesDiasException ex2){
+	            result.rejectValue("pet", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio", "No puede apuntar a su mascota en clase, límite de clase semanal alcanzado. Violación de regla de negocio");
+	            return "clases/apuntarClases";
+	        }catch(LimiteAforoClaseException ex3){
+	            result.rejectValue("pet", "Aforo completo de la clase, violación de regla de negocio", "Aforo completo de la clase, violación de regla de negocio");
+	            return "clases/apuntarClases";
+	        }catch(SolapamientoDeClasesException ex4){
+	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada, violación de regla de negocio",
+						"No puede apuntar a su mascota porque se pisa con otra clase a la que está apuntada, violación de regla de negocio");
+				return "clases/apuntarClases";
+	        }catch(MacostaYaApuntadaException ex5){
+	        	result.rejectValue("pet","Ya se ha apuntado a esta clase, violación de regla de negocio",
+						"Ya se ha apuntado a esta clase, violación de regla de negocio");
+				return "clases/apuntarClases";
+	        }
+			
 			apClase.getClase().setNumeroPlazasDisponibles(apClase.getClase().getNumeroPlazasDisponibles()-1);
-			this.claseService.saveClase(apClase.getClase());
+			try{
+				this.claseService.saveClase(apClase.getClase());
+			}catch(ClasePisadaDelAdiestradorException ex6){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			
 			return "redirect:/owners/clases";
 		}
@@ -243,18 +238,7 @@ public class ClaseController {
 	
 	@PostMapping(value = "secretarios/clases/show/{claseId}/edit")
 	public String processEditClase(@Valid Clase clase, BindingResult result,final Principal principal, 
-			@PathVariable("claseId") int claseId) {
-		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
-		boolean b=true;
-		int i=0;
-		if(!clases.isEmpty()) {
-			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())) {
-					b=false;		
-				}
-				i++;
-			}
-		}
+			@PathVariable("claseId") int claseId) throws DataAccessException, ClasePisadaDelAdiestradorException{
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/crearOEditarClase";
@@ -270,15 +254,17 @@ public class ClaseController {
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
 			return "clases/crearOEditarClase";
-		}else if(b==false){
-			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
-					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
-			return "clases/crearOEditarClase";
 		}else {
 			Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
 			clase.setSecretario(sec);
 			clase.setId(claseId);
-			this.claseService.saveClase(clase);
+			try{
+				this.claseService.saveClase(clase);
+			}catch(ClasePisadaDelAdiestradorException ex){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			return "redirect:/secretarios/clases/show/{claseId}";
 		}
 	}
@@ -299,7 +285,7 @@ public class ClaseController {
 		return "redirect:/secretarios/clases";
 	}
 	
-	@GetMapping(value = "secretarios/clases/new")  ///owners/comentarios/new
+	@GetMapping(value = "secretarios/clases/new")  
 	public String initCreateClase(Map<String, Object> model, final Principal principal) {
 		Clase clase = new Clase();
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
@@ -309,14 +295,15 @@ public class ClaseController {
 	}
 
 	@PostMapping(value = "secretarios/clases/new")
-	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) {
+	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) throws DataAccessException, ClasePisadaDelAdiestradorException {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
 		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
 		boolean b=true;
 		int i=0;
 		if(!clases.isEmpty()) {
 			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())) {
+				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
+						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
 					b=false;		
 				}
 				i++;
@@ -338,12 +325,14 @@ public class ClaseController {
 			result.rejectValue("name","Ya existe una clase con este nombre",
 					"Ya existe una clase con este nombre");
 			return "clases/crearOEditarClase";
-		}else if(b==false){
-			result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
-					"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
-			return "clases/crearOEditarClase";
 		}else {
-			this.claseService.saveClase(clase);
+			try{
+				this.claseService.saveClase(clase);
+			}catch(ClasePisadaDelAdiestradorException ex){
+				result.rejectValue("adiestrador","No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir",
+						"No puede dar la clase este adiestrador porque se pisa con otra clase a la que debe impartir");
+            return "clases/crearOEditarClase";
+	        }
 			return "redirect:/secretarios/clases";
 		}
 	}

@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
 package org.springframework.samples.petclinic.repository;
 
 import java.util.List;
@@ -20,20 +20,14 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Vet;
 
-/**
- * Spring Data JPA specialization of the {@link CitaRepository} interface
- *
- * @author Michael Isvy
- * @since 15.1.2013
- */
 public interface CitaRepository extends Repository<Cita, Integer> {
+
 
 	Cita findById(int citaId) throws DataAccessException;
 	
@@ -49,3 +43,8 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	
 }
+
+
+	
+	
+
