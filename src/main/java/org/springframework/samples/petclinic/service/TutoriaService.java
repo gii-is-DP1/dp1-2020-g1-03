@@ -29,6 +29,10 @@ public class TutoriaService {
 		return tutoriaRepository.findTutoriaById(tutoriaId);
 	}
 	
+	public Collection<Tutoria> findTutoriaByOwnerId(Integer idOwner) throws DataAccessException {
+		return tutoriaRepository.findTutoriasByOwnerId(idOwner);
+	}
+	
 	
 	public List<Tutoria> findAllTutorias() {
 		return tutoriaRepository.findAll();

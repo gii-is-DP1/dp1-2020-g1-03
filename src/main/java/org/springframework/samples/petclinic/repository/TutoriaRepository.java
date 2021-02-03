@@ -25,6 +25,9 @@ public interface TutoriaRepository extends Repository<Tutoria,Integer> {
 	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE tutoria.fechaHora LIKE :fechaHora AND tutoria.adiestrador.id LIKE :adiestradorId")
 	int findTutoriasByAdiestradorId(LocalDateTime fechaHora, int adiestradorId) throws DataAccessException;
 	
+	
+	Collection<Tutoria> findTutoriasByOwnerId(Integer idOwner) throws DataAccessException;
+	
 	@Query("SELECT COUNT (tutoria.id) FROM Tutoria tutoria WHERE DAY(tutoria.fechaHora) LIKE :day AND MONTH(tutoria.fechaHora) LIKE :month "
 			+ "AND YEAR(tutoria.fechaHora) LIKE :year AND tutoria.adiestrador.id LIKE :adiestradorId")
 	int numeroTutoriasEnUnDiaAdiestrador(int day, int month, int year, int adiestradorId) throws DataAccessException;
@@ -36,4 +39,5 @@ public interface TutoriaRepository extends Repository<Tutoria,Integer> {
 	int numeroTutoriasEnUnDiaPet(LocalDateTime fechaHora, int petId) throws DataAccessException;
 
 	Tutoria findTutoriaById(int tutoriaId) throws DataAccessException;
+	
 }
