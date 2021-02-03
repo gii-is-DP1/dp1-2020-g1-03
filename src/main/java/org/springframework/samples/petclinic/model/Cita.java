@@ -16,19 +16,22 @@
 package org.springframework.samples.petclinic.model;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
-
+/*
 /**
  * Simple JavaBean domain object representing an owner.
  *
@@ -49,8 +52,8 @@ public class Cita extends NamedEntity {
 
 	@Column(name = "fecha_hora")
 	@NotEmpty
-	@DateTimeFormat(pattern ="yyyy-MM-dd hh:mm")
-	private Date fechaHora;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	private LocalDateTime fechaHora;
 
 	@Column(name = "estado")
 	@NotEmpty
@@ -60,8 +63,8 @@ public class Cita extends NamedEntity {
 	@NotEmpty
 	private String razon;
 	
-//	@ManyToMany(cascade = CascadeType.ALL/*, mappedBy = "owner"*/)
-//	private Set<Pet> pets;
-
-
+	@ManyToOne
+	@JoinColumn(name = "vet_id")
+	private Vet vet;
+	
 }

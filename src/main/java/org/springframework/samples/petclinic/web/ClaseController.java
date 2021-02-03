@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.ApuntarClase;
+import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
@@ -63,6 +64,15 @@ public class ClaseController {
 	}
 	
 	
+	@InitBinder("fechaHoraInicio")
+	public void initFechaHoraInicioBinder(WebDataBinder dataBinder) {
+		dataBinder.addCustomFormatter(new FechaHoraFormatter());
+	}
+	@InitBinder("fechaHoraFin")
+	public void initFechaHoraFinBinder(WebDataBinder dataBinder) {
+		dataBinder.addCustomFormatter(new FechaHoraFormatter());
+	}
+	
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
 		return this.petService.findPetTypes();
@@ -73,17 +83,14 @@ public class ClaseController {
 		return this.adiestradorService.findNameAndLastnameAdiestrador();
 	}
 	
+	@ModelAttribute("categoriaClase")
+	public Collection<CategoriaClase> categoriasClase() {
+		return this.claseService.findAllCategoriasClase();
+	}
 	
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
+	
+	
+
 	
 	//ADIESTRADOR
 	
@@ -131,7 +138,7 @@ public class ClaseController {
 		apClase.setClase(clas);
 		model.put("apuntarClase", apClase);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		return "clases/apuntarClases";
 	}
@@ -140,6 +147,9 @@ public class ClaseController {
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId, Map<String, Object> model) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException {
 		apClase.setPet(apClase.getPet());
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(ownerId);
+		model.put("pets", pets);
 		Clase clas = this.claseService.findClaseById(claseId);
 		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		List<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
@@ -153,7 +163,6 @@ public class ClaseController {
 					"La clase ya ha comenzado o ha terminado");
 			
 			return "clases/apuntarClases";
-			
 		}else {
 			try{
 				this.claseService.escogerMascota(apClase);
@@ -192,14 +201,11 @@ public class ClaseController {
 	@GetMapping(value = "/owners/clases/show/{claseId}/pets")
 	public String listadoPetsEnClases(@PathVariable("claseId") int claseId,
 			Map<String, Object> model, final Principal principal) {
-		List<ApuntarClase> clases = new ArrayList<>(
+		List<ApuntarClase> mascotasEnClase = new ArrayList<>(
 				this.claseService.findMascotasApuntadasEnClaseByClaseId(claseId));
 		List<Pet> pets = new ArrayList<>();
-		Pet aux;
-		for (int i = 0; i < clases.size(); i++) {
-			int idClasePet = clases.get(i).getClase().getId();
-			aux = this.claseService.findPetByClasePetId(idClasePet);
-			pets.add(aux);
+		for (int i = 0; i < mascotasEnClase.size(); i++) {
+			pets.add(mascotasEnClase.get(i).getPet());
 		}
 		model.put("pets", pets);
 		return "clases/mascotasApuntadas";

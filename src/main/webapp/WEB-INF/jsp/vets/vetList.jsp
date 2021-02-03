@@ -30,7 +30,7 @@
                 <td>
                 <spring:url value="/vets/comentarios" var="comentariosUrl">
                 </spring:url>
-                <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Listar comentarios"/></a>
+                <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Ver comentarios"/></a>
                 </td>
             </tr>
         </c:forEach>

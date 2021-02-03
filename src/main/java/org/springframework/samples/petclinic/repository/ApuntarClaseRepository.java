@@ -23,6 +23,5 @@ public interface ApuntarClaseRepository extends Repository<ApuntarClase, Integer
 	
 	void delete(ApuntarClase apuntarClase) throws DataAccessException;
 	
-	@Query("SELECT pet FROM ApuntarClase apuntarClase WHERE apuntarClase.clase.id =:claseId")
-	Pet findPetByClasePetId(int claseId) throws DataAccessException;
+	
 }

@@ -16,8 +16,8 @@
             <td><c:out value="${comentario.cuerpo}"/></td>
         </tr>
         <tr>
-            <th>Veterianario</th>
-            <td><c:out value="${comentario.vet.firstName}"/></td>
+            <th>Dueño</th>
+            <td><c:out value="${comentario.owner.firstName}"/>,<c:out value="${comentario.owner.lastName}"/></td>
         </tr>
     </table><%-- 
     <spring:url value="/owners/comentarios/edit/{comentarioId}/{vetId}" var="editUrl">

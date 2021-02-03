@@ -20,7 +20,9 @@
         	<petclinic:inputField label="Fecha y hora fin" name="fechaHoraFin"/>
         	<petclinic:inputField label="Numero de plazas total" name="numeroPlazasTotal"/>
         	<petclinic:inputField label="Numero de plazas disponibles" name="numeroPlazasDisponibles"/>
-        	<petclinic:inputField label="Categoria de clase" name="categoriaClase"/>
+        	<div class="control-group">
+                    <petclinic:selectField name="categoriaClase" label="Categoria de la clase" names="${categoriaClase}" size="5"/>
+            </div>
         	<div class="control-group">
                     <petclinic:selectField name="type" label="Mascota" names="${types}" size="5"/>
             </div>

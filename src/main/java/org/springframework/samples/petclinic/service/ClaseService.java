@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
+import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.repository.AdiestradorRepository;
@@ -87,6 +88,8 @@ public class ClaseService {
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
+
+		 
 		Boolean b=true;
 		int i=0;
 		Boolean apuntada=false;
@@ -102,8 +105,9 @@ public class ClaseService {
 				}
 				i++;
 			}
-		}
+		
 		if(pet.getType()!=clase.getType()) {
+
 			throw new DiferenciaTipoMascotaException();
 		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();
@@ -129,7 +133,9 @@ public class ClaseService {
 	public void deleteApuntarClase(ApuntarClase apClase) throws DataAccessException{
 		 this.apuntarClaseRepository.delete(apClase);
 	}
-	public Pet findPetByClasePetId(int idClasePet) {
-		return this.apuntarClaseRepository.findPetByClasePetId(idClasePet);
+	
+	@Transactional()
+	public List<CategoriaClase> findAllCategoriasClase(){
+		return this.claseRepository.findAllCategoriasClases();
 	}
 	}
