@@ -8,6 +8,8 @@ import org.springframework.validation.Validator;
 
 public class ClaseValidator implements Validator{
 	private static final String REQUIRED = "required";
+	private static final String POSITIVE = "must be positive";
+	private static final String POSITIVEORZERO = "must be positive or zero";
 
 	@Override
 	public void validate(Object obj, Errors errors) {
@@ -22,6 +24,18 @@ public class ClaseValidator implements Validator{
 		// birth date validation
 		if (clase.getAdiestrador() == null) {
 			errors.rejectValue("adiestrador", REQUIRED, REQUIRED);
+		}
+		
+		if (clase.getName() == null) {
+			errors.rejectValue("name", REQUIRED, REQUIRED);
+		}
+		
+		if (clase.getNumeroPlazasDisponibles() <0) {
+			errors.rejectValue("disponibles", POSITIVEORZERO, POSITIVEORZERO);
+		}
+		
+		if (clase.getNumeroPlazasTotal() <=0) {
+			errors.rejectValue("plazas", POSITIVE, POSITIVE);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
+
 import org.springframework.samples.petclinic.model.Vacuna;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -7,6 +9,7 @@ import org.springframework.validation.Validator;
 public class VacunaValidator implements Validator{
 	
 	private static final String REQUIRED = "required";
+	private static final String PAST = "date must be a past date";
 
 	@Override
 	public void validate(Object obj, Errors errors) {
@@ -18,6 +21,10 @@ public class VacunaValidator implements Validator{
 		}
 		if (vacuna.getFecha() == null) {
 			errors.rejectValue("fecha", REQUIRED, REQUIRED);
+		}
+		
+		if (vacuna.getFecha().isAfter(LocalDate.now())) {
+			errors.rejectValue("fecha", PAST, PAST);
 		}
 	}
 
