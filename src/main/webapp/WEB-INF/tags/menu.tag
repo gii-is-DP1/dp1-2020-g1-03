@@ -55,6 +55,13 @@
 					</petclinic:menuItem>
 				</sec:authorize>
 				
+				<sec:authorize access="hasAnyAuthority('veterinarian')">
+					<petclinic:menuItem active="${name eq 'vacunas'}" url="/vets/vacuna" title="Vacunas">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Vacunas</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
 				<sec:authorize access="hasAnyAuthority('owner')">
 					<petclinic:menuItem active="${name eq 'citas'}" url="/owners/citas" title="Citas">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>

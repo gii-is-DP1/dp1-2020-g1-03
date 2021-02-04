@@ -40,14 +40,6 @@
     </table>
 
     <table class="table-buttons">
-    	<tr>
-                    <spring:url value="/vets/vacuna" var="vacunasUrl">
-                    </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.nombre}"/>Listado de Vacunas</a>
-        </tr>
-        <br>
-        <br>
-        <br>
         <tr>
             <td>
                 <a href="<spring:url value="/vets.xml" htmlEscape="true" />">View as XML</a>

@@ -119,6 +119,7 @@ public class ComentarioController {
 			return "redirect:/owners/comentarios/show/{comentarioId}";
 		}
 	}
+	
 	@GetMapping(value = "/owners/comentarios/new") 
 	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
 		Comentario comentario = new Comentario();
