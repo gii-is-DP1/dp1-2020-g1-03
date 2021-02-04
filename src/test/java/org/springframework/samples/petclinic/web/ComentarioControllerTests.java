@@ -28,7 +28,6 @@ classes = WebSecurityConfigurer.class),
 excludeAutoConfiguration= SecurityConfiguration.class)
 public class ComentarioControllerTests {
 	private static final int	TEST_COMENTARIO_ID				= 1;
-	private static final int	TEST_COMENTARIO_ID_INEXISTENTE	= 100;
 	private static final int	TEST_OWNER_ID				= 1;
 	private static final int	TEST_VET_ID				= 1;
 	

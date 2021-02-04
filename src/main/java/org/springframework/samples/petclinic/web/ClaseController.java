@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
@@ -95,8 +96,8 @@ public class ClaseController {
 	@GetMapping(value = "/adiestradores/clases")
 	public String listadoClasesByAdiestradorId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
-		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
-		Collection<Clase> clases= claseService.findClaseByAdiestradorId(idAdiestrador);
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
+		Collection<Clase> clases= claseService.findClaseByAdiestradorId(adiestrador.getId());
 		model.put("clases", clases);
 		return "clases/clasesList";
 		}

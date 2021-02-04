@@ -27,10 +27,11 @@ public class AdiestradorServiceTests {
 //
 //	}
 	@Test
-	void shouldFindAdiestradorIdByUsername() {
-		int com = this.adiestradorService.findAdiestradorIdByUsername("adiestrador1");
-		Assert.assertTrue(com==1);
-
+	void shouldFindAdiestradorByUsername() {
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername("adiestrador1");
+		Assert.assertTrue(adiestrador.getId()==1);
+		Assert.assertTrue(adiestrador.getFirstName().equals("Daniel"));
+		Assert.assertTrue(adiestrador.getLastName().equals("Castroviejo"));
 	}
 //	@Test
 //	@Transactional
