@@ -28,16 +28,14 @@ public class AdiestradorServiceTests {
 //	}
 	@Test
 	void shouldFindAdiestradorByUsername() {
-<<<<<<< HEAD
+
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername("adiestrador1");
 		Assert.assertTrue(adiestrador.getId()==1);
 		Assert.assertTrue(adiestrador.getFirstName().equals("Daniel"));
 		Assert.assertTrue(adiestrador.getLastName().equals("Castroviejo"));
-=======
-		Adiestrador com = this.adiestradorService.findAdiestradorByUsername("adiestrador1");
-		Assert.assertTrue(com.getId()==1);
 
->>>>>>> branch 'master' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
+
+
 	}
 //	@Test
 //	@Transactional
