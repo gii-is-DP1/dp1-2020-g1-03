@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Visit;
@@ -86,19 +87,25 @@ public class PetService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Pet> findMascotasOwner(int idOwner) throws DataAccessException{
-		return petRepository.findMascotasOwner(idOwner);
+	public List<Pet> findMascotasOwner(Owner owner) throws DataAccessException{
+		return petRepository.findMascotasOwner(owner);
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException{
-		return this.petRepository.findPetsByOwnerId(ownerId);
+	public List<Pet> findPetsByOwner(Owner owner) throws DataAccessException{
+		return this.petRepository.findPetsByOwner(owner);
 
 	}
 	
 	@Transactional(readOnly = true)
-	public List<String> findNameMascota(int idOwner) throws DataAccessException{
-		return this.petRepository.findNameMascota(idOwner);
+	public List<Pet> findPetsByOwnerId(int owner) throws DataAccessException{
+		return this.petRepository.findPetsByOwnerId(owner);
+
+	}
+	
+	@Transactional(readOnly = true)
+	public List<String> findNameMascota(Owner owner) throws DataAccessException{
+		return this.petRepository.findNameMascota(owner);
 	}
 }
 

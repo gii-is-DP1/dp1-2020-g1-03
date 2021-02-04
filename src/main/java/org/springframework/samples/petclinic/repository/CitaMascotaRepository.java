@@ -17,10 +17,6 @@ public interface CitaMascotaRepository extends Repository<CitaMascota, Integer>{
 	@Query("SELECT citaMascota FROM CitaMascota citaMascota WHERE citaMascota.cita.id LIKE ?1")
 	public List<CitaMascota> findCitaMascotaByCitaId (int citaId) throws DataAccessException;
 	
-	@Query("SELECT DISTINCT cita FROM CitaMascota citaMascota WHERE citaMascota.pet.owner.id LIKE ?1")
-	public List<Cita> findCitasByOwnerId (int ownerId) throws DataAccessException;
 	
-	@Query("SELECT COUNT (DISTINCT citaMascota.cita) FROM CitaMascota citaMascota WHERE citaMascota.cita.vet.id LIKE ?1 AND  citaMascota.pet.owner.id LIKE ?1")
-	int findCitasOwnerConVet(int idVet, int idOwner) throws DataAccessException;
 
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.CitaMascota;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
 import org.springframework.samples.petclinic.repository.CitaRepository;
@@ -61,8 +62,8 @@ public class CitaService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Cita> findCitasByOwnerId (int ownerId) throws DataAccessException{
-		return citaMascotaRepository.findCitasByOwnerId(ownerId);
+	public List<Cita> findCitasByOwner (Owner owner) throws DataAccessException{
+		return citaRepository.findCitasByOwner(owner);
 	}
 
 	@Transactional(readOnly = true)

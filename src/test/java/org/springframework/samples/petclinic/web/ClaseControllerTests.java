@@ -121,7 +121,7 @@ public class ClaseControllerTests {
 		this.clase1.setCategoriaClase(new CategoriaClase());
 
 		BDDMockito.given(this.claseService.findClaseById(TEST_CLASE_ID)).willReturn(this.clase1);
-		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(ClaseControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro").getId()).willReturn(ClaseControllerTests.TEST_OWNER_ID);
 		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(ClaseControllerTests.TEST_ADIESTRADOR_ID);
 
 

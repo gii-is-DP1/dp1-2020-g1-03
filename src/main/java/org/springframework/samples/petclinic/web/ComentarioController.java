@@ -70,8 +70,8 @@ public class ComentarioController {
 	
 	@GetMapping(value = "/owners/comentarios")
 	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal) {
-		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());	
-		Collection<Comentario> comentario= comentarioService.findAllComentariosByOwnerId(idOwner);
+		Owner Owner = this.ownerService.findOwnerByUsername(principal.getName());	
+		Collection<Comentario> comentario= comentarioService.findAllComentariosByOwner(Owner);
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
 		}
@@ -94,8 +94,8 @@ public class ComentarioController {
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
 	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
 			@PathVariable("comentarioId") int comentarioId) {
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
+		//Owner ow= this.ownerService.findOwnerBy(idOw);
 		comentario.setOwner(ow);
 		comentario.setId(comentarioId);
 		comentario.setVet(this.vetService.findVetById(vetId));
@@ -120,8 +120,7 @@ public class ComentarioController {
 	@GetMapping(value = "/owners/comentarios/new") 
 	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
 		Comentario comentario = new Comentario();
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
 		model.put("comentario", comentario);
 		Collection<Vet> vets = this.vetService.findVets();
@@ -131,8 +130,7 @@ public class ComentarioController {
 
 	@PostMapping(value = "/owners/comentarios/new")
 	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal) {
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
 		comentario.setId(comentario.getId());
 		Collection<Vet> vets = this.vetService.findVets();

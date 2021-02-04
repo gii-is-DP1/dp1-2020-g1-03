@@ -90,8 +90,9 @@ public class CitaController {
 	
 	@GetMapping(value = "/owners/citas")
 	public String listadoCitasOwners(Map<String, Object> model, Principal principal) {
-		int ownerId=this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<Cita> citas= citaService.findCitasByOwnerId(ownerId);
+		System.out.println("Owner: "+ this.ownerService.findOwnerByUsername(principal.getName()));
+		Owner owner=this.ownerService.findOwnerByUsername(principal.getName());
+		List<Cita> citas= citaService.findCitasByOwner(owner);
 		model.put("citas", citas);
 		return "citas/citasOwnerList";
 	}
@@ -108,19 +109,23 @@ public class CitaController {
 	@GetMapping(value = "/owners/citas/new")
 	public String initCreateCitaOwner(Map<String, Object> model, final Principal principal) {
 		Cita cita = new Cita();
-		Integer ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
 		CitaMascota citaMascota= new CitaMascota();
 		citaMascota.setCita(cita);
 		model.put("citaMascota", citaMascota);
-		List<Pet> items = this.petService.findPetsByOwnerId(ownerId);
+		List<Pet> items = this.petService.findPetsByOwner(owner);
 		model.put("items", items);
 		return "citas/crearOEditarCitaOwner";
 	}
 
 	@PostMapping(value = "/owners/citas/new")
-	public String processCrearCitaOwner(@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
+	public String processCrearCitaOwner(Map<String, Object> model,@Valid CitaMascota citaMascota, BindingResult result,final Principal principal)
 			throws DataAccessException {
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
+		List<Pet> items = this.petService.findPetsByOwner(owner);
+		model.put("items", items);
 		Cita cita=citaMascota.getCita();
+		cita.setName(cita.getTitulo());
 		cita.setEstado(Estado.PENDIENTE);
 		citaMascota.setCita(cita);
 		this.citaService.saveCita(cita);

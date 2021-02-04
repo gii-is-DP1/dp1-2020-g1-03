@@ -7,6 +7,7 @@ import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
+import org.springframework.samples.petclinic.repository.CitaRepository;
 import org.springframework.samples.petclinic.repository.ComentarioRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
@@ -19,13 +20,15 @@ public class ComentarioService {
 	private ComentarioRepository comentarioRepository;
 	private OwnerRepository ownerRepository;
 	private CitaMascotaRepository citaMascotaRepository;
+	private CitaRepository citaRepository;
 	
 	@Autowired
 	public ComentarioService(ComentarioRepository comentarioRepository,
-			VetRepository vetRepository, OwnerRepository ownerRepository, CitaMascotaRepository citaMascotaRepository) {
+			VetRepository vetRepository, OwnerRepository ownerRepository, CitaMascotaRepository citaMascotaRepository,CitaRepository citaRepository) {
 		this.comentarioRepository = comentarioRepository;
 		this.ownerRepository = ownerRepository;
 		this.citaMascotaRepository = citaMascotaRepository;
+		this.citaRepository = citaRepository;
 	}
 
 	
@@ -39,10 +42,10 @@ public class ComentarioService {
 	}
 	@Transactional()
 	public void saveComentario(Comentario comentario) throws DataAccessException,  ComentariosMaximoPorCitaException{
-		int idVet = comentario.getVet().getId();
-		int idOwner = comentario.getOwner().getId();
-		int citasOwnerConVet = this.citaMascotaRepository.findCitasOwnerConVet(idVet, idOwner);
-		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(idVet, idOwner);
+		Vet vet = comentario.getVet();
+		Owner owner = comentario.getOwner();
+		int citasOwnerConVet = this.citaRepository.findCitasOwnerConVet(vet, owner);
+		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(vet, owner);
 		if(comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0) {
 			throw new ComentariosMaximoPorCitaException();
 		}
@@ -55,12 +58,17 @@ public class ComentarioService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Collection<Comentario> findAllComentariosByOwnerId(int ownerId) throws DataAccessException{
-		return comentarioRepository.findComentariosByOwnerId(ownerId);
+	public Collection<Comentario> findAllComentariosByOwner(Owner owner) throws DataAccessException{
+		return comentarioRepository.findComentariosByOwner(owner);
 	}
 	
 	@Transactional(readOnly = true)
 	public Comentario findComentarioByComentarioId(int comentarioId) throws DataAccessException{
 		return comentarioRepository.findById(comentarioId);
+	}
+
+	@Transactional(readOnly = true)
+	public Collection<Comentario> findAllComentariosByOwnerId(int i) throws DataAccessException{
+		return comentarioRepository.findComentariosByOwnerId(i);
 	}
 }

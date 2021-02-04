@@ -19,6 +19,7 @@ import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
@@ -123,8 +124,8 @@ public class CompeticionController {
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
 		model.put("competicionPet", competicionPet);
-		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<String> pets = this.petService.findNameMascota(ownerId);
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(owner);
 		model.put("pets", pets);
 		return "competiciones/competicionesInscribePet";
 	}
@@ -133,8 +134,9 @@ public class CompeticionController {
 	public String processInscribePet(@PathVariable("competicionId") int competicionId,
 			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal, Map<String, Object> model) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException {
-		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		List<String> pets = this.petService.findNameMascota(ownerId);
+//		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(owner);
 		model.put("pets", pets);
 		competicionPet.setPet(competicionPet.getPet());
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
@@ -219,10 +221,24 @@ public class CompeticionController {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors() + "Errores");
 			return "/secretarios/competicionesCreateOrUpdate"; 
-		} else {
-			competicion.setId(competicionId);
-			this.competicionService.saveCompeticion(competicion);
-			return "redirect:/secretarios/competiciones/show/" + competicionId;
+		}else {
+			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+				result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+				result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+				return "competiciones/competicionesCreateOrUpdate";
+			}else {
+				if(competicion.getFechaHoraInicio().isAfter(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+					result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isAfter(LocalDate.now())){
+					result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else {
+					competicion.setId(competicionId);
+					this.competicionService.saveCompeticion(competicion);
+					return "redirect:/secretarios/competiciones/show/" + competicionId;
+				}
+			}
 		}
 	}
 

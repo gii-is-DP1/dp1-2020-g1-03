@@ -46,10 +46,10 @@ public class OwnerService {
 	public Owner findOwnerById(int id) throws DataAccessException {
 		return ownerRepository.findById(id);
 	}
-	@Transactional(readOnly = true)
-	public Integer findOwnerIdByUsername(String user) throws DataAccessException {
-		return ownerRepository.findOwnerIdByUsername(user);
-	}
+//	@Transactional(readOnly = true)
+//	public Integer findOwnerIdByUsername(String user) throws DataAccessException {
+//		return ownerRepository.findOwnerIdByUsername(user);
+//	}
 	@Transactional(readOnly = true)
 	public Owner findOwnerByUsername(String user) throws DataAccessException {
 		return ownerRepository.findOwnerByUsername(user);
