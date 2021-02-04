@@ -32,7 +32,8 @@ public class ClaseService {
 		this.claseRepository = claseRepository;
 		this.apuntarClaseRepository=apuntarClaseRepository;
 	}
-	@Transactional()
+	
+	@Transactional(rollbackFor={DataAccessException.class,ClasePisadaDelAdiestradorException.class}) 
 	public void saveClase(Clase clase) throws DataAccessException, ClasePisadaDelAdiestradorException{
 		List<Clase>clases=findClasesAdiestrador(clase.getAdiestrador());
 		boolean b=true;
@@ -88,7 +89,8 @@ public class ClaseService {
 		return claseRepository.findClasesAdiestrador(adie);
 	}
 	
-	@Transactional()
+	@Transactional(rollbackFor={DataAccessException.class,DiferenciaTipoMascotaException.class,LimiteAforoClaseException.class,
+			DiferenciaClasesDiasException.class,SolapamientoDeClasesException.class,MacostaYaApuntadaException.class,ClasePisadaDelAdiestradorException.class})
 	public void apuntarMascota(ApuntarClase apClase) throws DataAccessException, DiferenciaTipoMascotaException, LimiteAforoClaseException, 
 	DiferenciaClasesDiasException, SolapamientoDeClasesException, MacostaYaApuntadaException, ClasePisadaDelAdiestradorException{
 		Pet pet = apClase.getPet();
@@ -146,7 +148,7 @@ public class ClaseService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<CategoriaClase> findAllCategoriasClase(){
+	public List<CategoriaClase> findAllCategoriasClase() throws DataAccessException{
 		return this.claseRepository.findAllCategoriasClases();
 	}
 	}

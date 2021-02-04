@@ -37,7 +37,7 @@ public class ComentarioService {
 	public Owner findByOwnerId(int id) throws DataAccessException {
 		return ownerRepository.findById(id);
 	}
-	@Transactional()
+	@Transactional(rollbackFor= {ComentariosMaximoPorCitaException.class})
 	public void saveComentario(Comentario comentario) throws DataAccessException,  ComentariosMaximoPorCitaException{
 		int idVet = comentario.getVet().getId();
 		int idOwner = comentario.getOwner().getId();
