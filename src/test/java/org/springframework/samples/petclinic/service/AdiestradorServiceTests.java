@@ -27,9 +27,9 @@ public class AdiestradorServiceTests {
 //
 //	}
 	@Test
-	void shouldFindAdiestradorIdByUsername() {
-		int com = this.adiestradorService.findAdiestradorIdByUsername("adiestrador1");
-		Assert.assertTrue(com==1);
+	void shouldFindAdiestradorByUsername() {
+		Adiestrador com = this.adiestradorService.findAdiestradorByUsername("adiestrador1");
+		Assert.assertTrue(com.getId()==1);
 
 	}
 //	@Test
