@@ -28,9 +28,10 @@
                     <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
                 </td>
                 <td>
-                <spring:url value="/owners/comentarios" var="comentariosUrl">
-                </spring:url>
-                <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Ver comentarios"/></a>
+                	<spring:url value="/owners/comentarios/{vetId}" var="comentarioUrl">
+                        <spring:param name="vetId" value="${vet.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(comentarioUrl)}">Ver comentarios</a>
                 </td>
             </tr>
         </c:forEach>

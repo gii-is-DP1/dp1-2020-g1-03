@@ -37,16 +37,16 @@ public class ComentarioServiceTests {
 	@Test
 	@Transactional
 	public void shouldUpdateComentario() throws Exception {
-		Comentario comentario2 = this.comentarioService.findComentarioByComentarioId(2);
+		Comentario comentario2 = this.comentarioService.findComentarioByComentarioId(1);
 
 		String titulo = "Titulo Cambiado";
 		String cuerpo = "Cuerpo Cambiado";
 
 		comentario2.setTitulo(titulo);
 		comentario2.setCuerpo(cuerpo);
-		this.comentarioService.saveComentario(comentario2);
+		this.comentarioService.saveComentario(comentario2,true);
 
-		Comentario comentarioRev = this.comentarioService.findComentarioByComentarioId(2);
+		Comentario comentarioRev = this.comentarioService.findComentarioByComentarioId(1);
 		Assert.assertTrue(comentarioRev.getTitulo()==titulo);
 	}
 	@Test

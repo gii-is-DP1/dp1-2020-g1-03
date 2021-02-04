@@ -17,7 +17,7 @@ public interface ComentarioRepository extends Repository<Comentario, Integer>{
 	
 	Collection<Comentario> findComentariosByVetId(Integer idVet) throws DataAccessException;
 	
-	Collection<Comentario> findComentariosByOwnerId(Integer idOwner) throws DataAccessException;
+	List<Comentario> findComentariosByOwnerId(Integer idOwner) throws DataAccessException;
 	
 	Comentario findById(int comentarioId) throws DataAccessException;
 	

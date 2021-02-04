@@ -14,6 +14,8 @@ import org.springframework.samples.petclinic.service.ComentarioService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.exceptions.ComentariosMaximoPorCitaException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -68,10 +70,9 @@ public class ComentarioController {
 	
 	//    DUEÑO ABAJO	
 	
-	@GetMapping(value = "/owners/comentarios")
-	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal) {
-		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());	
-		Collection<Comentario> comentario= comentarioService.findAllComentariosByOwnerId(idOwner);
+	@GetMapping(value = "/owners/comentarios/{vetId}")
+	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal, @PathVariable("vetId") int vetId) {
+		Collection<Comentario> comentario= comentarioService.findAllComentariosByVetId(vetId);
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
 		}
@@ -109,7 +110,7 @@ public class ComentarioController {
 		}
 		else {
 			try{
-				this.comentarioService.saveComentario(comentario);
+				this.comentarioService.saveComentario(comentario, true);
 			}catch(ComentariosMaximoPorCitaException ex){
 	        result.rejectValue("titulo", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
 	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
@@ -144,7 +145,7 @@ public class ComentarioController {
 			return "comentarios/crearOEditarComentario";
 		} else {
 			try{
-				this.comentarioService.saveComentario(comentario);
+				this.comentarioService.saveComentario(comentario, false);
 			}catch(ComentariosMaximoPorCitaException ex){
 	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
 	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
