@@ -55,7 +55,15 @@ public class ClaseService {
 	
 	@Transactional()
 	public void deleteClase(Clase clase) throws DataAccessException {
+		List<ApuntarClase> clases = findMascotasApuntadasEnClaseByClaseId(clase.getId());
+		if(clases.isEmpty() || clases==null) {
+			claseRepository.delete(clase);
+		}else {
+			for(int i=0; i<clases.size(); i++) {
+				this.deleteApuntarClase(clases.get(i));
+			}
 		claseRepository.delete(clase);
+		}
 	}
 
 	@Transactional(readOnly = true)

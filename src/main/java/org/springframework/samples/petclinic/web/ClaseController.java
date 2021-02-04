@@ -257,16 +257,7 @@ public class ClaseController {
 	@GetMapping(value = "secretarios/clases/show/{claseId}/delete")
 	public String deleteClase(Map<String, Object> model,@PathVariable("claseId") int claseId) {
 		Clase clase= claseService.findClaseById(claseId);
-		List<ApuntarClase> clases = claseService.findMascotasApuntadasEnClaseByClaseId(claseId);
-		if(clases.isEmpty() || clases==null) {
-			this.claseService.deleteClase(clase);
-		}else {
-			for(int i=0; i<clases.size(); i++) {
-				this.claseService.deleteApuntarClase(clases.get(i));
-			}
-			this.claseService.deleteClase(clase);
-		}
-		
+		this.claseService.deleteClase(clase);
 		return "redirect:/secretarios/clases";
 	}
 	

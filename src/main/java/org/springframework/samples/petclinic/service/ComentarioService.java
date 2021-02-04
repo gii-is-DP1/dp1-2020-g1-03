@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
 import org.springframework.samples.petclinic.repository.ComentarioRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -29,10 +28,6 @@ public class ComentarioService {
 	}
 
 	
-	@Transactional(readOnly = true)
-	public Vet findVetById(int id) throws DataAccessException {
-		return comentarioRepository.findVetById(id);
-	}
 	@Transactional(readOnly = true)
 	public Owner findByOwnerId(int id) throws DataAccessException {
 		return ownerRepository.findById(id);
