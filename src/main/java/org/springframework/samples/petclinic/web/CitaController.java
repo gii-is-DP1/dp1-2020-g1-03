@@ -70,8 +70,7 @@ public class CitaController {
 	
 	@GetMapping(value = "/vets/citas")
 	public String listadoCitasVets(Map<String, Object> model, Principal principal) {
-		int idVet=this.vetService.findVetIdByUsername(principal.getName());
-		Vet vet= this.vetService.findVetById(idVet);
+		Vet vet=this.vetService.findVetIdByUsername(principal.getName());
 		List<Cita> citas= citaService.findCitasByVet(vet);
 		model.put("citas", citas);
 		return "citas/citasList";
