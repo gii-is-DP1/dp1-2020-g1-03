@@ -1,6 +1,18 @@
 package org.springframework.samples.petclinic.web;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.time.LocalDate;
+
 import org.hamcrest.Matchers;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -16,6 +28,8 @@ import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.ComentarioService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,9 +41,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 classes = WebSecurityConfigurer.class),
 excludeAutoConfiguration= SecurityConfiguration.class)
 public class ComentarioControllerTests {
-	private static final int	TEST_COMENTARIO_ID				= 1;
-	private static final int	TEST_OWNER_ID				= 1;
-	private static final int	TEST_VET_ID				= 1;
+	private static final int	TEST_COMENTARIO_ID= 1;
+	private static final int	TEST_OWNER_ID= 1;
+	private static final int	TEST_VET_ID= 1;
 	
 	@MockBean
 	private ComentarioService	comentarioService;
@@ -43,15 +57,10 @@ public class ComentarioControllerTests {
 
 	@Autowired
 	private MockMvc				mockMvc;
-
 	private Comentario			comentario1;
-
 	private Vet					josue;
-	
 	private Owner				pedro;
-	
 	private Vet					error;
-
 	private Comentario 			comentario2;
 	
 	@BeforeEach
@@ -64,16 +73,13 @@ public class ComentarioControllerTests {
 		this.pedro.setAddress("Plaza San Pedro");
 		this.pedro.setCity("Roma");
 		this.pedro.setTelephone("954442211");
-		this.pedro.setFirstName("Josue");
+		this.pedro.setFirstName("Pedro");
 		this.pedro.setLastName("Perez Gutierrez");
 		
 		this.josue = new Vet();
 		this.josue.setId(ComentarioControllerTests.TEST_VET_ID);
 		this.josue.setFirstName("Josue");
 		this.josue.setLastName("Perez Gutierrez");
-
-
-
 
 		this.error = new Vet();
 		this.error.setId(2);
@@ -84,6 +90,8 @@ public class ComentarioControllerTests {
 		this.comentario1.setId(ComentarioControllerTests.TEST_COMENTARIO_ID);
 		this.comentario1.setCuerpo("Buen servicio y atención");
 		this.comentario1.setTitulo("Buen veterinario");
+		this.comentario1.setOwner(this.pedro);
+		this.comentario1.setVet(this.josue);
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
 		BDDMockito.given(this.ownerService.findOwnerIdByUsername("josue1")).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
@@ -94,11 +102,10 @@ public class ComentarioControllerTests {
 	@Test
 	void testShowOwnerComentarioForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("cuerpo", Matchers.is("Buen servicio y atención"))))
-
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("vet", Matchers.hasProperty("firstName", Matchers.is("Josue")))))
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("vet", Matchers.hasProperty("lastName", Matchers.is("Perez Gutierrez")))))
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/show"));
 	}
 	
@@ -106,20 +113,87 @@ public class ComentarioControllerTests {
 	@Test
 	void testShowVetComentarioForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("cuerpo", Matchers.is("Buen servicio y atención"))))
-
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("owner", Matchers.hasProperty("firstName", Matchers.is("Pedro")))))
+			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("owner", Matchers.hasProperty("lastName", Matchers.is("Perez Gutierrez")))))
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/showVet"));
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testComentarioList() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios", ComentarioControllerTests.TEST_COMENTARIO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/{vetId}", ComentarioControllerTests.TEST_VET_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
 
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testInitCreationComentarioForm() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/new")).andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("comentarios/crearOEditarComentario")).andExpect(MockMvcResultMatchers.model().attributeExists("comentario"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+    @Test
+    void testProcessCreationComentarioFormSuccess() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/owners/comentarios/new")
+				.param("owner", "pedro")
+					.with(csrf())
+					.param("titulo", "titulo")
+					.param("cuerpo", "cuerpo")
+					.param("vet", "josue"))
+			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+    @Test
+    void testProcessCreationComentarioFormHasErrors() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/owners/comentarios/new")
+					.with(csrf())
+					.param("cuerpo", "cuerpo"))
+			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("owner"))
+			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("vet"))
+			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("comentario"))
+			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("comentario", "titulo"))
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.view().name("comentarios/crearOEditarComentario"));
+	}
+	
+	@WithMockUser(value = "spring")
+	@Test
+	void testInitUpdateForm() throws Exception {
+		mockMvc.perform(get("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID))
+				.andExpect(status().isOk()).andExpect(model().attributeExists("comentario"))
+				.andExpect(view().name("comentarios/crearOEditarComentario"));
+	}
+    
+    @WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormSuccess() throws Exception {
+		mockMvc.perform(post("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID)
+							.with(csrf())
+							.param("titulo", "titulo cambiado")
+							.param("cuerpo", "cuerpo cambiado"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/owners/comentarios/show/{comentarioId}"));
+	}
+    
+    @WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateFormHasErrors() throws Exception {
+		mockMvc.perform(post("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID)
+							.with(csrf())
+							.param("titulo", ""))
+				.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("owner"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("vet"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasErrors("comentario"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("comentario", "titulo"))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("comentarios/crearOEditarComentario"));
 	}
 	
 	

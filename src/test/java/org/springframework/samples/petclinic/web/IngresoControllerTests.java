@@ -81,7 +81,7 @@ class IngresoControllerTests {
 		cal.set(Calendar.YEAR, 2014);
 		cal.set(Calendar.MONTH, Calendar.APRIL);
 		cal.set(Calendar.DAY_OF_MONTH, 12);
-		Date dateRepresentation = cal.getTime();
+	
 		
 		this.error = new Economista();
 		this.error.setId(2);
@@ -106,11 +106,8 @@ class IngresoControllerTests {
 	@Test
 	void testShowIngresoForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/ingreso/{ingresoId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("ingreso"))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("titulo", Matchers.is("Clases"))))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("cantidad", Matchers.is(250))))
-
 			.andExpect(MockMvcResultMatchers.view().name("ingresos/ingresosShow"));
 	}
 	
@@ -123,7 +120,7 @@ class IngresoControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("exception"));
 	}
 	
-	// Escenario positivo
+
 	@WithMockUser(value = "pepe", roles = "economista")
 	@Test
 	void testIngresoList() throws Exception {
