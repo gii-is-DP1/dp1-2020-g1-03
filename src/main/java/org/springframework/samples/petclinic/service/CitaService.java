@@ -38,6 +38,12 @@ public class CitaService {
 	public void saveCita(Cita cita) throws DataAccessException {
             	citaRepository.save(cita);                
 	}
+	
+	@Transactional()
+	public void deleteCita(Cita cita) throws DataAccessException{
+		this.citaRepository.delete(cita);
+	}
+	
 //	
 //	@Transactional()
 //	public void saveCitaMascota(CitaMascota citaMascota) throws DataAccessException {//, DuplicatedPetNameException

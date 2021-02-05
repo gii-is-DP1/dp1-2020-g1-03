@@ -25,6 +25,8 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL")
 	List<Cita> findCitasSinVet() throws DataAccessException;
+
+	void delete(Cita cita)throws DataAccessException;
 	
 //	@Query("SELECT DISTINCT cita FROM Pet cita.pets WHERE cita.pets.owner LIKE ?1")
 //	public List<Cita> findCitasByOwner (Owner owner) throws DataAccessException;
