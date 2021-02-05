@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,12 @@ public class TutoriaServiceTests {
 	@Test
 	void shouldFindAllTutorias() {
 		List<Tutoria> tutorias = this.tutoriaService.findAllTutorias();
+		assertThat(tutorias.size()==1);
+	}
+	
+	@Test
+	void shouldFindTutoriaByOwnerId() {
+		Collection<Tutoria> tutorias = this.tutoriaService.findTutoriaByOwnerId(1);
 		assertThat(tutorias.size()==1);
 	}
 	

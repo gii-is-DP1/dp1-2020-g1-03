@@ -34,7 +34,8 @@ public class TutoriaController {
 	private PetService petService;
 	
 	@Autowired
-	public TutoriaController(TutoriaService tutoriaService, AdiestradorService adiestradorService, PetService petService) {
+	public TutoriaController(TutoriaService tutoriaService, AdiestradorService adiestradorService, PetService petService, OwnerService ownerService) {
+		this.ownerService = ownerService;
 		this.tutoriaService = tutoriaService;
 		this.adiestradorService = adiestradorService;
 		this.petService = petService;
@@ -55,12 +56,9 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/owners/tutorias") 
-	public String listadoTutoriasOwner( final Principal principal, Map<String, Object> model) { //FALTA QUE EL OWNER MUESTRE SOLO SUS TUTORIAS
-//		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		System.out.println(idOwner);
-//		System.out.println("ID DEL OWNER" + idOwner);
-		System.out.println(this.ownerService.findOwnerIdByUsername(principal.getName()));
-		Collection<Tutoria> tutorias = this.tutoriaService.findAllTutorias();
+	public String listadoTutoriasOwner(final Principal principal, Map<String, Object> model) {
+		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Collection<Tutoria> tutorias = this.tutoriaService.findTutoriaByOwnerId(idOwner);
 		model.put("tutorias", tutorias);
 		return "tutorias/tutoriasListOwner";
 	}
