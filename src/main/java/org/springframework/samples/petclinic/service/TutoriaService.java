@@ -34,22 +34,34 @@ public class TutoriaService {
 		return tutoriaRepository.findAll();
 	}
 	
-	@Transactional()
-	public void saveTutoria(Tutoria tutoria, boolean b) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException{
-		int tutoriasAdiestrador = tutoriaRepository.findTutoriasByAdiestradorId(tutoria.getFechaHora(),tutoria.getAdiestrador().getId());
+	@Transactional(rollbackFor= {MismaHoraTutoriaException.class,NumeroTutoriasMaximoPorDiaException.class,MismaHoraTutoriaPetException.class})
+	public void saveTutoria(Tutoria tutoria, boolean estaEditando) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException{
+		List<Tutoria> tutorias = tutoriaRepository.findAllTutoriasByAdiestradorId(tutoria.getFechaHora(),tutoria.getAdiestrador().getId());
+		List<Tutoria> todasTutoriasPet = tutoriaRepository.findAllTutoriasByPetId(tutoria.getFechaHora(),tutoria.getPet().getId());
+		int tutoriasAdiestrador = tutorias.size();
 		int numeroTutoriasPorDia = tutoriaRepository.numeroTutoriasEnUnDiaAdiestrador(tutoria.getFechaHora().getDayOfMonth(),
 				tutoria.getFechaHora().getMonthValue(),tutoria.getFechaHora().getYear(), tutoria.getAdiestrador().getId());
-		int tutoriasPet = tutoriaRepository.numeroTutoriasEnUnDiaPet(tutoria.getFechaHora(), tutoria.getPet().getId());
-		if((tutoriasAdiestrador>=1&&b==false) || (b==true&&tutoriasAdiestrador>1)) {
+		int tutoriasPet = todasTutoriasPet.size();
+		if((tutoriasAdiestrador>=1&&estaEditando==false)) {
 			throw new MismaHoraTutoriaException();
+		}else if(tutorias.size()!=0&&!tutorias.get(0).getId().equals(tutoria.getId())){
+			if((estaEditando==true&&tutorias.get(0).getFechaHora().equals(tutoria.getFechaHora()))){
+				throw new MismaHoraTutoriaException();
+			}
 		}else if(tutoriasMaximoPorDia<=numeroTutoriasPorDia){
 			throw new NumeroTutoriasMaximoPorDiaException();
-		}else if(tutoriasPet>=1&&b==false) {
+		}else if(tutoriasPet>=1&&estaEditando==false) {
 			throw new MismaHoraTutoriaPetException();
+			
+		}else if(todasTutoriasPet.size()!=0&&!todasTutoriasPet.get(0).getId().equals(tutoria.getId())){
+			if((estaEditando==true&&todasTutoriasPet.get(0).getFechaHora().equals(tutoria.getFechaHora()))){
+				throw new MismaHoraTutoriaPetException();
+			}
 		}else {
 			this.tutoriaRepository.save(tutoria);
 		}
 	}
+
 
 	public Collection<Pet> findMascotaByName(String name) throws DataAccessException{
 		return tutoriaRepository.findMascotaByName(name);

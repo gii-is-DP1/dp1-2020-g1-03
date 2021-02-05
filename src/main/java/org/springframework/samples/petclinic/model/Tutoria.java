@@ -1,7 +1,5 @@
 package org.springframework.samples.petclinic.model;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -22,14 +20,14 @@ import lombok.Setter;
 @Table(name = "tutorias")
 public class Tutoria extends BaseEntity {
 	
-	@Column(name = "titulo")
+	@NotEmpty
 	private String titulo;
 	
 	@Column(name = "fecha_hora")
 	@DateTimeFormat(pattern ="yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 	
-	@Column(name = "razon")
+	@NotEmpty
 	private String razon;
 	
 	@ManyToOne

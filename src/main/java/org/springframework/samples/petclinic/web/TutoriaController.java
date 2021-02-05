@@ -98,7 +98,6 @@ public class TutoriaController {
 	public String initCreateTutoria(Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
 		Tutoria tutoria = new Tutoria();
 		tutoria.setPet(this.petService.findPetById(Id));
-		tutoria.setId(tutoria.getId());
 		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorById(idAdiestrador);
 		tutoria.setAdiestrador(adiestrador);
