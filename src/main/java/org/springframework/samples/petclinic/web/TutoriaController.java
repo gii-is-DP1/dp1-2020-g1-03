@@ -49,7 +49,6 @@ public class TutoriaController {
 	@GetMapping(value = "/adiestradores/tutorias/show/{tutoriaId}")
 	public String mostrarTutoria(@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
-		System.out.println(tutoria.getId()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowAdiestrador";
 	}
