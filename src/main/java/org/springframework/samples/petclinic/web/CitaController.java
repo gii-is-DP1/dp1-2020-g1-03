@@ -55,12 +55,6 @@ public class CitaController {
 		this.petService = petService;
 	}
 	
-	@InitBinder("pet")
-	public void initPetBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new ApuntarClaseValidator());
-		dataBinder.addCustomFormatter(new CitaPetFormatter(petService));
-	}
-	
 	@InitBinder("fecha")
 	public void initFechaBinder(WebDataBinder dataBinder) {
 		dataBinder.addCustomFormatter(new FechaFormatter(citaService));
