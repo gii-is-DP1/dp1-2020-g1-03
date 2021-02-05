@@ -1,8 +1,10 @@
 package org.springframework.samples.petclinic.web;
 
-import java.time.LocalDate;
 
-import org.assertj.core.util.Lists;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -28,75 +30,157 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@WebMvcTest(controllers = TutoriaController.class,excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-classes = WebSecurityConfigurer.class),
-excludeAutoConfiguration= SecurityConfiguration.class)
-
+@WebMvcTest(controllers = TutoriaController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
 public class TutoriaControllerTests {
 	
 	private static final int TEST_TUTORIA_ID = 1;
 	private static final int TEST_OWNER_ID = 1;
-	private static final int TEST_ADISETRADOR_ID = 1;
+	private static final int TEST_ADI_ID = 1;
 	private static final int TEST_PET_ID = 1;
 	
 	@MockBean
 	private TutoriaService tutoriaService;
+	
 	@MockBean
 	private OwnerService ownerService;
+
 	@MockBean
-	private AdiestradorService adiestradorService;
+	private AdiestradorService adiService;
+
 	@MockBean
 	private PetService petService;
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 	
-	private Owner pedro;
-	private Adiestrador	josue;
 	private Tutoria tutoria1;
-	private Pet pet1;
-	private LocalDate fecha1 = LocalDate.parse("2012-08-06");
+	
+	private Owner pedro;
+
+	private Adiestrador josue;
+
+	private Pet max;
+	
+	private LocalDate fecha = LocalDate.parse("2020-10-04");
+	private LocalDateTime fechaHora = LocalDateTime.of(2021,01,14,13,30);
+
 	
 	@BeforeEach
 	void setup() {
 		
-		PetType hamster = new PetType();
-		hamster.setId(6);
-		hamster.setName("hamster");
+		PetType dog = new PetType();
+		dog.setId(6);
+		dog.setName("perro");
 		
 		this.pedro = new Owner();
-		User username= new User();
-		username.setUsername("josue1");
-		this.pedro.setUser(username);
 		this.pedro.setId(TutoriaControllerTests.TEST_OWNER_ID);
-		this.pedro.setAddress("Plaza San Pedro");
-		this.pedro.setCity("Roma");
-		this.pedro.setTelephone("954442211");
-		this.pedro.setFirstName("Josue");
-		this.pedro.setLastName("Perez Gutierrez");
+		this.pedro.setAddress("Gran Via");
+		this.pedro.setCity("Madrid");
+		this.pedro.setTelephone("954263514");
+		this.pedro.setFirstName("Alenjandro");
+		this.pedro.setLastName("Perez");
 		
 		this.josue = new Adiestrador();
-		this.josue.setId(TutoriaControllerTests.TEST_ADISETRADOR_ID);
+		User username = new User();
+		this.josue.setId(TutoriaControllerTests.TEST_ADI_ID);
 		this.josue.setFirstName("Josue");
-		this.josue.setLastName("Perez Gutierrez");
-		 
-		this.pet1 = new Pet();
-		this.pet1.setId(TutoriaControllerTests.TEST_PET_ID);
-		this.pet1.setBirthDate(fecha1);
-		this.pet1.setName("Basil");
-		this.pet1.setType(hamster);
-
-		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(hamster));
-		BDDMockito.given(this.tutoriaService.findTutoriaById(TutoriaControllerTests.TEST_TUTORIA_ID)).willReturn(this.tutoria1);
-		BDDMockito.given(this.adiestradorService.findAdiestradorIdByUsername("josue")).willReturn(TutoriaControllerTests.TEST_ADISETRADOR_ID);
-		BDDMockito.given(this.petService.findPetById(TutoriaControllerTests.TEST_PET_ID)).willReturn(this.pet1);
+		this.josue.setLastName("Martinez");
+		this.josue.setUser(username);
+		this.josue.setCompetencias("competencia");
+		
+		this.max = new Pet();
+		this.max.setId(TutoriaControllerTests.TEST_PET_ID);
+		this.max.setName("Max");
+		this.max.setBirthDate(this.fecha);
+		this.max.setType(dog);
+		
+		this.tutoria1 = new Tutoria();
+		this.tutoria1.setId(TutoriaControllerTests.TEST_TUTORIA_ID);
+		this.tutoria1.setFechaHora(fechaHora);
+		this.tutoria1.setTitulo("Primera tutoria");
+		this.tutoria1.setRazon("Mejoras en el animal");
+		this.tutoria1.setPet(max);
+		
+		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(TutoriaControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(TutoriaControllerTests.TEST_ADI_ID);
+		BDDMockito.given(this.tutoriaService.findTutoriaById(TEST_TUTORIA_ID)).willReturn(this.tutoria1);
+		
 	}
 	
-
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test	
+	void testShowAdiestradorTutoriaForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_ADI_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("tutoria"))
+			
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("titulo", Matchers.is("Primera tutoria"))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("fechaHora", Matchers.is(fechaHora))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("razon", Matchers.is("Mejoras en el animal"))))
+			.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowAdiestrador"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test	
+	void testShowAdiestradorListTutorias() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias", TutoriaControllerTests.TEST_ADI_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriasList"));
+	}
+	
 	@WithMockUser(value = "josue", roles = "adiestrador")
 	@Test
-	void testTutoriaShowAdiestrador() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowAdiestrador"));
+	void testAdiestradorInitFindForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/pets/find", TutoriaControllerTests.TEST_ADI_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("tutorias/EncontrarMascotas"));
 	}
+	
+//	@WithMockUser(value = "josue", roles = "adiestrador")
+//	@Test
+//	void testAdiestradorProcessFindForm() throws Exception {
+//		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
+//	}
+	
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test
+	void testAdiestradorInitCreateTutoria() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/pets/{petId}/new", TutoriaControllerTests.TEST_ADI_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("tutorias/crearOEditarTutoria")).andExpect(MockMvcResultMatchers.model().attributeExists("tutoria"));
+	}
+	
+//	@WithMockUser(value = "josue", roles = "adiestrador")
+//	@Test
+//	void testProcessCreationFormSuccess() throws Exception {
+//		this.mockMvc.perform(MockMvcRequestBuilders.post("/adiestradores/tutorias/pets/{petId}/new").with(csrf())
+//				.param("titulo", "Primera tutoria")
+//				.param("fechaHora", "2021-01-14 16:30")
+//				.param("razon", "Mejoras en el animal"))
+//		.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+//	}
+	
+	
+	
+	
+	
+	
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testShowOwnerTutoriaForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("tutoria"))
+			
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("titulo", Matchers.is("Primera tutoria"))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("fechaHora", Matchers.is(fechaHora))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("razon", Matchers.is("Mejoras en el animal"))))
+			.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowOwner"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testShowOwnerListTutorias() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias", TutoriaControllerTests.TEST_TUTORIA_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriasListOwner"));
+	}
+	
+	
+
 }
