@@ -155,7 +155,7 @@ public class CitaController {
 	
 	@GetMapping(value = "/secretarios/citas")
 	public String listadoCitasSecretarios(Map<String, Object> model, Principal principal) {
-		List<Cita> citas= citaService.findAllCitas();
+		List<Cita> citas= citaService.findAllCitas(); 
 		model.put("citas", citas);
 		return "citas/citasSecretarioList";
 	}
