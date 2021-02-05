@@ -38,5 +38,9 @@ public class Tutoria extends BaseEntity {
 	@JoinColumn(name = "adiestrador_id")
 	private Adiestrador adiestrador;
 	
+	@ManyToOne
+	@JoinColumn(name = "owner_id")
+	private Owner owner;
+	
 
 }

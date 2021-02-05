@@ -13,6 +13,7 @@ import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Tutoria;
 import org.springframework.samples.petclinic.service.AdiestradorService;
+import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.TutoriaService;
 import org.springframework.samples.petclinic.service.exceptions.MismaHoraTutoriaException;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class TutoriaController {
 
 	private TutoriaService tutoriaService;
+	private OwnerService ownerService;
 	private AdiestradorService adiestradorService;
 	private PetService petService;
 	
@@ -52,16 +54,26 @@ public class TutoriaController {
 		return "tutorias/tutoriaShowAdiestrador";
 	}
 	
+	@GetMapping(value = "/owners/tutorias") 
+	public String listadoTutoriasOwner( final Principal principal, Map<String, Object> model) { //FALTA QUE EL OWNER MUESTRE SOLO SUS TUTORIAS
+//		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
+//		System.out.println(idOwner);
+//		System.out.println("ID DEL OWNER" + idOwner);
+		System.out.println(this.ownerService.findOwnerIdByUsername(principal.getName()));
+		Collection<Tutoria> tutorias = this.tutoriaService.findAllTutorias();
+		model.put("tutorias", tutorias);
+		return "tutorias/tutoriasListOwner";
+	}
+	
+	@GetMapping(value = "/owners/tutorias/show/{tutoriaId}")
+	public String mostrarTutoriaOwner(@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
+		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+		model.put("tutoria", tutoria);
+		return "tutorias/tutoriaShowOwner";
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/*CREAR Y EDITAR TUTORIAS */
 	
 	
