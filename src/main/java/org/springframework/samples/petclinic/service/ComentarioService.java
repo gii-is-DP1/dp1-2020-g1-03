@@ -28,12 +28,6 @@ public class ComentarioService {
 		this.ownerRepository = ownerRepository;
 		this.citaMascotaRepository = citaMascotaRepository;
 	}
-
-	
-	@Transactional(readOnly = true)
-	public Owner findByOwnerId(int id) throws DataAccessException {
-		return ownerRepository.findById(id);
-	}
 	@Transactional(rollbackFor= {ComentariosMaximoPorCitaException.class})
 	public void saveComentario(Comentario comentario, boolean estaEditando) throws DataAccessException,  ComentariosMaximoPorCitaException{
 		int idVet = comentario.getVet().getId();
