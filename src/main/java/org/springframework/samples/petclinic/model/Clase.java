@@ -64,10 +64,10 @@ public class Clase extends BaseEntity{
 	@JoinColumn(name = "secretario_id")
 	private Secretario secretario;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "clases_pets", joinColumns = @JoinColumn(name = "clase_id"),
-			inverseJoinColumns = @JoinColumn(name = "pet_id"))
-	private Set<Pet> pets;
+//	@ManyToMany(fetch = FetchType.EAGER)
+//	@JoinTable(name = "clases_pets", joinColumns = @JoinColumn(name = "clase_id"),
+//			inverseJoinColumns = @JoinColumn(name = "pet_id"))
+//	private Set<Pet> pets;
 	
 	public long numeroDiasEntreDosFechas(LocalDateTime fecha2){
 		   return DAYS.between(this.fechaHoraFin, fecha2);

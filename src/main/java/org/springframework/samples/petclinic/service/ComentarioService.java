@@ -1,12 +1,14 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
 import org.springframework.samples.petclinic.repository.CitaRepository;
 import org.springframework.samples.petclinic.repository.ComentarioRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
@@ -19,15 +21,15 @@ public class ComentarioService {
 	
 	private ComentarioRepository comentarioRepository;
 	private OwnerRepository ownerRepository;
-	private CitaMascotaRepository citaMascotaRepository;
+	//private CitaMascotaRepository citaMascotaRepository;
 	private CitaRepository citaRepository;
 	
 	@Autowired
 	public ComentarioService(ComentarioRepository comentarioRepository,
-			VetRepository vetRepository, OwnerRepository ownerRepository, CitaMascotaRepository citaMascotaRepository,CitaRepository citaRepository) {
+			VetRepository vetRepository, OwnerRepository ownerRepository,CitaRepository citaRepository) {
 		this.comentarioRepository = comentarioRepository;
 		this.ownerRepository = ownerRepository;
-		this.citaMascotaRepository = citaMascotaRepository;
+		//this.citaMascotaRepository = citaMascotaRepository;
 		this.citaRepository = citaRepository;
 	}
 
@@ -40,14 +42,29 @@ public class ComentarioService {
 	public Owner findByOwnerId(int id) throws DataAccessException {
 		return ownerRepository.findById(id);
 	}
-	@Transactional()
-	public void saveComentario(Comentario comentario) throws DataAccessException,  ComentariosMaximoPorCitaException{
-		Vet vet = comentario.getVet();
-		Owner owner = comentario.getOwner();
-		int citasOwnerConVet = this.citaRepository.findCitasOwnerConVet(vet, owner);
-		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(vet, owner);
-		if(comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0) {
+	@Transactional(rollbackFor= {ComentariosMaximoPorCitaException.class})
+	public void saveComentario(Comentario comentario, boolean estaEditando) throws DataAccessException,  ComentariosMaximoPorCitaException{
+		int idVet = comentario.getVet().getId();
+		int idOwner = comentario.getOwner().getId();
+		//int citasOwnerConVet = this.citaMascotaRepository.findCitasOwnerConVet(idVet, idOwner);
+		int citasOwnerConVet=0;
+		Vet vet =comentario.getVet();
+		List<Cita> citasVet=this.citaRepository.findCitasByVet(vet);
+		for(int i=0; i<citasVet.size(); i++) {
+			Cita cita=citasVet.get(i);
+			Owner ow=cita.getPets().get(0).getOwner();
+			if(ow.equals(comentario.getOwner())) {
+				citasOwnerConVet++;
+			}
+		}
+		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(idVet, idOwner);
+		List<Comentario> comentarios3 = this.comentarioRepository.findComentariosByOwner(comentario.getOwner());
+		if((comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0)&& estaEditando==false ) {
 			throw new ComentariosMaximoPorCitaException();
+		}else if(!comentarios3.isEmpty()&&!comentarios3.get(0).getId().equals(comentario.getId())){
+			if(estaEditando && comentariosHechosOwnerAVet>citasOwnerConVet) {
+				throw new ComentariosMaximoPorCitaException();
+			}
 		}
 		comentarioRepository.save(comentario);               
 	}
@@ -68,7 +85,7 @@ public class ComentarioService {
 	}
 
 	@Transactional(readOnly = true)
-	public Collection<Comentario> findAllComentariosByOwnerId(int i) throws DataAccessException{
-		return comentarioRepository.findComentariosByOwnerId(i);
+	public Collection<Comentario> findAllComentariosByOwnerId(Owner owner) throws DataAccessException{
+		return comentarioRepository.findComentariosByOwner(owner);
 	}
 }
