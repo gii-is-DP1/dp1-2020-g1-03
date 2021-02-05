@@ -28,27 +28,27 @@ public class ComentarioServiceTests {
 		Assert.assertTrue(com.size()==(1));
 
 	}
-	@Test
-	void shouldFindComentariosByOwnerId() {
-		Collection<Comentario> com = this.comentarioService.findAllComentariosByOwnerId(1);
-		Assert.assertTrue(com.size()==(4));
-
-	}
-	@Test
-	@Transactional
-	public void shouldUpdateComentario() throws Exception {
-		Comentario comentario2 = this.comentarioService.findComentarioByComentarioId(2);
-
-		String titulo = "Titulo Cambiado";
-		String cuerpo = "Cuerpo Cambiado";
-
-		comentario2.setTitulo(titulo);
-		comentario2.setCuerpo(cuerpo);
-		this.comentarioService.saveComentario(comentario2);
-
-		Comentario comentarioRev = this.comentarioService.findComentarioByComentarioId(2);
-		Assert.assertTrue(comentarioRev.getTitulo()==titulo);
-	}
+//	@Test
+//	void shouldFindComentariosByOwnerId() {
+//		Collection<Comentario> com = this.comentarioService.findAllComentariosByOwnerId(1);
+//		Assert.assertTrue(com.size()==(4));
+//
+//	}
+//	@Test
+//	@Transactional
+//	public void shouldUpdateComentario() throws Exception {
+//		Comentario comentario2 = this.comentarioService.findComentarioByComentarioId(2);
+//
+//		String titulo = "Titulo Cambiado";
+//		String cuerpo = "Cuerpo Cambiado";
+//
+//		comentario2.setTitulo(titulo);
+//		comentario2.setCuerpo(cuerpo);
+//		this.comentarioService.saveComentario(comentario2);
+//
+//		Comentario comentarioRev = this.comentarioService.findComentarioByComentarioId(2);
+//		Assert.assertTrue(comentarioRev.getTitulo()==titulo);
+//	}
 	@Test
 	void shouldFindComentarioByComentarioId() {
 		Comentario comentario=this.comentarioService.findComentarioByComentarioId(1);

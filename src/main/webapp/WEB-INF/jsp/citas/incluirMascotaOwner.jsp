@@ -8,7 +8,7 @@
 
 <petclinic:layout pageName="citas">
         
-        <h2>
+        <h2> 
          <c:if test="${citaMascota['new']}"> Nueva </c:if>  Cita
     	</h2>
     	
@@ -18,18 +18,20 @@
         	<petclinic:inputField label="Nombre" name="titulo"/>
          	<petclinic:inputField label="Fecha y hora" name="fechaHora"/>
         	<petclinic:inputField label="Razon" name="razon"/>
-        	
+        	<%-- <div class="control-group">
+                    <petclinic:selectField name="pets" label="Mascota" names="${pets}" size="5"/>
+            </div> --%>
         	
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
                     <c:when test="${citaMascota['new']}">
-                        <button class="btn btn-default" type="submit">Crear cita</button>
+                        <button class="btn btn-default" type="submit">Crear cita e introducir mascotas</button>
                     </c:when>
-                    <c:otherwise>
+                    <%-- <c:otherwise>
                         <button class="btn btn-default" type="submit">Editar cita</button>
-                    </c:otherwise>
+                    </c:otherwise> --%>
                 </c:choose>
             </div>
         </div>

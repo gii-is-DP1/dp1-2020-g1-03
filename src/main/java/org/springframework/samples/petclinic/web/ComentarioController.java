@@ -91,32 +91,32 @@ public class ComentarioController {
 		return "comentarios/crearOEditarComentario";
 	}
 	
-	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
-			@PathVariable("comentarioId") int comentarioId) {
-		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		//Owner ow= this.ownerService.findOwnerBy(idOw);
-		comentario.setOwner(ow);
-		comentario.setId(comentarioId);
-		comentario.setVet(this.vetService.findVetById(vetId));
-		Collection<Vet> vets = this.vetService.findVets();
-		model.put("vets", vets);
-		
-		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors()+ "Errores");
-			return "comentarios/crearOEditarComentario";
-		}
-		else {
-			try{
-				this.comentarioService.saveComentario(comentario);
-			}catch(ComentariosMaximoPorCitaException ex){
-	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
-	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
-	        return "comentarios/crearOEditarComentario";
-	    }
-			return "redirect:/owners/comentarios/show/{comentarioId}";
-		}
-	}
+//	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
+//	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
+//			@PathVariable("comentarioId") int comentarioId) {
+//		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
+//		//Owner ow= this.ownerService.findOwnerBy(idOw);
+//		comentario.setOwner(ow);
+//		comentario.setId(comentarioId);
+//		comentario.setVet(this.vetService.findVetById(vetId));
+//		Collection<Vet> vets = this.vetService.findVets();
+//		model.put("vets", vets);
+//		
+//		if (result.hasErrors()) {
+//			System.out.println(result.getAllErrors()+ "Errores");
+//			return "comentarios/crearOEditarComentario";
+//		}
+//		else {
+//			try{
+//				this.comentarioService.saveComentario(comentario);
+//			}catch(ComentariosMaximoPorCitaException ex){
+//	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
+//	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
+//	        return "comentarios/crearOEditarComentario";
+//	    }
+//			return "redirect:/owners/comentarios/show/{comentarioId}";
+//		}
+//	}
 	@GetMapping(value = "/owners/comentarios/new") 
 	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
 		Comentario comentario = new Comentario();
@@ -128,26 +128,26 @@ public class ComentarioController {
 		return "comentarios/crearOEditarComentario";
 	}
 
-	@PostMapping(value = "/owners/comentarios/new")
-	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal) {
-		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		comentario.setOwner(ow);
-		comentario.setId(comentario.getId());
-		Collection<Vet> vets = this.vetService.findVets();
-		model.put("vets", vets);
-		
-		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
-			return "comentarios/crearOEditarComentario";
-		} else {
-			try{
-				this.comentarioService.saveComentario(comentario);
-			}catch(ComentariosMaximoPorCitaException ex){
-	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
-	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
-	        return "comentarios/crearOEditarComentario";
-	    }
-			return "redirect:/owners/comentarios";
-		}
-	}
+//	@PostMapping(value = "/owners/comentarios/new")
+//	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal) {
+//		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
+//		comentario.setOwner(ow);
+//		comentario.setId(comentario.getId());
+//		Collection<Vet> vets = this.vetService.findVets();
+//		model.put("vets", vets);
+//		
+//		if (result.hasErrors()) {
+//			System.out.println(result.getAllErrors());
+//			return "comentarios/crearOEditarComentario";
+//		} else {
+//			try{
+//				this.comentarioService.saveComentario(comentario);
+//			}catch(ComentariosMaximoPorCitaException ex){
+//	        result.rejectValue("vet", "El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio", 
+//	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
+//	        return "comentarios/crearOEditarComentario";
+//	    }
+//			return "redirect:/owners/comentarios";
+//		}
+//	}
 }

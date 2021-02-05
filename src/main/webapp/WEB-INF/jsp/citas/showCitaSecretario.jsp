@@ -31,11 +31,11 @@
             <tr>
             	<th>Nombre Mascota</th>
                 <td>
-                    <c:out value="${mascota.pet.name}"/>
+                    <c:out value="${mascota.name}"/>
                 </td>
                 <th>Especie</th>
                 <td>
-                   <c:out value="${mascota.pet.type}"/>
+                   <c:out value="${mascota.type}"/>
                 </td>
             </tr>
         </c:forEach>
