@@ -38,6 +38,9 @@
         
     </table>
 
-
+<spring:url value="{citaId}/edit" var="editUrl">
+        <spring:param name="citaId" value="${cita.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
 
 </petclinic:layout>
