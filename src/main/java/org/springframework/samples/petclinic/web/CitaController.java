@@ -156,30 +156,32 @@ public class CitaController {
 			model.put("cita", cita);
 			return "citas/crearOEditarCitaOwner";
 		} else {
-			return "exception";
+			return "redirect:/owners/citas/" + citaId;
 		}
 	}
 
 	@PostMapping(value = "/owners/citas/{citaId}/edit")
 	public String processEditarCitaOwner(@Valid Cita cita, @PathVariable("citaId") int citaId, BindingResult result,
 			final Principal principal) {
-		cita.setId(citaId);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
 					"La fecha no puede ser una fecha pasada");
-			this.citaService.saveCita(cita);
 			return "citas/crearOEditarCitaOwner";
 		} else {
+			List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
+			cita.setPets(pets);
+			cita.setId(citaId);
+			cita.setEstado(Estado.PENDIENTE);
 			this.citaService.saveCita(cita);
 			return "redirect:/owners/citas/";
 		}
 	}
-	
+
 	@GetMapping(value = "/owners/citas/{citaId}/delete")
-	public String deleteCita(Map<String, Object> model,@PathVariable("citaId") int citaId) {
+	public String deleteCita(Map<String, Object> model, @PathVariable("citaId") int citaId) {
 		this.citaService.deleteCita(this.citaService.findCitaById(citaId));
 		return "redirect:/owners/citas/";
 	}
@@ -221,12 +223,12 @@ public class CitaController {
 //		model.put("cita", cita);
 //		return "citas/showCitaSecretario";
 //	}
-	
-	@GetMapping(value ="/secretarios/citas/{citaId}/edit")
+
+	@GetMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String getEditarCitaSecretario(Map<String, Object> model, Principal principal,
 			@PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
-		
+
 		if (cita.getEstado().equals(Estado.PENDIENTE)) {
 			model.put("cita", cita);
 			List<Vet> vets = new ArrayList<>(this.vetService.findVets());
@@ -240,8 +242,8 @@ public class CitaController {
 			return "redirect:/secretarios/citas/" + citaId;
 		}
 	}
-	
-	@PostMapping(value ="/secretarios/citas/{citaId}/edit")
+
+	@PostMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String processEditarCitaSecretario(Map<String, Object> model, @Valid Cita cita, BindingResult result,
 			final Principal principal, @PathVariable("citaId") int citaId) {
 		model.put("cita", cita);
@@ -251,20 +253,19 @@ public class CitaController {
 		estados.add(Estado.RECHAZADA);
 		model.put("estados", estados);
 		model.put("vets", vets);
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/citasSecretarioList";
-		}else if(cita.getFechaHora().isBefore(LocalDateTime.now())) {
+		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
 					"La fecha no puede ser una fecha pasada");
 			return "citas/editarCitaSecretario";
 		}
-		
-		
+
 		Cita cita1 = this.citaService.findCitaById(citaId);
 		List<Pet> mascotas = cita1.getPets();
 		cita.setPets(mascotas);
-		
+
 		cita.setId(citaId);
 		this.citaService.saveCita(cita);
 		return "redirect:/secretarios/citas";
