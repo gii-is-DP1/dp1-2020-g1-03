@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -8,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -107,44 +110,130 @@ public class CitaControllerTest {
 		this.cita.setFechaHora(LocalDateTime.of(LocalDate.of(2022, 01, 01), LocalTime.of(15, 30)));
 		this.cita.setName("Citatest");
 		this.cita.setPets(pets);
+
+		BDDMockito.given(this.citaService.findCitaById(this.TEST_CITA_ID)).willReturn(this.cita);
 	}
 
 	@Test
 	@WithMockUser(value = "juan", roles = "vet")
 	void testListadoCitasVets() throws Exception {
-		this.mockMvc
-				.perform(MockMvcRequestBuilders.get("/vets/citas"))
-				.andExpect(MockMvcResultMatchers.status().isOk())
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/citas")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("citas/citasList"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("citas"));
 	}
-	
+
 	@Test
 	@WithMockUser(value = "juan", roles = "vet")
-	void testMostrarCitasVets() throws Exception {
-		this.mockMvc
-				.perform(MockMvcRequestBuilders.get("/vets/citas/{citaId}", this.TEST_CITA_ID))
+	void testMostrarCitaVet() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/citas/{citaId}", this.TEST_CITA_ID))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaVet"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("cita", "owner", "mascotas"));
 	}
-	
+
 	@Test
 	@WithMockUser(value = "pedro", roles = "owner")
 	void testListadoCitasOwner() throws Exception {
-		this.mockMvc
-				.perform(MockMvcRequestBuilders.get("/owners/citas/"))
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("citas/citasOwnerList"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("citas"));
 	}
+
 	@Test
 	@WithMockUser(value = "pedro", roles = "owner")
-	void testMostrarCitasOwner() throws Exception {
-		this.mockMvc
-				.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId", this.TEST_CITA_ID))
+	void testMostrarCitaOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}", this.TEST_CITA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaOwner"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testInitCreateCitaOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/new"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("citas/crearOEditarCitaOwner"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testProcessCreateCitaOwner() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/owners/citas/new").with(csrf()).param("titulo", "Cita 1")
+						.param("fechaHora", "2022-01-01 15:30").param("estado", "PENDIENTE").param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testGetEditarCitaOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}/edit", this.TEST_CITA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/crearOEditarCitaOwner"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testProcessEditarCitaOwner() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/owners/citas/{citaId}/edit", this.TEST_CITA_ID).with(csrf())
+						.param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30").param("estado", "PENDIENTE")
+						.param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
+				.andExpect(MockMvcResultMatchers.model().attribute("cita.titulo", "Cita 1"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testListadoCitasSecretario() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/citas"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/citasSecretarioList"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("citas"));
+	}
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testListadoCitasSecretarioSinVet() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/citas/sinVet"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/citasSecretarioSinVetList"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("citas"));
+	}
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testMostrarCitaSecretario() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/citas/{citaId}", this.TEST_CITA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaSecretario"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
+	}
+	
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testGetEditarCitaSecretario() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/citas/{citaId}/edit", this.TEST_CITA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("citas/editarCitaSecretario"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
+	}
+	
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testProcessEditarCitaSecretario() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/secretarios/citas/{citaId}/edit", this.TEST_CITA_ID).with(csrf())
+						.param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30").param("estado", "ACEPTADA")
+						.param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
+				.andExpect(MockMvcResultMatchers.model().attribute("cita.estado", "Cita 1"))
+				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

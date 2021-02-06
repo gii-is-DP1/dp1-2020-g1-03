@@ -146,6 +146,7 @@ public class CitaController {
 			return "citas/crearOEditarCitaOwner";
 		}
 		System.out.println("Pets: " + cita.getPets());
+		model.put("cita", cita);
 		this.citaService.saveCita(cita);
 		return "redirect:/owners/citas/";
 	}
