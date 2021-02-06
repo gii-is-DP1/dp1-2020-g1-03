@@ -24,6 +24,7 @@ import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
 import org.springframework.samples.petclinic.service.OwnerService;
@@ -45,6 +46,7 @@ public class CitaController {
 	private final VetService vetService;
 	private final OwnerService ownerService;
 	private final PetService petService;
+	private final SecretarioService secretarioService;
 
 	@Autowired
 	public CitaController(CitaService citaService, VetService vetService, SecretarioService secretarioService,
@@ -53,6 +55,7 @@ public class CitaController {
 		this.vetService = vetService;
 		this.ownerService = ownerService;
 		this.petService = petService;
+		this.secretarioService = secretarioService;
 	}
 
 	@InitBinder("fecha")
@@ -207,35 +210,61 @@ public class CitaController {
 		return "citas/showCitaSecretario";
 	}
 
-	@GetMapping(value = "/secretarios/citas/sinVet/{citaId}")
-	public String mostarCitaSecretarioSinVet(Map<String, Object> model, Principal principal,
-			@PathVariable("citaId") int citaId) {
-		Cita cita = this.citaService.findCitaById(citaId);
-		List<Pet> mascotas = cita.getPets();
-		Owner owner = mascotas.get(0).getOwner();
-		model.put("owner", owner);
-		model.put("mascotas", mascotas);
-		model.put("cita", cita);
-		return "citas/showCitaSecretario";
-	}
+//	@GetMapping(value = "/secretarios/citas/sinVet/{citaId}")
+//	public String mostarCitaSecretarioSinVet(Map<String, Object> model, Principal principal,
+//			@PathVariable("citaId") int citaId) {
+//		Cita cita = this.citaService.findCitaById(citaId);
+//		List<Pet> mascotas = cita.getPets();
+//		Owner owner = mascotas.get(0).getOwner();
+//		model.put("owner", owner);
+//		model.put("mascotas", mascotas);
+//		model.put("cita", cita);
+//		return "citas/showCitaSecretario";
+//	}
 	
 	@GetMapping(value ="/secretarios/citas/{citaId}/edit")
 	public String getEditarCitaSecretario(Map<String, Object> model, Principal principal,
 			@PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
-		model.put("cita", cita);
-		List<Vet> vets = new ArrayList<>(this.vetService.findVets());
-		model.put("vets", vets);
-		return "citas/editarCitaSecretario";
+		
+		if (cita.getEstado().equals(Estado.PENDIENTE)) {
+			model.put("cita", cita);
+			List<Vet> vets = new ArrayList<>(this.vetService.findVets());
+			List<Estado> estados = new ArrayList<Estado>();
+			estados.add(Estado.ACEPTADA);
+			estados.add(Estado.RECHAZADA);
+			model.put("estados", estados);
+			model.put("vets", vets);
+			return "citas/editarCitaSecretario";
+		} else {
+			return "redirect:/secretarios/citas/" + citaId;
+		}
 	}
 	
 	@PostMapping(value ="/secretarios/citas/{citaId}/edit")
 	public String processEditarCitaSecretario(Map<String, Object> model, @Valid Cita cita, BindingResult result,
 			final Principal principal, @PathVariable("citaId") int citaId) {
+		model.put("cita", cita);
+		List<Vet> vets = new ArrayList<>(this.vetService.findVets());
+		List<Estado> estados = new ArrayList<Estado>();
+		estados.add(Estado.ACEPTADA);
+		estados.add(Estado.RECHAZADA);
+		model.put("estados", estados);
+		model.put("vets", vets);
 		if(result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/citasSecretarioList";
+		}else if(cita.getFechaHora().isBefore(LocalDateTime.now())) {
+			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
+					"La fecha no puede ser una fecha pasada");
+			return "citas/editarCitaSecretario";
 		}
+		
+		
+		Cita cita1 = this.citaService.findCitaById(citaId);
+		List<Pet> mascotas = cita1.getPets();
+		cita.setPets(mascotas);
+		
 		cita.setId(citaId);
 		this.citaService.saveCita(cita);
 		return "redirect:/secretarios/citas";

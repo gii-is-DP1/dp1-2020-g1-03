@@ -1,11 +1,13 @@
 
 package org.springframework.samples.petclinic.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Vet;
@@ -59,6 +61,7 @@ public class CitaService {
 	public Cita findCitaById(int citaId) throws DataAccessException{
 		return citaRepository.findById(citaId);
 	}
+	
 //	
 //	@Transactional(readOnly = true)
 //	public List<CitaMascota> findCitaMascotaByCitaId (int citaId) throws DataAccessException{

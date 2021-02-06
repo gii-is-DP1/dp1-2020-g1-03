@@ -30,7 +30,7 @@
                    <c:out value="${cita.razon}"/>
                 </td>
                  <td>
-                	<spring:url value="/secretarios/citas/sinVet/{citaId}" var="citaUrl">
+                	<spring:url value="/secretarios/citas/{citaId}" var="citaUrl">
                         <spring:param name="citaId" value="${cita.id}"/>
                     </spring:url>
                     <a href="${fn:escapeXml(citaUrl)}">Mirar detalles de la cita</a>
