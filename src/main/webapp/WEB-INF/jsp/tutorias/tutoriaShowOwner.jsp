@@ -23,6 +23,8 @@
             <td><c:out value="${tutoria.razon}"/></td>
         </tr>
     </table>
+     <spring:url value="/owners/tutorias" var="tutoriasUrl"></spring:url>
+     <a href="${fn:escapeXml(tutoriasUrl)}"><c:out value="Volver"/></a>
     <br/>
     <br/>
     <br/>
