@@ -61,10 +61,10 @@ public class VacunaController {
 	}
 	
 	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
-	public String mostarVacunaOwnerDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
+	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
 		Vacuna vacuna= vacunaService.findVacunaById(Id);
 		model.put("vacuna", vacuna);
-		return "vacunas/vacunasShow";
+		return "vacunas/vacunasShowOwner";
 		}
 	
 	//VETS

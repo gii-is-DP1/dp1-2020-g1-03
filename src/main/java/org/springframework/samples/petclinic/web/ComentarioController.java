@@ -64,10 +64,6 @@ public class ComentarioController {
 		return "comentarios/showVet";
 		}
 	
-	
-
-	
-	
 	//    DUEÑO ABAJO	
 	
 	@GetMapping(value = "/owners/comentarios/{vetId}")
@@ -95,15 +91,12 @@ public class ComentarioController {
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
 	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
 			@PathVariable("comentarioId") int comentarioId) {
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
-		
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
 		comentario.setId(comentarioId);
 		comentario.setVet(this.vetService.findVetById(vetId));
 		Collection<Vet> vets = this.vetService.findVets();
 		model.put("vets", vets);
-		
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors()+ "Errores");
 			return "comentarios/crearOEditarComentario";

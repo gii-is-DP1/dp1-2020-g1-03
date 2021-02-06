@@ -87,10 +87,6 @@ public class ClaseController {
 		return this.claseService.findAllCategoriasClase();
 	}
 	
-	
-	
-
-	
 	//ADIESTRADOR
 	
 	@GetMapping(value = "/adiestradores/clases")
@@ -274,18 +270,6 @@ public class ClaseController {
 	@PostMapping(value = "secretarios/clases/new")
 	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) throws DataAccessException, ClasePisadaDelAdiestradorException {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
-		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
-		boolean b=true;
-		int i=0;
-		if(!clases.isEmpty()) {
-			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
-						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
-					b=false;		
-				}
-				i++;
-			}
-		}
 		clase.setSecretario(sec);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());

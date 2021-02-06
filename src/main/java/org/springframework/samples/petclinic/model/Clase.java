@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
@@ -50,24 +51,22 @@ public class Clase extends BaseEntity{
 	
 	@ManyToOne
 	@JoinColumn(name = "categoria")
+	@NotNull(message="Debes seleccionar un campo de categorias")
 	private CategoriaClase categoriaClase;
 	
 	@ManyToOne
 	@JoinColumn(name = "mascota")
+	@NotNull(message="Debes seleccionar un campo de tipo mascota")
 	private PetType type;
 	
 	@ManyToOne
 	@JoinColumn(name = "adiestrador_id")
+	@NotNull(message="Debes seleccionar un adiestrador")
 	private Adiestrador adiestrador;
 	
 	@ManyToOne
 	@JoinColumn(name = "secretario_id")
 	private Secretario secretario;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "clases_pets", joinColumns = @JoinColumn(name = "clase_id"),
-			inverseJoinColumns = @JoinColumn(name = "pet_id"))
-	private Set<Pet> pets;
 	
 	public long numeroDiasEntreDosFechas(LocalDateTime fecha2){
 		   return DAYS.between(this.fechaHoraFin, fecha2);

@@ -29,13 +29,10 @@
             <th>Nombre de la Mascota</th>
             <td><c:out value="${vacuna.pet.name}"/></td>
         </tr>
-        <tr>
-            <th>Nombre del Owner</th>
-            <td><c:out value="${vacuna.pet.owner.firstName} ${vacuna.pet.owner.lastName}"/></td>
-        </tr>
     </table>
     
-    <spring:url value="/vets/vacuna" var="vacunasUrl">          	
+    <spring:url value="/owners/{ownerId}/vacuna/" var="vacunasUrl"> 
+    				<spring:param name="ownerId" value="${vacuna.pet.owner.id}"/>         	
                     </spring:url>
                     <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="Volver"/></a>
 

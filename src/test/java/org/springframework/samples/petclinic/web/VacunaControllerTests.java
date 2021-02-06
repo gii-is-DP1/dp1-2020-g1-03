@@ -106,7 +106,7 @@ public class VacunaControllerTests {
 	@Test
 	void testVacunaShowOwner() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/owners/{ownerId}/vacuna/{vacunaId}", VacunaControllerTests.TEST_OWNER_ID, VacunaControllerTests.TEST_VACUNA_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShow"));
+				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShowOwner"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "vet")

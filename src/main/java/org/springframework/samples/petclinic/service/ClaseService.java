@@ -24,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ClaseService {
 	private ClaseRepository claseRepository;
 	private ApuntarClaseRepository apuntarClaseRepository;
-	public static final int limiteClases=3;
-	public static final int dias=7;
+	public static final int LIMITE_DE_CLASES_SEMANALES=3;
+	public static final int DIFERENCIA_ENTRE_DIAS=7;
 
 	@Autowired
 	public ClaseService(ClaseRepository claseRepository, ApuntarClaseRepository apuntarClaseRepository) {
@@ -122,13 +122,13 @@ public class ClaseService {
 				i++;
 			}
 		
-		if(pet.getType()!=clase.getType()) {
+		}if(pet.getType()!=clase.getType()) {
 
 			throw new DiferenciaTipoMascotaException();
 		}else if(clase.getNumeroPlazasDisponibles()<=0){
 			throw new LimiteAforoClaseException();
-		}else if(clasesApuntadas.size()+1>limiteClases && clasesApuntadas.get(clasesApuntadas.size()-1)
-				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())<dias && clasesApuntadas!=null){
+		}else if(clasesApuntadas.size()+1>LIMITE_DE_CLASES_SEMANALES && clasesApuntadas.get(clasesApuntadas.size()-1)
+				.getClase().numeroDiasEntreDosFechas(clase.getFechaHoraFin())<DIFERENCIA_ENTRE_DIAS && clasesApuntadas!=null){
 			
 			throw new DiferenciaClasesDiasException();
 		}else if(b==false){
@@ -142,8 +142,8 @@ public class ClaseService {
 			
 			
 			}
-		}	
-	}
+	}	
+
 	
 	@Transactional(readOnly = true)
 	public List<ApuntarClase> findMascotasApuntadasEnClaseByClaseId(int claseId) throws DataAccessException{
