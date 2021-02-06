@@ -31,9 +31,11 @@ import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelVetException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
+import org.springframework.samples.petclinic.service.exceptions.LimiteDeCitasAlDiaDelVet;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -132,7 +134,7 @@ public class CitaController {
 
 	@PostMapping(value = "/owners/citas/new")
 	public String processCrearCitaOwner(Map<String, Object> model, @Valid Cita cita, BindingResult result,
-			final Principal principal) throws DataAccessException {
+			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet {
 		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
 		List<Pet> pets = this.petService.findMascotasOwner(owner);
 		cita.setName(cita.getTitulo());
@@ -162,7 +164,7 @@ public class CitaController {
 
 	@PostMapping(value = "/owners/citas/{citaId}/edit")
 	public String processEditarCitaOwner(@Valid Cita cita, @PathVariable("citaId") int citaId, BindingResult result,
-			final Principal principal) {
+			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
@@ -235,6 +237,7 @@ public class CitaController {
 			List<Estado> estados = new ArrayList<Estado>();
 			estados.add(Estado.ACEPTADA);
 			estados.add(Estado.RECHAZADA);
+			estados.add(Estado.PENDIENTE);
 			model.put("estados", estados);
 			model.put("vets", vets);
 			return "citas/editarCitaSecretario";
@@ -246,12 +249,13 @@ public class CitaController {
 	@PostMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String processEditarCitaSecretario(Map<String, Object> model, @Valid Cita cita, BindingResult result,
 			final Principal principal, @PathVariable("citaId") int citaId) {
-		model.put("cita", cita);
 		List<Vet> vets = new ArrayList<>(this.vetService.findVets());
-		List<Estado> estados = new ArrayList<Estado>();
+		List<Estado> estados = new ArrayList<>();
 		estados.add(Estado.ACEPTADA);
 		estados.add(Estado.RECHAZADA);
+		estados.add(Estado.PENDIENTE);
 		model.put("estados", estados);
+		model.put("cita", cita);
 		model.put("vets", vets);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
@@ -260,14 +264,27 @@ public class CitaController {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
 					"La fecha no puede ser una fecha pasada");
 			return "citas/editarCitaSecretario";
+		} else if (cita.getEstado().equals(Estado.RECHAZADA)) {
+			result.rejectValue("vet", "No se puede seleccionar veterinario ya que la cita ha sido rechazada",
+					"No se puede seleccionar veterinario ya que la cita ha sido rechazada");
+			return "citas/editarCitaSecretario";
 		}
 
 		Cita cita1 = this.citaService.findCitaById(citaId);
 		List<Pet> mascotas = cita1.getPets();
 		cita.setPets(mascotas);
-
 		cita.setId(citaId);
-		this.citaService.saveCita(cita);
+		try {
+			this.citaService.saveCita(cita);
+		}catch(CitaPisadaDelVetException ex) {
+			result.rejectValue("vet","No puede aceptar la cita de este veterinario porque se pisa con otra cita",
+					"No puede aceptar la cita de este veterinario porque se pisa con otra cita");
+			return "citas/editarCitaSecretario";
+		}catch(LimiteDeCitasAlDiaDelVet ex2) {
+			result.rejectValue("vet","El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio",
+			"El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio");
+			return "citas/editarCitaSecretario";
+		}
 		return "redirect:/secretarios/citas";
 	}
 
