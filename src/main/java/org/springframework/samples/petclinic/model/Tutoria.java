@@ -20,14 +20,14 @@ import lombok.Setter;
 @Table(name = "tutorias")
 public class Tutoria extends BaseEntity {
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String titulo;
 	
 	@Column(name = "fecha_hora")
 	@DateTimeFormat(pattern ="yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String razon;
 	
 	@ManyToOne

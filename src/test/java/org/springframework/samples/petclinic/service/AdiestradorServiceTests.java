@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Collection;
 
 import org.junit.Assert;
@@ -8,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Adiestrador;
-import org.springframework.samples.petclinic.model.Comentario;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdiestradorServiceTests {
 	@Autowired
 	protected AdiestradorService adiestradorService;
-	
-	@Autowired
-	private OwnerService	ownerService;
 	
 	@Test
 	void shouldFindAdiestradorById() {
@@ -32,31 +31,34 @@ public class AdiestradorServiceTests {
 		Assert.assertTrue(com==1);
 
 	}
-//	@Test
-//	@Transactional
-//	public void shouldUpdateAdiestrador() throws Exception {
-//		Adiestrador ad = this.adiestradorService.findAdiestradorById(1);
-//
-//		String titulo = "Titulo Cambiado";
-//		String cuerpo = "Cuerpo Cambiado";
-//
-//		comentario2.setTitulo(titulo);
-//		comentario2.setCuerpo(cuerpo);
-//		this.comentarioService.saveComentario(comentario2);
-//
-//		Comentario comentarioRev = this.comentarioService.findComentarioByComentarioId(2);
-//		Assert.assertTrue(comentarioRev.getTitulo()==titulo);
-//	}
 	@Test
 	void shouldFindAllAdiestradores() {
 		Collection<Adiestrador> adiestradores=this.adiestradorService.findAllAdiestradores();
-		Assert.assertTrue(adiestradores.size()==1);
+		Assert.assertTrue(adiestradores.size()==2);
 	}
-	//PREGUNTAR
 	@Test
 	void shouldFindFirstnameAndLastnameOfAdiestrador() {
-		String adiestradorBD = "Daniel Castroviejo";
+		String adiestradorBD = "Daniel,Castroviejo";
 		Collection<String> nombreCompleto=this.adiestradorService.findNameAndLastnameAdiestrador();
-		Assert.assertTrue(nombreCompleto.equals(adiestradorBD));
+		Assert.assertTrue(nombreCompleto.contains(adiestradorBD));
+	}
+	
+	@Test
+	@Transactional
+	void shouldSaveAdiestrador(){
+		Collection<Adiestrador> adiestradores = this.adiestradorService.findAllAdiestradores();
+		int tamOriginal = adiestradores.size();
+		Adiestrador adiestrador = new Adiestrador();
+		User user=new User();
+		user.setUsername("adiestrador3");
+		String competencias = "Esto es una competencia";
+		adiestrador.setUser(user);
+		adiestrador.setCompetencias(competencias);
+		adiestrador.setFirstName("Paco");
+		adiestrador.setLastName("Rodriguez");
+		adiestrador.setId(3);
+		this.adiestradorService.saveAdiestrador(adiestrador);
+		adiestradores = this.adiestradorService.findAllAdiestradores();
+		assertThat(adiestradores.size()).isEqualTo(tamOriginal + 1);
 	}
 }

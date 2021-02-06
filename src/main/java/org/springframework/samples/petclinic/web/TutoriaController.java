@@ -110,8 +110,7 @@ public class TutoriaController {
 	public String initCreateTutoria(Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
 		Tutoria tutoria = new Tutoria();
 		tutoria.setPet(this.petService.findPetById(Id));
-		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
-		Adiestrador adiestrador = this.adiestradorService.findAdiestradorById(idAdiestrador);
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
 		tutoria.setAdiestrador(adiestrador);
 		model.put("tutoria", tutoria);
 		return "tutorias/crearOEditarTutoria";
@@ -122,8 +121,7 @@ public class TutoriaController {
 			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
 		tutoria.setId(tutoria.getId());
 		tutoria.setPet(this.petService.findPetById(Id));
-		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
-		Adiestrador adiestrador = this.adiestradorService.findAdiestradorById(idAdiestrador);
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
 		tutoria.setAdiestrador(adiestrador);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
