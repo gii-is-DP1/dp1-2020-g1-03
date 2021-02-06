@@ -29,7 +29,7 @@ import lombok.Setter;
 public class Clase extends BaseEntity{
 	
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String name;
 	
 	@Column(name = "inicio")
@@ -41,11 +41,11 @@ public class Clase extends BaseEntity{
 	private LocalDateTime fechaHoraFin;
 	
 	@Column(name = "plazas")
-	@Positive
+	@Positive(message="El número de plazas totales debe ser mayor a 0")
 	private Integer numeroPlazasTotal;
 	
 	@Column(name = "disponibles")
-	@PositiveOrZero
+	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
 	private Integer numeroPlazasDisponibles;
 	
 	@ManyToOne

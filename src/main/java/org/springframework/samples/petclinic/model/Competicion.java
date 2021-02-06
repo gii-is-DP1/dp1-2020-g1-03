@@ -24,11 +24,11 @@ import java.time.LocalDate;
 @Table(name = "competiciones")
 public class Competicion extends BaseEntity {
 
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String nombre;
 	
 	
-	@PositiveOrZero
+	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
 	@NotNull
 	private Integer cantidad;
 	
@@ -37,7 +37,7 @@ public class Competicion extends BaseEntity {
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 
 
-  @NotNull
+	@NotNull
 	private LocalDate fechaHoraInicio;
 	
 	@Column(name = "fecha_hora_fin")        
@@ -46,7 +46,7 @@ public class Competicion extends BaseEntity {
 	@NotNull
 	private LocalDate fechaHoraFin;
 
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String premios;
 
 	@ManyToOne

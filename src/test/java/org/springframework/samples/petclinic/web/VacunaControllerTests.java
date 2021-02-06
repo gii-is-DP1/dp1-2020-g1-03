@@ -1,13 +1,9 @@
 package org.springframework.samples.petclinic.web;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.time.LocalDate;
@@ -73,7 +69,7 @@ public class VacunaControllerTests {
 		
 		this.pedro = new Owner();
 		User username= new User();
-		username.setUsername("josue1");
+		username.setUsername("pedro1");
 		this.pedro.setUser(username);
 		this.pedro.setId(VacunaControllerTests.TEST_OWNER_ID);
 		this.pedro.setAddress("Plaza San Pedro");
@@ -184,7 +180,6 @@ public class VacunaControllerTests {
     @Test
     void testProcessCreationVacunaFormSuccess() throws Exception {
     	mockMvc.perform(MockMvcRequestBuilders.post("/vets/vacuna/pets/{petId}/create", VacunaControllerTests.TEST_PET_ID)
-    			.param("vet", "Josue").param("pet", "Basil")
 						.with(csrf())
 						.param("tipoEnfermedad", "Rabia")
 						.param("fecha", "2020-08-06")
@@ -197,13 +192,15 @@ public class VacunaControllerTests {
     @Test
     void testProcessCreationVacunaFormHasErrors() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/vets/vacuna/pets/{petId}/create", VacunaControllerTests.TEST_PET_ID)
-				.param("vet", "Josue").param("pet", "Basil")
+				.param("vet", "josue")
 				.with(csrf())
+				.param("tipoEnfermedad", "Rabia")
 				.param("fecha", "2020-08-06"))
-			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("pet"))
+			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("vet"))
 			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("vacuna"))
-			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("vacuna", "tipoEnfermedad"))
 			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("vacuna", "descripcion"))
+			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.view().name("vacunas/crearVacuna"));
 	}
 	
