@@ -67,7 +67,7 @@ public class ClaseControllerTests {
 
 	private Owner pedro;
 
-	private Adiestrador josue;
+	private Adiestrador josue = new Adiestrador();
 
 	private Secretario angel;
 
@@ -76,10 +76,10 @@ public class ClaseControllerTests {
 	private LocalDate fecha = LocalDate.parse("2020-10-04");
 	private LocalDateTime fechaClaseInicio = LocalDateTime.of(2021,01,14,13,30);
 	private LocalDateTime fechaClaseFin = LocalDateTime.of(2021,01,14,16,30);
-	private CategoriaClase adiestrar;
+	private CategoriaClase adiestrar = new CategoriaClase();
 	@BeforeEach
 	void setup() {
-		CategoriaClase adiestrar = new CategoriaClase();
+		
 		adiestrar.setId(1);
 		adiestrar.setName("Adiestrar");
 		PetType dog = new PetType();
@@ -94,7 +94,6 @@ public class ClaseControllerTests {
 		this.pedro.setFirstName("Alenjandro");
 		this.pedro.setLastName("Perez");
 
-		this.josue = new Adiestrador();
 		User username = new User();
 		this.josue.setId(ClaseControllerTests.TEST_ADIESTRADOR_ID);
 		this.josue.setFirstName("Josue");
@@ -121,6 +120,7 @@ public class ClaseControllerTests {
 		this.clase1.setFechaHoraFin(fechaClaseFin);
 		this.clase1.setNumeroPlazasTotal(15);
 		this.clase1.setNumeroPlazasDisponibles(12);
+		this.clase1.setAdiestrador(josue);
 		this.clase1.setType(dog);
 		this.clase1.setCategoriaClase(adiestrar);
 
@@ -199,12 +199,15 @@ public class ClaseControllerTests {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/clases/show/apuntar/{claseId}", ClaseControllerTests.TEST_OWNER_ID)
 				.with(csrf())
 				.param("name", "Clase 1")
-				.param("fechaHoraInicio", "2021-01-15 15:30")
-				.param("fechaHoraFin", "2021-01-15 16:30")
+				.param("fechaHoraInicio", "2025-01-15 15:30")
+				.param("fechaHoraFin", "2025-01-15 16:30")
 				.param("numeroPlazasTotal", "25")
+				.param("type", "dog")
 				.param("numeroPlazasDisponibles", "13")
-				.param("categoriaClase", "ADIESTRAR"))
-		.andExpect(MockMvcResultMatchers.status().isOk());
+				.param("categoriaClase", "Adiestrar")
+				.param("adiestrador", "Josue,Martinez"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/clases"));
 	}
 	
 	
@@ -260,8 +263,9 @@ public class ClaseControllerTests {
 				.param("numeroPlazasTotal", "25")
 				.param("numeroPlazasDisponibles", "13")
 				.param("type", "dog")
+				.param("adiestrador", "Josue,Martinez")
 				.param("categoriaClase", "Adiestrar")
-				.param("adiestrador", "Josue,Martinez"))
+				)
 		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/clases/show/{claseId}"));
 	}
@@ -289,16 +293,25 @@ public class ClaseControllerTests {
 	@WithMockUser(value = "angel", roles = "secretario")
 	@Test
 	void testProcessCreationFormSuccess() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/secretarios/clases/new", ClaseControllerTests.TEST_SECRETARIO_ID)
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/secretarios/clases/new")
 				.with(csrf())
 				.param("name", "Clase 1")
-				.param("fechaHoraInicio", "2021-01-14 15:30")
-				.param("fechaHoraFin", "2021-01-14 16:30")
+				.param("fechaHoraInicio", "2025-01-14 15:30")
+				.param("fechaHoraFin", "2025-01-14 16:30")
 				.param("numeroPlazasTotal", "20")
 				.param("numeroPlazasDisponibles", "12")
-				.param("categoriaClase", "ADIESTRAR"))
-		.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+				.param("categoriaClase", "Adiestrar")
+				.param("type", "dog")
+				.param("adiestrador", "Josue,Martinez"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/clases"));
 	}
 	
+	@WithMockUser(value = "angel", roles = "secretario")
+	@Test
+	void testDeleteClase() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.delete("secretarios/clases/show/{claseId}/delete", TEST_CLASE_ID))
+		.andExpect(MockMvcResultMatchers.status().isForbidden());
+	}
 
 }
