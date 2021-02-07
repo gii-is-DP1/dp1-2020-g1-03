@@ -21,17 +21,11 @@ import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
-<<<<<<< HEAD
 import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
-=======
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
-import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
-import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
-import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
 import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
->>>>>>> branch 'tests' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.samples.petclinic.service.exceptions.MacostaYaApuntadaException;
 import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeClasesException;
@@ -298,164 +292,6 @@ public class ClaseServiceTests {
         	Logger.getLogger(ClaseServiceTests.class.getName()).log(Level.SEVERE, null, ex5);
         }
 		Assert.assertTrue(clase.getNumeroPlazasDisponibles() == plazas-1);
-<<<<<<< HEAD
-=======
-	}
-	
-	@Test
-	@Transactional
-	void shouldThrowMacostaYaApuntadaExceptionApuntarMascota() throws Exception {
-		Clase clase = this.claseService.findClaseById(11);
-		Pet pet = this.petService.findPetById(4);
-		int plazas = clase.getNumeroPlazasDisponibles();
-		ApuntarClase apClase = new ApuntarClase();
-		apClase.setClase(clase);
-		apClase.setPet(pet);
-		try{
-			this.claseService.apuntarMascota(apClase);
-		}catch(DiferenciaTipoMascotaException ex){
-			ex.printStackTrace();
-        }catch(DiferenciaClasesDiasException ex2){
-        	ex2.printStackTrace();
-        }catch(LimiteAforoClaseException ex3){
-        	ex3.printStackTrace();
-        }catch(SolapamientoDeClasesException ex4){
-        	ex4.printStackTrace();
-        }catch(MacostaYaApuntadaException ex5){
-        	ex5.printStackTrace();
-        }
-		clase = this.claseService.findClaseById(11);
-		Assert.assertTrue(clase.getNumeroPlazasDisponibles() == plazas-1);
-	}
-	
-	@Test
-	@Transactional
-	void shouldThrowLimiteAforoClaseExceptionApuntarMascota() throws Exception {
-		Clase clase = this.claseService.findClaseById(4);
-		Pet pet = this.petService.findPetById(4);
-		ApuntarClase apClase = new ApuntarClase();
-		apClase.setClase(clase);
-		apClase.setPet(pet);
-		Assertions.assertThrows(LimiteAforoClaseException.class, () ->{
-			claseService.apuntarMascota(apClase);
-		});
-	}
-	
-	@Test
-	@Transactional
-	void shouldThrowsDiferenciaTipoMascotaExceptionApuntarMascota() throws Exception {
-		Clase clase = this.claseService.findClaseById(11);
-		Pet pet = this.petService.findPetById(1);
-		ApuntarClase apClase = new ApuntarClase();
-		apClase.setClase(clase);
-		apClase.setPet(pet);
-		Assertions.assertThrows(DiferenciaTipoMascotaException.class, () ->{
-			claseService.apuntarMascota(apClase);
-		});
-	}
-	
-	@Test
-	@Transactional
-	void shouldThrowSolapamientoDeClasesExceptionApuntarMascota() throws Exception {
-		Clase clase = this.claseService.findClaseById(11);
-		Pet pet = this.petService.findPetById(4);
-		ApuntarClase apClase = new ApuntarClase();
-		apClase.setClase(clase);
-		apClase.setPet(pet);
-		try{
-			this.claseService.apuntarMascota(apClase);
-		}catch(DiferenciaTipoMascotaException ex){
-			ex.printStackTrace();
-        }catch(DiferenciaClasesDiasException ex2){
-        	ex2.printStackTrace();
-        }catch(LimiteAforoClaseException ex3){
-        	ex3.printStackTrace();
-        }catch(SolapamientoDeClasesException ex4){
-        	ex4.printStackTrace();
-        }catch(MacostaYaApuntadaException ex5){
-        	ex5.printStackTrace();
-        }
-		Clase clase2 = this.claseService.findClaseById(10);
-		ApuntarClase apClase2 = new ApuntarClase();
-		apClase2.setClase(clase2);
-		apClase2.setPet(pet);
-		Assertions.assertThrows(SolapamientoDeClasesException.class, () ->{
-			claseService.apuntarMascota(apClase2);
-		});
-	}
-	
-	@Test
-	@Transactional
-	void shouldThrowDiferenciaClasesDiasExceptionApuntarMascota() throws Exception {
-		Clase clase = this.claseService.findClaseById(5);
-		Pet pet = this.petService.findPetById(78);
-		ApuntarClase apClase = new ApuntarClase();
-		apClase.setClase(clase);
-		apClase.setPet(pet);
-		
-		this.claseService.apuntarMascota(apClase);
-		
-		Clase clase2 = this.claseService.findClaseById(6);
-		ApuntarClase apClase2 = new ApuntarClase();
-		apClase2.setClase(clase2);
-		apClase2.setPet(pet);
-		
-		this.claseService.apuntarMascota(apClase2);
-		
-		Clase clase3 = this.claseService.findClaseById(7);
-		ApuntarClase apClase3 = new ApuntarClase();
-		apClase3.setClase(clase3);
-		apClase3.setPet(pet);
-		
-		
-		try{
-			this.claseService.apuntarMascota(apClase3);
-		}catch(DiferenciaTipoMascotaException ex){
-			ex.printStackTrace();
-        }catch(DiferenciaClasesDiasException ex2){
-        	ex2.printStackTrace();
-        }catch(LimiteAforoClaseException ex3){
-        	ex3.printStackTrace();
-        }catch(SolapamientoDeClasesException ex4){
-        	ex4.printStackTrace();
-        }catch(MacostaYaApuntadaException ex5){
-        	ex5.printStackTrace();
-        }
-		Clase clase4 = this.claseService.findClaseById(8);
-		ApuntarClase apClase4 = new ApuntarClase();
-		apClase4.setClase(clase4);
-		apClase4.setPet(pet);
-		Assertions.assertThrows(DiferenciaClasesDiasException.class, () ->{
-			claseService.apuntarMascota(apClase4);
-		});
-	}
-	
-	@Test
-	void shouldFindAllCategoriasClases() {
-		Collection<CategoriaClase> CategoriasClases = this.claseService.findAllCategoriasClase();
-		CategoriaClase CategoriasClase1 = EntityUtils.getById(CategoriasClases, CategoriaClase.class, 1);
-		assertThat(CategoriasClase1.getName()).isEqualTo("Adiestrar");
-		CategoriaClase CategoriasClase2 = EntityUtils.getById(CategoriasClases, CategoriaClase.class, 3);
-		assertThat(CategoriasClase2.getName()).isEqualTo("Trucos basicos");
-	}
-	
-	@Test
-	void shouldFindAllPetTypes() {
-		Collection<PetType> petTypes = this.petService.findPetTypes();
-		PetType petType1 = EntityUtils.getById(petTypes, PetType.class, 1);
-		assertThat(petType1.getName()).isEqualTo("cat");
-		PetType petType4 = EntityUtils.getById(petTypes, PetType.class, 4);
-		assertThat(petType4.getName()).isEqualTo("snake");
-	}
-	
-	@Test
-	void shouldFindAllAdiestradores() {
-		List<String> adiestradores = new ArrayList<String>(this.adiestradorService.findNameAndLastnameAdiestrador());
-		String adiestrador1 = "Daniel,Castroviejo";
-		assertThat(adiestrador1).isEqualTo(adiestradores.get(0));
-		String adiestrador2 = "Manuel,Castroviejo";
-		assertThat(adiestrador2).isEqualTo(adiestradores.get(1));
->>>>>>> branch 'tests' of https://github.com/gii-is-DP1/dp1-2020-g1-03.git
 	}
 	
 	@Test
@@ -612,4 +448,6 @@ public class ClaseServiceTests {
 		String adiestrador2 = "Manuel,Castroviejo";
 		assertThat(adiestrador2).isEqualTo(adiestradores.get(1));
 	}
+	
+	
 }
