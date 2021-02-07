@@ -104,8 +104,6 @@ public class ClaseService {
 		Pet pet = apClase.getPet();
 		Clase clase = apClase.getClase();
 		List<ApuntarClase> clasesApuntadas = this.apuntarClaseRepository.findClasesByPetId(pet.getId());
-
-		 
 		Boolean b=true;
 		int i=0;
 		Boolean apuntada=false;
