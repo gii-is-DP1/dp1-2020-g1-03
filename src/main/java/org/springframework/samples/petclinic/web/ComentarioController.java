@@ -80,7 +80,7 @@ public class ComentarioController {
 		return "comentarios/show";
 		}
 	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
+	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model, Owner owner, Vet vet) {
 		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
 		model.put("comentario", comentario);
 		Collection<Vet> vets = this.vetService.findVets();
@@ -89,7 +89,7 @@ public class ComentarioController {
 	}
 	
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, @PathVariable("vetId") int vetId, BindingResult result,
+	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId, Owner owner, Vet vet,
 			@PathVariable("comentarioId") int comentarioId) {
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
@@ -114,7 +114,7 @@ public class ComentarioController {
 	}
 	
 	@GetMapping(value = "/owners/comentarios/new") 
-	public String initCreateComentario(Map<String, Object> model, final Principal principal) {
+	public String initCreateComentario(Map<String, Object> model, final Principal principal, Owner owner, Vet vet) {
 		Comentario comentario = new Comentario();
 		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
 		Owner ow= this.ownerService.findOwnerById(idOw);
@@ -126,7 +126,7 @@ public class ComentarioController {
 	}
 
 	@PostMapping(value = "/owners/comentarios/new")
-	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal) {
+	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal, Owner owner, Vet vet) {
 		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
 		Owner ow= this.ownerService.findOwnerById(idOw);
 		comentario.setOwner(ow);
