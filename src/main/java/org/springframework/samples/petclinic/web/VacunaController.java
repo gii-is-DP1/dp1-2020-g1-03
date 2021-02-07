@@ -19,6 +19,7 @@ import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,21 +121,26 @@ public class VacunaController {
 	
 	
 	@GetMapping(value = "/vets/vacuna/pets/{petId}/create")
-	public String initCreateVacuna(Map<String, Object> model,@PathVariable("petId") int Id) {
+	public String initCreateVacuna(Pet pet, Vet vet, Map<String, Object> model,@PathVariable("petId") int Id) {
 		Vacuna vacuna = new Vacuna();
 		vacuna.setPet(this.petService.findPetById(Id));
+		vacuna.setVet(vet);
 		model.put("vacuna", vacuna);
 		return "vacunas/crearVacuna";
 	}
 
 	@PostMapping(value = "/vets/vacuna/pets/{petId}/create")
-	public String processCreateVacuna(@Valid Vacuna vacuna, @PathVariable("petId") int Id,BindingResult result, final Principal principal) {
+	public String processCreateVacuna(Pet pet, Vet vet, @Valid Vacuna vacuna, BindingResult result, ModelMap model,@PathVariable("petId") int Id, final Principal principal) {
 		vacuna.setId(vacuna.getId());
-		int idVet = this.vetService.findVetIdByUsername(principal.getName());
-		Vet vet= this.vetService.findVetById(idVet);
+		vet.setId(this.vetService.findVetIdByUsername(principal.getName()));
+		pet.setId(this.petService.findPetById(Id).getId());
+		pet.setName(this.petService.findPetById(Id).getName());
+		pet.setBirthDate(this.petService.findPetById(Id).getBirthDate());
+		pet.setType(this.petService.findPetById(Id).getType());	
 		vacuna.setVet(vet);
-		vacuna.setPet(this.petService.findPetById(Id));
+		vacuna.setPet(pet);
 		if (result.hasErrors()) {
+			model.put("vacuna", vacuna);
 			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "vacunas/crearVacuna";
 		}else if(vacuna.getFecha().compareTo(vacuna.getPet().getBirthDate())<0) {

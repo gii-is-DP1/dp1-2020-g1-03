@@ -56,8 +56,6 @@ public class ComentarioControllerTests {
 	private Vet					josue;
 	private Owner				pedro;
 	private Vet					error;
-	private Comentario 			comentario2;
-	
 	@BeforeEach
 	void setup() {
 		this.pedro = new Owner();
