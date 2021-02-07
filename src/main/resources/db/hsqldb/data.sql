@@ -172,15 +172,12 @@ INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) V
 
 
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
-
-
-
 INSERT INTO adiestrador VALUES(2,'Manuel','Castroviejo','competencia','adiestrador2');
 
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota, adiestrador_id) VALUES (1,'Clase1','2020-12-14 15:30', '2020-12-14 16:30', 10, 8, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (2,'Clase2','2020-01-14 15:30', '2020-01-14 16:30', 10, 8, 1, 1, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (3,'Clase3','2021-01-14 15:00', '2021-01-14 16:00', 10, 8, 1, 2, 1);
-INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (4,'Clase4','2021-02-14 15:00', '2021-02-14 16:00', 10, 0, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (4,'Clase4','2021-02-14 15:00', '2021-02-14 16:00', 10, 0, 1, 2, 2);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (5,'Clase5','2021-02-14 15:00', '2021-02-14 16:00', 10, 7, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (6,'Clase6','2021-02-15 15:00', '2021-02-15 16:00', 10, 6, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (7,'Clase7','2021-02-16 15:00', '2021-02-16 16:00', 10, 3, 1, 2, 1);
