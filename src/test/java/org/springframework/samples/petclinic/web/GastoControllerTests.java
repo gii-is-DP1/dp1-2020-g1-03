@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.web;
 
 
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import java.time.LocalDate;
 import java.util.Calendar;
 
@@ -27,6 +29,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
  * Test class for {@link VisitController}
@@ -131,7 +134,6 @@ class GastoControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("exception"));
 	}
 
-	// Escenario positivo
 	@WithMockUser(value = "josue", roles = "economista")
 	@Test
 	void testGastoList() throws Exception {
@@ -140,14 +142,74 @@ class GastoControllerTests {
 
 	}
 	
-//	// Escenario negativo
-//	//PREGUNTAR
-//		@WithMockUser(value = "pedro", roles = "owner")
-//		@Test
-//		void testGastoListError() throws Exception {
-//			this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/gasto", GastoControllerTests.TEST_GASTO_ID))
-//			.andExpect(MockMvcResultMatchers.status().is);
-//
-//		}
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testEconomistaInitEditGasto() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/gasto/{gastoId}/edit", GastoControllerTests.TEST_GASTO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeExists("gasto"))
+		.andExpect(MockMvcResultMatchers.model().attribute("gasto", Matchers.hasProperty("titulo", Matchers.is("Material esterilizante"))))
+		.andExpect(MockMvcResultMatchers.model().attribute("gasto", Matchers.hasProperty("cantidad", Matchers.is(250))))
+		.andExpect(MockMvcResultMatchers.model().attribute("gasto", Matchers.hasProperty("fecha", Matchers.is(fecha))))
+		.andExpect(MockMvcResultMatchers.model().attribute("gasto", Matchers.hasProperty("description", Matchers.is("Gasto correspondiente a la compra de material esterilizante para la clinica"))))
+		.andExpect(MockMvcResultMatchers.view().name("gastos/crearOEditarGasto"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testProcessEditFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/gasto/{gastoId}/edit", GastoControllerTests.TEST_GASTO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevo material esterilizante")
+				.param("cantidad", "280")
+				.param("fecha", "2021-01-15")
+				.param("description", "Nuevos esterilizantes"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		.andExpect(MockMvcResultMatchers.view().name("redirect:/economistas/gasto/{gastoId}"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testProcessEditFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/gasto/{gastoId}/edit", GastoControllerTests.TEST_GASTO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevo material esterilizante")
+				.param("cantidad", "280")
+				.param("fecha", "2022-01-15")
+				.param("description", "Nuevos esterilizantes"))
+		.andExpect(MockMvcResultMatchers.view().name("gastos/crearOEditarGasto"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testEconomistaInitCreationForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/gasto/new", GastoControllerTests.TEST_GASTO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("gastos/crearOEditarGasto")).andExpect(MockMvcResultMatchers.model().attributeExists("gasto"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testProcessCreationFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/gasto/new", GastoControllerTests.TEST_GASTO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevo material para clases")
+				.param("cantidad", "270")
+				.param("fecha", "2019-03-15")
+				.param("description", "Nuevos materiales")
+				.param("economista", "1"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+	}
+	
+	@WithMockUser(value = "josue", roles = "economista")
+	@Test
+	void testProcessCreationFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/gasto/new", GastoControllerTests.TEST_GASTO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevo material para clases")
+				.param("cantidad", "270")
+				.param("fecha", "2019-03-15")
+				.param("description", "")
+				.param("economista", "1"))
+		.andExpect(MockMvcResultMatchers.view().name("gastos/crearOEditarGasto"));
+	}
 
 }
