@@ -7,6 +7,17 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="vacunas">
+
+	<jsp:attribute name="customScript">
+        <script>
+									$(function() {
+										$("#fecha").datepicker({
+											dateFormat : "yy-mm-dd"
+										});
+									});
+		</script>
+    </jsp:attribute>
+	<jsp:body>
     <h2>
         <c:if test="${vacuna['new']}">Nueva </c:if> Vacuna
     </h2>
@@ -35,4 +46,5 @@
             </div>
         </div>
     </form:form>
+    </jsp:body>
 </petclinic:layout>

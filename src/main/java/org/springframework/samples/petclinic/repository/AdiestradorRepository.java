@@ -12,8 +12,8 @@ public interface AdiestradorRepository extends Repository<Adiestrador, Integer>{
 	void save(Adiestrador adiestrador) throws DataAccessException;
 	
 	
-	@Query("SELECT adiestrador.id FROM Adiestrador adiestrador WHERE adiestrador.user.username LIKE :username%")
-	int findAdiestradorIdByUsername(String username) throws DataAccessException;
+	@Query("SELECT adiestrador FROM Adiestrador adiestrador WHERE adiestrador.user.username LIKE :username%")
+	Adiestrador findAdiestradorByUsername(String username) throws DataAccessException;
 	
 	@Query("SELECT adiestrador.firstName, adiestrador.lastName FROM Adiestrador adiestrador")
 	List<String> findNameAndLastnameAdiestrador()throws DataAccessException;

@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -81,7 +83,7 @@ class IngresoControllerTests {
 		cal.set(Calendar.YEAR, 2014);
 		cal.set(Calendar.MONTH, Calendar.APRIL);
 		cal.set(Calendar.DAY_OF_MONTH, 12);
-		Date dateRepresentation = cal.getTime();
+	
 		
 		this.error = new Economista();
 		this.error.setId(2);
@@ -106,11 +108,8 @@ class IngresoControllerTests {
 	@Test
 	void testShowIngresoForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/ingreso/{ingresoId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("ingreso"))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("titulo", Matchers.is("Clases"))))
-
 			.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("cantidad", Matchers.is(250))))
-
 			.andExpect(MockMvcResultMatchers.view().name("ingresos/ingresosShow"));
 	}
 	
@@ -123,7 +122,7 @@ class IngresoControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("exception"));
 	}
 	
-	// Escenario positivo
+
 	@WithMockUser(value = "pepe", roles = "economista")
 	@Test
 	void testIngresoList() throws Exception {
@@ -132,16 +131,74 @@ class IngresoControllerTests {
 
 	}
 	
-//	// Escenario negativo
-//		@WithMockUser(value = "alejandro", roles = "owner")
-//		@Test
-//		void testIngresoListError() throws Exception {
-//			this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/ingreso", IngresoControllerTests.TEST_INGRESO_ID))
-//			.andExpect(MockMvcResultMatchers.status().is);
-//
-//		}
-
-
-
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testEconomistaInitEditIngreso() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/ingreso/{ingresoId}/edit", IngresoControllerTests.TEST_INGRESO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeExists("ingreso"))
+		.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("titulo", Matchers.is("Clases"))))
+		.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("cantidad", Matchers.is(250))))
+		.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("fecha", Matchers.is(fecha))))
+		.andExpect(MockMvcResultMatchers.model().attribute("ingreso", Matchers.hasProperty("description", Matchers.is("Ingresos correspondiente a las clases impartidas en el mes de Noviembre"))))
+		.andExpect(MockMvcResultMatchers.view().name("ingresos/crearOEditarIngreso"));
+	}
+	
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testProcessEditFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/ingreso/{ingresoId}/edit", IngresoControllerTests.TEST_INGRESO_ID)
+				.with(csrf())
+				.param("titulo", "Clases impartidas")
+				.param("cantidad", "300")
+				.param("fecha", "2021-01-15")
+				.param("description", "Ingresos de las clases de este mes"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		.andExpect(MockMvcResultMatchers.view().name("redirect:/economistas/ingreso/{ingresoId}"));
+	}
+	
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testProcessEditFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/ingreso/{ingresoId}/edit", IngresoControllerTests.TEST_INGRESO_ID)
+				.with(csrf())
+				.param("titulo", "Clases impartidas")
+				.param("cantidad", "300")
+				.param("fecha", "2022-01-15")
+				.param("description", ""))
+		.andExpect(MockMvcResultMatchers.view().name("ingresos/crearOEditarIngreso"));
+	}
+	
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testEconomistaInitCreationForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/ingreso/create", IngresoControllerTests.TEST_INGRESO_ID)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("ingresos/crearOEditarIngreso")).andExpect(MockMvcResultMatchers.model().attributeExists("ingreso"));
+	}
+	
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testProcessCreationFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/ingreso/create", IngresoControllerTests.TEST_INGRESO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevos ingresos")
+				.param("cantidad", "280")
+				.param("fecha", "2020-01-15")
+				.param("description", "Nuevos ingresos del mes de diciembre")
+				.param("economista", "1"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+	}
+	
+	@WithMockUser(value = "pepe", roles = "economista")
+	@Test
+	void testProcessCreationFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/economistas/ingreso/create", IngresoControllerTests.TEST_INGRESO_ID)
+				.with(csrf())
+				.param("titulo", "Nuevos ingresos")
+				.param("cantidad", "280")
+				.param("fecha", "2023-01-15")
+				.param("description", "")
+				.param("economista", "1"))
+		.andExpect(MockMvcResultMatchers.view().name("ingresos/crearOEditarIngreso"));
+	}
 
 }

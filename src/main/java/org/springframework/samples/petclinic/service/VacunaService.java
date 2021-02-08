@@ -32,7 +32,7 @@ public class VacunaService {
 		return this.vacunaRepository.findById(id);
 	}
 	
-	@Transactional()
+	@Transactional(rollbackFor={DistanciaEntreDiasException.class})
 	public void saveVacuna(Vacuna vacuna, int id) throws DataAccessException, DistanciaEntreDiasException {
 		List<Vacuna> ultVacunas=vacunaRepository.findVacunasByPetId(id);
 		if(ultVacunas.isEmpty() || ultVacunas==null) {

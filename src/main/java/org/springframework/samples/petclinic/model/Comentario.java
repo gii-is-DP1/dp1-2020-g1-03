@@ -17,10 +17,11 @@ import lombok.Setter;
 @Setter
 @Table(name = "comentarios")
 public class Comentario extends BaseEntity{
-	@NotEmpty
+	
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String titulo;
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String cuerpo;
 	
 	@ManyToOne

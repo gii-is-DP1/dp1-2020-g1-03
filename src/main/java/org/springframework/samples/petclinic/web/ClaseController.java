@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
@@ -87,17 +88,13 @@ public class ClaseController {
 		return this.claseService.findAllCategoriasClase();
 	}
 	
-	
-	
-
-	
 	//ADIESTRADOR
 	
 	@GetMapping(value = "/adiestradores/clases")
 	public String listadoClasesByAdiestradorId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
-		int idAdiestrador = this.adiestradorService.findAdiestradorIdByUsername(principal.getName());
-		Collection<Clase> clases= claseService.findClaseByAdiestradorId(idAdiestrador);
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
+		Collection<Clase> clases= claseService.findClaseByAdiestradorId(adiestrador.getId());
 		model.put("clases", clases);
 		return "clases/clasesList";
 		}
@@ -258,16 +255,7 @@ public class ClaseController {
 	@GetMapping(value = "secretarios/clases/show/{claseId}/delete")
 	public String deleteClase(Map<String, Object> model,@PathVariable("claseId") int claseId) {
 		Clase clase= claseService.findClaseById(claseId);
-		List<ApuntarClase> clases = claseService.findMascotasApuntadasEnClaseByClaseId(claseId);
-		if(clases.isEmpty() || clases==null) {
-			this.claseService.deleteClase(clase);
-		}else {
-			for(int i=0; i<clases.size(); i++) {
-				this.claseService.deleteApuntarClase(clases.get(i));
-			}
-			this.claseService.deleteClase(clase);
-		}
-		
+		this.claseService.deleteClase(clase);
 		return "redirect:/secretarios/clases";
 	}
 	
@@ -283,18 +271,6 @@ public class ClaseController {
 	@PostMapping(value = "secretarios/clases/new")
 	public String processCreateClase(@Valid Clase clase, BindingResult result,final Principal principal) throws DataAccessException, ClasePisadaDelAdiestradorException {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
-		List<Clase>clases=this.claseService.findClasesAdiestrador(clase.getAdiestrador());
-		boolean b=true;
-		int i=0;
-		if(!clases.isEmpty()) {
-			while(b && i<clases.size()) {
-				if(clases.get(i).getFechaHoraFin().isAfter(clase.getFechaHoraInicio())&& 
-						clases.get(i).getFechaHoraInicio().isBefore(clase.getFechaHoraFin())) {
-					b=false;		
-				}
-				i++;
-			}
-		}
 		clase.setSecretario(sec);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
