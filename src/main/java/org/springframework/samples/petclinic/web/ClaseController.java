@@ -101,6 +101,9 @@ public class ClaseController {
 	@GetMapping(value = "/adiestradores/clases/show/{claseId}")
 	public String mostarClasesAdiestrador(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
 		Clase clase= claseService.findClaseById(claseId);
+		if(clase.isNew()) {
+			return "exception";
+		}
 		model.put("clase", clase);
 		return "clases/showAdiestrador";
 		}

@@ -60,6 +60,9 @@ public class ComentarioController {
 	@GetMapping(value = "/vets/comentarios/show/{comentarioId}")
 	public String mostarComentariosDeVet(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
 		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
+		if(comentario.isNew()) {
+			return "exception";
+		}
 		model.put("comentario", comentario);
 		return "comentarios/showVet";
 		}

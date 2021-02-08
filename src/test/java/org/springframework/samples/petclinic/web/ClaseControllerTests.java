@@ -2,8 +2,6 @@ package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.assertj.core.util.Lists;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.CategoriaClase;
@@ -28,6 +27,8 @@ import org.springframework.samples.petclinic.service.ClaseService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
+import org.springframework.samples.petclinic.service.VacunaService;
+import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,7 +36,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-@WebMvcTest(controllers = ClaseController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class), excludeAutoConfiguration = SecurityConfiguration.class)
+@WebMvcTest(controllers = ClaseController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
+includeFilters = @ComponentScan.Filter(value = Formatter.class, type = FilterType.ASSIGNABLE_TYPE),excludeAutoConfiguration = SecurityConfiguration.class)
 public class ClaseControllerTests {
 
 	private static final int TEST_CLASE_ID = 1;
@@ -59,6 +61,12 @@ public class ClaseControllerTests {
 
 	@MockBean
 	private PetService petService;
+	
+	@MockBean
+	private VetService vetService;
+	
+	@MockBean
+	private VacunaService vacunaService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -151,6 +159,15 @@ public class ClaseControllerTests {
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(clase1.getCategoriaClase()))))
 			.andExpect(MockMvcResultMatchers.view().name("clases/showAdiestrador"));
 
+	}
+	
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test
+	void testShowAdiestradorClaseFormError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/clases/show/{claseId}", ClaseControllerTests.TEST_CLASE_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("clase"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "adiestrador")
