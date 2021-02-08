@@ -24,6 +24,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,8 +36,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * Simple business object representing a pet.
@@ -59,13 +59,17 @@ public class Pet extends NamedEntity {
 	@ManyToOne
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
+	
+	
+//	@JoinTable(name = "rel_clases_pets", joinColumns = @JoinColumn(name = "FK_PET", nullable = false),
+//				inverseJoinColumns = @JoinColumn(name="FK_CLASE", nullable = false))
+//	@ManyToMany(cascade=CascadeType.ALL)
+//	@JoinColumn(name = "clases")
+//	private List<Clase> clases;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Visit> visits;
 	
-//	@OneToMany(mappedBy = "pets")
-//	//@JoinColumn(name = "competicion_pet_id")
-//	private CompeticionPet competicionPet;
 
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
@@ -87,7 +91,7 @@ public class Pet extends NamedEntity {
 		return this.owner;
 	}
 
-	protected void setOwner(Owner owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 

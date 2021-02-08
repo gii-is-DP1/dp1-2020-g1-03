@@ -1,8 +1,5 @@
 package org.springframework.samples.petclinic.model;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;

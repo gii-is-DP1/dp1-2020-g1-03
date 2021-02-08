@@ -3,7 +3,6 @@ package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,30 +24,22 @@ import lombok.Setter;
 @Table(name = "ingresos")
 public class Ingreso extends BaseEntity{
 	
-	@NotEmpty
-	@Column(name = "titulo")
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String titulo;
 	
-	@NotNull
-	@Column(name = "cantidad")
-	@PositiveOrZero
-	private Integer cantidad;
 	
-	@Column(name = "fecha")        
+	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
+	@NotNull
+	private Integer cantidad;
+	    
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Past
+	@Past(message="La fecha debe ser anterior al día actual")
 	private LocalDate fecha;
 
-	/**
-	 * Holds value of property description.
-	 */
-	@NotEmpty
-	@Column(name = "description")
+	
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String description;
 
-	/**
-	 * Holds value of property pet.
-	 */
 	@ManyToOne
 	@JoinColumn(name = "economista_id")
 	private Economista economista;

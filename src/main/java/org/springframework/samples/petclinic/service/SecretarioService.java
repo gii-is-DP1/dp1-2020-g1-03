@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Economista;
 import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.repository.SecretarioRepository;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class SecretarioService {
 	private SecretarioRepository secretarioRepository;
 	
-	@Autowired
-	private AuthoritiesService authoritiesService;
-
 	@Autowired
 	public SecretarioService(SecretarioRepository secretarioRepository) {
 		this.secretarioRepository = secretarioRepository;
@@ -37,6 +33,8 @@ public class SecretarioService {
 	public void saveSecretario(Secretario secretario) throws DataAccessException {
 		secretarioRepository.save(secretario);		
 	}
+	
+	@Transactional(readOnly = true)
 	public Collection<Secretario> findSecretarios() {
 		return secretarioRepository.findAll();
 	}	

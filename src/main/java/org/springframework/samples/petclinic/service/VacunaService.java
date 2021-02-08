@@ -20,7 +20,7 @@ public class VacunaService {
 	
 	private VacunaRepository vacunaRepository;
 	
-	public static final Integer dias=7;
+	public static final Integer DÍAS_ENTRE_VACUNAS=7;
 
 	@Autowired
 	public VacunaService(VacunaRepository vacunaRepository,PetRepository petRepository,VetRepository vetRepository) {
@@ -32,14 +32,14 @@ public class VacunaService {
 		return this.vacunaRepository.findById(id);
 	}
 	
-	@Transactional()
+	@Transactional(rollbackFor={DistanciaEntreDiasException.class})
 	public void saveVacuna(Vacuna vacuna, int id) throws DataAccessException, DistanciaEntreDiasException {
 		List<Vacuna> ultVacunas=vacunaRepository.findVacunasByPetId(id);
 		if(ultVacunas.isEmpty() || ultVacunas==null) {
 		vacunaRepository.save(vacuna);
 		}else {
 			Vacuna ultVacuna=ultVacunas.get(ultVacunas.size()-1);
-			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<dias) {
+			if(vacuna.getFecha().isBefore(ultVacuna.getFecha()) || ultVacuna.numeroDiasEntreDosFechas(vacuna.getFecha())<DÍAS_ENTRE_VACUNAS) {
 				throw new DistanciaEntreDiasException();
 			}else {
 				vacunaRepository.save(vacuna);
@@ -48,11 +48,12 @@ public class VacunaService {
 		}               
 	}
 	
-
+	@Transactional(readOnly = true)
 	public List<Vacuna> findAllVacunas() throws DataAccessException {
 		return this.vacunaRepository.findAll();
 	}
 
+	@Transactional(readOnly = true)
 	public Collection<Vacuna> findAllVacunasByOwnerId(int ownerId) throws DataAccessException{
 		return vacunaRepository.findVacunasByOwnerId(ownerId);
 	}

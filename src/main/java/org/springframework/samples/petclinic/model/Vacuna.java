@@ -2,7 +2,6 @@ package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,13 +25,11 @@ public class Vacuna extends BaseEntity {
 	@JoinColumn(name = "tipoenfermedad_id")
 	private TipoEnfermedad tipoEnfermedad;
 
-	@Column(name = "fecha")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Past
+	@Past(message="La fecha debe ser anterior al día actual")
 	private LocalDate fecha;
 
-	@NotEmpty
-	@Column(name = "descripcion")
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String descripcion;
 	
 	@ManyToOne

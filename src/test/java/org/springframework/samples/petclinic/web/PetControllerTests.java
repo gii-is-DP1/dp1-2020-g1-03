@@ -65,7 +65,7 @@ class PetControllerTests {
 	@MockBean
 	private PetService petService;
         
-        @MockBean
+    @MockBean
 	private OwnerService ownerService;
 
 	@Autowired

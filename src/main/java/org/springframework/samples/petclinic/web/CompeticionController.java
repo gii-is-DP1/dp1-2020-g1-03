@@ -1,32 +1,25 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.validation.Valid;
 
+//import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
@@ -35,6 +28,8 @@ import org.springframework.samples.petclinic.service.CompeticionService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
+import org.springframework.samples.petclinic.service.exceptions.MascotaYaApuntadaCompeticionException;
+import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeCompeticionesException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -43,13 +38,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import lombok.extern.java.Log;
 
-/**
- * @author Juergen Hoeller
- * @author Ken Krebs
- * @author Arjen Poutsma
- * @author Michael Isvy
- */
 @Controller
 public class CompeticionController {
 
@@ -58,11 +48,12 @@ public class CompeticionController {
 	private final PetService petService;
 	private final OwnerService ownerService;
 	private final CompeticionPetService competicionPetService;
+	private static final Logger logger =
+			Logger.getLogger(CompeticionController.class.getName());
 	@Autowired
 	public CompeticionController(CompeticionService competicionService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService, CompeticionPetService competicionPetService) {
 		this.competicionService = competicionService;
-		// this.adiestradorService = adiestradorService;
 		this.secretarioService = secretarioService;
 		this.petService = petService;
 		this.ownerService = ownerService;
@@ -72,7 +63,6 @@ public class CompeticionController {
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
 	   dataBinder.setValidator(new CompeticionPetValidator());
-	   dataBinder.addCustomFormatter(new CompeticionPetFormatter(petService, ownerService));
 	}
 
 
@@ -81,23 +71,10 @@ public class CompeticionController {
 		return this.petService.findPetTypes();
 	}
 
-//	@ModelAttribute("adiestradores")
-//	public Collection<String> populateAdiestradores() {
-//		return this.secretarioService.findNameAndLastnameAdiestrador();
-//	}
 
-//	@ModelAttribute("pets")
-//	public Collection<String> populatePet(final Principal principal) {
-//		Integer idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
-//		if(idOwner!=null) {
-//		Collection<String> mascotas = this.petService.findNameMascota(idOwner);
-//		return mascotas;
-//		}else {
-//		return new ArrayList<String>();
-//		}
-//	}
 
-	// ADIESTRADOR
+	// SECRETARIO
+
 
 	@GetMapping(value = "/secretarios/competiciones")
 	public String listadoCompeticionesBySecretarioId(Map<String, Object> model, final Principal principal) {
@@ -112,6 +89,7 @@ public class CompeticionController {
 			Map<String, Object> model, final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
 		if(competicion.getNombre()==null) {
+			logger.log(Level.WARNING, "Competición vacia");
 			return "exception";
 		} else {
 		model.put("competicion", competicion);
@@ -119,12 +97,8 @@ public class CompeticionController {
 	}
 	}
 
-	// Dueño
-
 	@GetMapping(value = "/owners/competiciones")
 	public String listadoCompeticionesByOwnerId(Map<String, Object> model, final Principal principal) {
-//			Integer ownerId=this.ownerService.findOwnerIdByUsername(principal.getName());
-//			Owner owner= this.ownerService.findOwnerById(ownerId);
 		Collection<Competicion> competiciones = competicionService.findAllCompeticiones();
 		model.put("competiciones", competiciones);
 		return "competiciones/competicionesListOwner";
@@ -135,6 +109,7 @@ public class CompeticionController {
 			final Principal principal) {
 		Competicion competicion = competicionService.findCompeticionById(competicionId);
 		if(competicion.getNombre()==null) {
+			logger.log(Level.WARNING, "Competición vacia");
 			return "exception";
 		} else {
 		model.put("competicion", competicion);
@@ -149,59 +124,49 @@ public class CompeticionController {
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
 		model.put("competicionPet", competicionPet);
-		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Collection<Pet> pets = this.petService.findPetsByOwnerId(ownerId);
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(owner);
 		model.put("pets", pets);
 		return "competiciones/competicionesInscribePet";
 	}
 
 	@PostMapping(value = "/owners/competiciones/show/{competicionId}/inscribir")
 	public String processInscribePet(@PathVariable("competicionId") int competicionId,
-			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal) {
+			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal, Map<String, Object> model) throws DataAccessException,
+	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException {
+//		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(owner);
+		model.put("pets", pets);
 		competicionPet.setPet(competicionPet.getPet());
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
-		List<CompeticionPet> competicionesApuntadas = this.competicionPetService
-				.findCompeticionByPetId(competicionPet.getPet().getId());
-		Boolean b = true;
-		int i = 0;
-		Boolean apuntada = false;
-		if (!competicionesApuntadas.isEmpty()) {
-			while (b && i < competicionesApuntadas.size() && apuntada.equals(false)) {
-				if (competicionesApuntadas.get(i).getCompeticion().getFechaHoraFin()
-						.isAfter(competicionPet.getCompeticion().getFechaHoraInicio())
-						|| competicionesApuntadas.get(i).getCompeticion().getFechaHoraInicio()
-								.isBefore(competicionPet.getCompeticion().getFechaHoraFin())
-						&& (competicionesApuntadas.get(i).getCompeticion().getId() != competicionPet.getCompeticion()
-								.getId())) {
-					b = false;
-				}
-				if (competicionesApuntadas.get(i).getCompeticion().getId()
-						.equals(competicionPet.getCompeticion().getId())) {
-					apuntada = true;
-				}
-				i++;
-			}
-		}
+		List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
-			return "exception";
-		} else if (competicionPet.getCompeticion().getFechaHoraInicio().isBefore(LocalDate.now())) {
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
+			return "competiciones/competicionesInscribePet";
+		}else if (competicionPet.getCompeticion().getFechaHoraInicio().isBefore(LocalDate.now())) {
 			result.rejectValue("pet", "La competicion ya ha comenzado", "La competicion ya ha comenzado");
 
-			return "exception";
+			return "competiciones/competicionesInscribePet";
 
-		} else if (b == false) {
-			result.rejectValue("pet",
-					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada",
-					"No puede apuntar a su mascota porque se pisa con otra competicion a la que está apuntada");
-			return "exception";
-		} else if (apuntada) {
-			result.rejectValue("pet", "Ya se ha apuntado a esta competicion", "Ya se ha apuntado a esta competicion");
-			return "exception";
 		} else {
-			this.competicionPetService.saveCompeticionPet(competicionPet);
+			System.out.println("Elseeeee");
+			try{
+				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
+	        }catch(SolapamientoDeCompeticionesException ex4){
+	        	//System.out.println("EX4444444444");
+	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada",
+						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada");
+				return "competiciones/competicionesInscribePet";
+	        }catch(MascotaYaApuntadaCompeticionException ex5){
+	        	//System.out.println("EX5555555555");
+	        	result.rejectValue("pet","Ya se ha apuntado a esta competición",
+						"Ya se ha apuntado a esta competición");
+				return "competiciones/competicionesInscribePet";
+	        }
+			this.competicionPetService.saveCompeticionPet(competicionPet);
 			return "redirect:/owners/competiciones/show/" + competicionId;
 		}
 	}
@@ -222,37 +187,64 @@ public class CompeticionController {
 			System.out.println(result.getAllErrors());
 			return "competiciones/competicionesCreateOrUpdate";
 		} else {
-			this.competicionService.saveCompeticion(competicion);
-			return "redirect:/secretarios/competiciones";
+			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+				result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+				result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+				return "competiciones/competicionesCreateOrUpdate";
+			}else {
+				if(competicion.getFechaHoraInicio().isAfter(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+					result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isAfter(LocalDate.now())){
+					result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else {
+					this.competicionService.saveCompeticion(competicion);
+					return "redirect:/secretarios/competiciones";
+				}
+			}
 		}
 	}
 
 	@GetMapping(value = "/secretarios/competiciones/edit/{competicionId}")
-	public String initEditComentario(@PathVariable("competicionId") int competicionId, Map<String, Object> model) {
+	public String initEditCompeticion(@PathVariable("competicionId") int competicionId, Map<String, Object> model) {
 		Competicion competicion = this.competicionService.findCompeticionById(competicionId);
 		model.put("competicion", competicion);
 		return "competiciones/competicionesCreateOrUpdate";
 	}
 
 	@PostMapping(value = "/secretarios/competiciones/edit/{competicionId}")
-	public String processEditComentario(final Principal principal, @Valid Competicion competicion, BindingResult result,
+	public String processEditCompeticion(final Principal principal, @Valid Competicion competicion, BindingResult result,
 			@PathVariable("competicionId") int competicionId) {
 		Secretario secretario = this.secretarioService.findSecretarioByUsername(principal.getName());
 		competicion.setSecretario(secretario);
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors() + "Errores");
-			return "/secretarios/competicionesCreateOrUpdate";
-		} else {
-			competicion.setId(competicionId);
-			this.competicionService.saveCompeticion(competicion);
-			return "redirect:/secretarios/competiciones/show/" + competicionId;
+			return "/secretarios/competicionesCreateOrUpdate"; 
+		}else {
+			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+				result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+				result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+				return "competiciones/competicionesCreateOrUpdate";
+			}else {
+				if(competicion.getFechaHoraInicio().isAfter(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
+					result.rejectValue("fechaHoraFin", "La fecha de fin no puede ser una fecha pasada", "La fecha de fin no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isAfter(LocalDate.now())){
+					result.rejectValue("fechaHoraInicio", "La fecha de inicio no puede ser una fecha pasada", "La fecha de inicio no puede ser una fecha pasada");
+					return "competiciones/competicionesCreateOrUpdate";
+				}else {
+					competicion.setId(competicionId);
+					this.competicionService.saveCompeticion(competicion);
+					return "redirect:/secretarios/competiciones/show/" + competicionId;
+				}
+			}
 		}
 	}
 
 	@GetMapping(value = "/owners/competiciones/show/{competicionId}/pets")
 	public String listadoPetsEnCompeticiones(@PathVariable("competicionId") int competicionId,
 			Map<String, Object> model, final Principal principal) {
-		Competicion competicion = this.competicionService.findCompeticionById(competicionId);
 		List<CompeticionPet> competicionPets = new ArrayList<>(
 				this.competicionPetService.findCompeticionPetByCompeticionId(competicionId));
 		List<Pet> pets = new ArrayList<>();

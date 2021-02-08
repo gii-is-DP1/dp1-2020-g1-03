@@ -20,6 +20,7 @@ public class CompeticionPetService {
 		this.competicionPetRepository = competicionPetRepository;
 	}
 	
+	@Transactional(readOnly = true)
 	public List<CompeticionPet> findCompeticionByPetId(int petId) throws DataAccessException{
 		return competicionPetRepository.findCompeticionByPetId(petId);
 	}
@@ -29,9 +30,12 @@ public class CompeticionPetService {
 		this.competicionPetRepository.save(competicionPet);
 	}
 	
+	@Transactional(readOnly = true)
 	public Collection<CompeticionPet> findCompeticionPetByCompeticionId(int competicionId){
 		return this.competicionPetRepository.findCompeticionPetByCompeticionId(competicionId);
 	}
+	
+	@Transactional(readOnly = true)
 	public Pet findPetByCompeticionPetId(int competicionPetId) {
 		return this.competicionPetRepository.findPetByCompeticionPetId(competicionPetId);
 	}

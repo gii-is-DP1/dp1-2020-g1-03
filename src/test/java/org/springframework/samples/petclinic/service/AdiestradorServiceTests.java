@@ -20,17 +20,13 @@ public class AdiestradorServiceTests {
 	protected AdiestradorService adiestradorService;
 	
 	@Test
-	void shouldFindAdiestradorById() {
-		Adiestrador ad = this.adiestradorService.findAdiestradorById(1);
-		Assert.assertTrue(ad.getId()==(1));
-
+	void shouldFindAdiestradorByUsername() {
+		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername("adiestrador1");
+		Assert.assertTrue(adiestrador.getId()==1);
+		Assert.assertTrue(adiestrador.getFirstName().equals("Daniel"));
+		Assert.assertTrue(adiestrador.getLastName().equals("Castroviejo"));
 	}
-	@Test
-	void shouldFindAdiestradorIdByUsername() {
-		int com = this.adiestradorService.findAdiestradorIdByUsername("adiestrador1");
-		Assert.assertTrue(com==1);
 
-	}
 	@Test
 	void shouldFindAllAdiestradores() {
 		Collection<Adiestrador> adiestradores=this.adiestradorService.findAllAdiestradores();

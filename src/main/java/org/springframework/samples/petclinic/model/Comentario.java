@@ -2,14 +2,12 @@ package org.springframework.samples.petclinic.model;
 
 
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import com.sun.istack.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +17,11 @@ import lombok.Setter;
 @Setter
 @Table(name = "comentarios")
 public class Comentario extends BaseEntity{
-	@NotEmpty
-	@Column(name = "titulo")
+	
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String titulo;
 	
-	@NotEmpty
-	@Column(name = "cuerpo")
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String cuerpo;
 	
 	@ManyToOne

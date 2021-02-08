@@ -1,18 +1,4 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
@@ -20,66 +6,105 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Clase;
+import org.springframework.samples.petclinic.model.Estado;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.CitaRepository;
-import org.springframework.samples.petclinic.repository.PetRepository;
-import org.springframework.samples.petclinic.repository.VisitRepository;
+import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelVetException;
+import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
+import org.springframework.samples.petclinic.service.exceptions.LimiteDeCitasAlDiaDelVet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-/**
- * Mostly used as a facade for all Petclinic controllers Also a placeholder
- * for @Transactional and @Cacheable annotations
- *
- * @author Michael Isvy
- */
 @Service
 public class CitaService {
 
-//	private CitaRepository citaRepository;
+	private CitaRepository citaRepository;
+	//private CitaMascotaRepository citaMascotaRepository;
+	public static final int limiteCitas = 5;
+
+
+	
+
+	@Autowired
+	public CitaService(CitaRepository citaRepository) {
+		this.citaRepository = citaRepository;
+		//this.citaMascotaRepository=citaMascotaRepository;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Cita> findCitasByVet(Vet vet) throws DataAccessException{
+		return citaRepository.findCitasByVet(vet);
+	}
+
+
+	@Transactional(rollbackFor = DuplicatedPetNameException.class)
+	public void saveCita(Cita cita) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet {
+		List<Cita> citas = findCitasByVet(cita.getVet());
+		boolean b=true;
+		int i=0;
+		if(!citas.isEmpty()) {
+			while(b && i<citas.size()) {
+				if(citas.get(i).getFechaHora().isEqual(cita.getFechaHora())) {
+					b=false;		
+				}
+				i++;
+			}
+		}if(b==false) {
+			throw new CitaPisadaDelVetException();
+		}else if(citas.size()+1 > limiteCitas) {
+			throw new LimiteDeCitasAlDiaDelVet();
+		}else {
+        	this.citaRepository.save(cita); 
+		}
+               
+	}
+	
+	@Transactional()
+	public void deleteCita(Cita cita) throws DataAccessException{
+		this.citaRepository.delete(cita);
+	}
+	
 //	
-//	//private VisitRepository visitRepository;
-//	
-//
-//	@Autowired
-//	public CitaService(PetRepository petRepository,
-//			VisitRepository visitRepository) {
-//		this.citaRepository = citaRepository;
+//	@Transactional()
+//	public void saveCitaMascota(CitaMascota citaMascota) throws DataAccessException {//, DuplicatedPetNameException
+//            	citaMascotaRepository.save(citaMascota);                
 //	}
 //
-////	@Transactional(readOnly = true)
-////	public Collection<PetType> findPetTypes() throws DataAccessException {
-////		return citaRepository.findPetTypes();
-////	}
+	@Transactional(readOnly = true)
+	public List<Cita> findAllCitas() {
+		return citaRepository.findAll();
+	}
+	
+	@Transactional(readOnly = true)
+	public Cita findCitaById(int citaId) throws DataAccessException{
+		return citaRepository.findById(citaId);
+	}
+	
 //	
-//
 //	@Transactional(readOnly = true)
-//	public Cita findPetById(int id) throws DataAccessException {
-//		return citaRepository.findById(id);
+//	public List<CitaMascota> findCitaMascotaByCitaId (int citaId) throws DataAccessException{
+//		return citaMascotaRepository.findCitaMascotaByCitaId(citaId);
 //	}
-//
-//	@Transactional(rollbackFor = DuplicatedPetNameException.class)
-//	public void saveCita(Cita cita) throws DataAccessException {//, DuplicatedPetNameException
-////		Cita otherCita=cita.getOwner().getPetwithIdDifferent(cita.getTitulo(), cita.getId());
-////            if (StringUtils.hasLength(cita.getTitulo()) &&  (otherCita!= null && otherCita.getId()!=cita.getId())) {            	
-////            	throw new DuplicatedPetNameException();
-////            }else
-//            	citaRepository.save(cita);                
+//	
+//	@Transactional(readOnly = true)
+//	public List<Cita> findCitasByOwner (Owner owner) throws DataAccessException{
+//		return citaRepository.findCitasByOwner(owner);
 //	}
-//
-//	public List<Cita> findAllCitas() {
-//		// TODO Auto-generated method stub
-//		return citaRepository.findAllCitas();
+
+	@Transactional(readOnly = true)
+	public List<Cita> findCitasSinVet() throws DataAccessException{
+		return citaRepository.findCitasSinVet();
+	}
+
+//	@Transactional(readOnly = true)
+//	public List<Cita> findCitasByPet(Pet pet) {
+//		return citaRepository.findCitasByPet(pet);
 //	}
-//
-//
-////	public Collection<Visit> findVisitsByPetId(int petId) {
-////		return visitRepository.findByPetId(petId);
-////	}
 
 }

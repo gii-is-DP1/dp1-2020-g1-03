@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.assertj.core.util.Lists;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,13 +76,15 @@ public class ClaseControllerTests {
 	private LocalDate fecha = LocalDate.parse("2020-10-04");
 	private LocalDateTime fechaClaseInicio = LocalDateTime.of(2021,01,14,13,30);
 	private LocalDateTime fechaClaseFin = LocalDateTime.of(2021,01,14,16,30);
-
+	private CategoriaClase adiestrar;
 	@BeforeEach
 	void setup() {
-		
+		CategoriaClase adiestrar = new CategoriaClase();
+		adiestrar.setId(1);
+		adiestrar.setName("Adiestrar");
 		PetType dog = new PetType();
 		dog.setId(6);
-		dog.setName("perro");
+		dog.setName("dog");
 
 		this.pedro = new Owner();
 		this.pedro.setId(ClaseControllerTests.TEST_OWNER_ID);
@@ -118,11 +121,16 @@ public class ClaseControllerTests {
 		this.clase1.setFechaHoraFin(fechaClaseFin);
 		this.clase1.setNumeroPlazasTotal(15);
 		this.clase1.setNumeroPlazasDisponibles(12);
-		this.clase1.setCategoriaClase(CategoriaClase.ADIESTRAR);
+		this.clase1.setType(dog);
+		this.clase1.setCategoriaClase(adiestrar);
 
+		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
 		BDDMockito.given(this.claseService.findClaseById(TEST_CLASE_ID)).willReturn(this.clase1);
+
 		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(ClaseControllerTests.TEST_OWNER_ID);
-		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(ClaseControllerTests.TEST_ADIESTRADOR_ID);
+		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
+		BDDMockito.given(this.claseService.findAllCategoriasClase()).willReturn(Lists.newArrayList(adiestrar));
+		BDDMockito.given(this.adiService.findNameAndLastnameAdiestrador()).willReturn(Lists.newArrayList(josue.getFirstName()+","+josue.getLastName()));
 
 
 	}
@@ -132,14 +140,16 @@ public class ClaseControllerTests {
 	@WithMockUser(value = "josue", roles = "adiestrador")
 	@Test
 	void testShowAdiestradorClaseForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
-		
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("name", Matchers.is("Clase 1"))))
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraInicio", Matchers.is(fechaClaseInicio))))
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
 			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(CategoriaClase.ADIESTRAR))))
+			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("type", Matchers.is(clase1.getType()))))
+			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("adiestrador", Matchers.is(clase1.getAdiestrador()))))
+			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(clase1.getCategoriaClase()))))
 			.andExpect(MockMvcResultMatchers.view().name("clases/showAdiestrador"));
 
 	}
@@ -157,15 +167,17 @@ public class ClaseControllerTests {
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testShowOwnerClaseForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
-		
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("name", Matchers.is("Clase 1"))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraInicio", Matchers.is(fechaClaseInicio))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(CategoriaClase.ADIESTRAR))))
-			.andExpect(MockMvcResultMatchers.view().name("clases/showClaseOwner"));
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("name", Matchers.is("Clase 1"))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraInicio", Matchers.is(fechaClaseInicio))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("type", Matchers.is(clase1.getType()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("adiestrador", Matchers.is(clase1.getAdiestrador()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(clase1.getCategoriaClase()))))
+		.andExpect(MockMvcResultMatchers.view().name("clases/showClaseOwner"));
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")
@@ -209,15 +221,17 @@ public class ClaseControllerTests {
 	@WithMockUser(value = "angel", roles = "secretario")
 	@Test
 	void testShowSecretarioClaseForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
-		
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("name", Matchers.is("Clase 1"))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraInicio", Matchers.is(fechaClaseInicio))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
-			.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(CategoriaClase.ADIESTRAR))))
-			.andExpect(MockMvcResultMatchers.view().name("clases/showClaseSecretario"));
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/clases/show/{claseId}", 1)).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("clase"))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("name", Matchers.is("Clase 1"))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraInicio", Matchers.is(fechaClaseInicio))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("type", Matchers.is(clase1.getType()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("adiestrador", Matchers.is(clase1.getAdiestrador()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(clase1.getCategoriaClase()))))
+		.andExpect(MockMvcResultMatchers.view().name("clases/showClaseSecretario"));
 	}
 	
 	@WithMockUser(value = "angel", roles = "secretario")
@@ -230,7 +244,9 @@ public class ClaseControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("fechaHoraFin", Matchers.is(fechaClaseFin))))
 				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasTotal", Matchers.is(15))))
 				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("numeroPlazasDisponibles", Matchers.is(12))))
-				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(CategoriaClase.ADIESTRAR))))
+				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("type", Matchers.is(clase1.getType()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("adiestrador", Matchers.is(clase1.getAdiestrador()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("clase", Matchers.hasProperty("categoriaClase", Matchers.is(clase1.getCategoriaClase()))))
 				.andExpect(MockMvcResultMatchers.view().name("clases/crearOEditarClase"));
 	}
 	
@@ -244,7 +260,9 @@ public class ClaseControllerTests {
 				.param("fechaHoraFin", "2021-01-15 16:30")
 				.param("numeroPlazasTotal", "25")
 				.param("numeroPlazasDisponibles", "13")
-				.param("categoriaClase", "ADIESTRAR"))
+				.param("type", "dog")
+				.param("categoriaClase", "Adiestrar")
+				.param("adiestrador", "Josue,Martinez"))
 		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/clases/show/{claseId}"));
 	}

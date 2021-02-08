@@ -4,6 +4,8 @@ package org.springframework.samples.petclinic.web;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -13,7 +15,6 @@ import org.springframework.samples.petclinic.model.Ingreso;
 import org.springframework.samples.petclinic.service.EconomistaService;
 
 import org.springframework.samples.petclinic.service.IngresoService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,8 @@ public class IngresoController {
 
 	private final IngresoService ingresoService;
 	private final EconomistaService economistaService;
+	private static final Logger logger =
+			Logger.getLogger(IngresoController.class.getName());
 
 	@Autowired
 	public IngresoController(IngresoService ingresoService, EconomistaService economistaService) {
@@ -36,23 +39,18 @@ public class IngresoController {
 
 	@GetMapping()
 	public String listadoIngresos(Map<String, Object> model, Principal principal) {
-		// String vista="owners/{ownerId}/listadoCitas";
-		if(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString().contains("economista")) {
 			List<Ingreso> ingresos = ingresoService.findAllIngresos();
 			model.put("ingresos", ingresos);
 			return "ingresos/ingresosList";
-		}else {
-			//ModelAndView exception = new ModelAndView("exception");
-			return "exception";			
-		}
+		
 
 	}
 
 	@GetMapping(value = "{ingresoId}")
 	public String mostarIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
-		// String vista="owners/{ownerId}/listadoCitas";
 		Ingreso ingreso = ingresoService.findIngresoById(ingresoId);
 		if(ingreso==null) {
+			logger.log(Level.WARNING, "Ingreso vacio");
 			return "exception";
 		}else {
 			model.put("ingreso", ingreso);
@@ -64,7 +62,6 @@ public class IngresoController {
 	@GetMapping(value = "/{ingresoId}/edit")
 	public String initEditIngreso(@PathVariable("ingresoId") int ingresoId, Map<String, Object> model) {
 		Ingreso ingreso = this.ingresoService.findIngresoById(ingresoId);
-		System.out.println(ingreso + "INGRESO");
 		model.put("ingreso", ingreso);
 		return "ingresos/crearOEditarIngreso";
 	}
@@ -73,13 +70,12 @@ public class IngresoController {
 	public String processEditIngreso(final Principal principal, @Valid Ingreso ingreso, BindingResult result,
 			@PathVariable("ingresoId") int ingresoId) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "ingresos/crearOEditarIngreso";
 		} else {
 			int idEcon = this.economistaService.findEconomistaIdByUsername(principal.getName());
 			Economista econ = this.economistaService.findEconomistaById(idEcon);
 			ingreso.setEconomista(econ);
-			System.out.println(ingreso.getEconomista());
 			ingreso.setId(ingresoId);
 			this.ingresoService.saveIngreso(ingreso);
 			return "redirect:/economistas/ingreso/{ingresoId}";
@@ -96,7 +92,7 @@ public class IngresoController {
 	@PostMapping(value = "/create")
 	public String processCreateIngreso(@Valid Ingreso ingreso, BindingResult result) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "ingresos/crearOEditarIngreso";
 		} else {
 			this.ingresoService.saveIngreso(ingreso);

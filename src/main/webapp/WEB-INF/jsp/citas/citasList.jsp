@@ -2,41 +2,38 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="citas">
-    <h2>Veterinarians</h2>
+    <h2>Citas</h2>
 
-    <table id="vetsTable" class="table table-striped">
+    <table id="citaTable" class="table table-striped">
         <thead>
-        <tr>
-            <th>Mascota</th>
+        <tr>	
             <th>Fecha y hora</th>
-            <th>Estado</th>
+            <th>Razon</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${citas.vetList}" var="cita">
+        <c:forEach items="${citas}" var="cita">
             <tr>
                 <td>
-                    <c:out value="${vet.firstName} ${vet.lastName}"/>
+                    <c:out value="${cita.fechaHora}"/>
                 </td>
                 <td>
-                    <c:forEach var="specialty" items="${vet.specialties}">
-                        <c:out value="${specialty.name} "/>
-                    </c:forEach>
-                    <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
+                   <c:out value="${cita.razon}"/>
+                </td>
+                 <td>
+                	<spring:url value="/vets/citas/{citaId}" var="citaUrl">
+                        <spring:param name="citaId" value="${cita.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(citaUrl)}">Mirar detalles de la cita</a>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 
-    <table class="table-buttons">
-        <tr>
-            <td>
-                <a href="<spring:url value="/vets.xml" htmlEscape="true" />">View as XML</a>
-            </td>            
-        </tr>
-    </table>
 </petclinic:layout>

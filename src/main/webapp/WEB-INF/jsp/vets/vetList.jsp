@@ -28,9 +28,10 @@
                     <c:if test="${vet.nrOfSpecialties == 0}">none</c:if>
                 </td>
                 <td>
-                <spring:url value="/vets/comentarios" var="comentariosUrl">
-                </spring:url>
-                <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Listar comentarios"/></a>
+                	<spring:url value="/owners/comentarios/{vetId}" var="comentarioUrl">
+                        <spring:param name="vetId" value="${vet.id}"/>
+                    </spring:url>
+                    <a href="${fn:escapeXml(comentarioUrl)}">Ver comentarios</a>
                 </td>
             </tr>
         </c:forEach>
@@ -39,14 +40,6 @@
     </table>
 
     <table class="table-buttons">
-    	<tr>
-                    <spring:url value="/vets/vacuna" var="vacunasUrl">
-                    </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="${vacuna.nombre}"/>Listado de Vacunas</a>
-        </tr>
-        <br>
-        <br>
-        <br>
         <tr>
             <td>
                 <a href="<spring:url value="/vets.xml" htmlEscape="true" />">View as XML</a>

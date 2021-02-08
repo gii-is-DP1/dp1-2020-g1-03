@@ -90,6 +90,11 @@ INSERT INTO types VALUES (4, 'snake');
 INSERT INTO types VALUES (5, 'bird');
 INSERT INTO types VALUES (6, 'hamster');
 
+
+INSERT INTO categorias_clase VALUES (1,'Adiestrar');
+INSERT INTO categorias_clase VALUES (2,'Mascota de caza');
+INSERT INTO categorias_clase VALUES (3,'Trucos basicos');
+
 INSERT INTO tipo_enfermedades VALUES (1, 'Rabia');
 INSERT INTO tipo_enfermedades VALUES (2, 'Sarna');
 INSERT INTO tipo_enfermedades VALUES (3, 'Parvovirus');
@@ -143,7 +148,7 @@ INSERT INTO gastos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3
 INSERT INTO ingresos(id,titulo,cantidad,fecha,description,economista_id) VALUES (3, 'Arreglar ventana', 80, '2020-10-19', 'Gasto correspondiente a larreglar una ventana de la clinica',1);
 
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (1,'ComentarioPrueba', 'Esto es un comentario de prueba', 2, 1);
-INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
+--INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (5,'Otro comentario', 'Esto es otro comentario', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (2,'ComentarioPrueba', 'Esto es un comentario de prueba', 1, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (3,'ComentarioPrueba', 'Esto es un comentario de prueba', 3, 1);
 INSERT INTO comentarios(id,titulo,cuerpo,vet_id,owner_id) VALUES (4,'ComentarioPrueba', 'Esto es un comentario de prueba', 4, 1);
@@ -165,7 +170,7 @@ INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) V
 INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) VALUES (2, 3, '2013-05-01', 'Se le ha añadido la vacuna contra la parvovirus', 2, 1);
 
 
---INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
 INSERT INTO tutorias(id,titulo,fecha_hora,razon,pet_id,adiestrador_id,owner_id) VALUES(1,'TutoriaPrueba', '2021-01-14 15:30', 'Probando las tutorias',3,1,1);
 INSERT INTO tutorias(id,titulo,fecha_hora,razon,pet_id,adiestrador_id,owner_id) VALUES(2,'TutoriaPrueba2', '2021-01-16 15:30', 'Probando las tutorias',3,1,1);
@@ -183,10 +188,19 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (8,'Clase8','2021-02-17 15:00', '2021-02-17 16:00', 10, 5, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (9,'Clase9','2021-02-18 15:00', '2021-02-18 16:00', 10, 10, 1, 2, 1);
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (10,'Clase10','2021-02-18 16:30', '2021-02-18 18:00', 10, 10, 1, 2, 1);
-INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (11,'Clase11','2021-02-18 17:30', '2021-02-18 18:30', 10, 10, 1, 2, 1);
+INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adiestrador_id) VALUES (11,'Clase11','2021-02-18 17:30', '2021-02-18 18:30', 10, 10, 1, 2, 2);
 
 
 
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2021-02-14 15:30',2,'Mi perros están malitos',1);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon) VALUES (2,'Cita2','2020-01-17 15:30',0,'Mi perros están malitos');
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (3,'Cita3','2020-01-15 15:30',2,'Mi perros están malitos',4);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (4,'Cita4','2020-01-14 15:30',0,'Mi perros están malitosssss',1);
 
-INSERT INTO apuntar(pet_id,clase_id) VALUES (4,1);
 
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,4);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (3,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (78,2);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,3);
