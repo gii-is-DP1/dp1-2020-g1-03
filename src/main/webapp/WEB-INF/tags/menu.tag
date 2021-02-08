@@ -28,12 +28,6 @@
 					<span>Home</span>
 				</petclinic:menuItem>
 
-				<sec:authorize access="hasAnyAuthority('owner')">
-					<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"	title="find owners">
-						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-						<span>Find owners</span>
-					</petclinic:menuItem>
-				</sec:authorize>
 
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
@@ -52,6 +46,13 @@
 					<petclinic:menuItem active="${name eq 'citas'}" url="/vets/citas" title="Citas">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 						<span>Citas</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('veterinarian')">
+					<petclinic:menuItem active="${name eq 'vacunas'}" url="/vets/vacuna" title="Vacunas">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Vacunas</span>
 					</petclinic:menuItem>
 				</sec:authorize>
 				
@@ -75,6 +76,12 @@
 						<span>Clases</span>
 					</petclinic:menuItem>
 				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('adiestrador')">
+					<petclinic:menuItem active="${name eq 'tutorias'}" url="/adiestradores/tutorias" title="Tutorias">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Tutorias</span>
+					</petclinic:menuItem>
+				</sec:authorize>				
 				
 				<sec:authorize access="hasAnyAuthority('secretario')">
 					<petclinic:menuItem active="${name eq 'clases'}" url="/secretarios/clases" title="Clases">
@@ -119,6 +126,12 @@
 					<petclinic:menuItem active="${name eq 'competiciones'}" url="/owners/competiciones" title="Competiciones">
 						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 						<span>Competiciones</span>
+					</petclinic:menuItem>
+				</sec:authorize>
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'tutorias'}" url="/owners/tutorias" title="Tutorias">
+						<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+						<span>Tutorias</span>
 					</petclinic:menuItem>
 				</sec:authorize>
 

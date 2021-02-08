@@ -41,6 +41,7 @@ public class CitaTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Cita>> constraintViolations = validator.validate(cita);
 
+
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(0);
 
 	}
@@ -49,6 +50,7 @@ public class CitaTests {
 	void shouldNotValidateWhenHisFieldsBlankOrNull() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Cita cita = new Cita();
+
 		Vet vet = new Vet();
 		Pet pet1= new Pet();
 		Pet pet2= new Pet();
@@ -65,6 +67,4 @@ public class CitaTests {
 		Set<ConstraintViolation<Cita>> constraintViolations = validator.validate(cita);
 
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
-
-	}
 }

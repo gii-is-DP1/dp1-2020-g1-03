@@ -8,8 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.CitaRepository;
+import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
 import org.springframework.samples.petclinic.repository.ComentarioRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
@@ -33,15 +32,6 @@ public class ComentarioService {
 		this.citaRepository = citaRepository;
 	}
 
-	
-	@Transactional(readOnly = true)
-	public Vet findVetById(int id) throws DataAccessException {
-		return comentarioRepository.findVetById(id);
-	}
-	@Transactional(readOnly = true)
-	public Owner findByOwnerId(int id) throws DataAccessException {
-		return ownerRepository.findById(id);
-	}
 	@Transactional(rollbackFor= {ComentariosMaximoPorCitaException.class})
 	public void saveComentario(Comentario comentario, boolean estaEditando) throws DataAccessException,  ComentariosMaximoPorCitaException{
 		int idVet = comentario.getVet().getId();
@@ -58,7 +48,9 @@ public class ComentarioService {
 			}
 		}
 		int comentariosHechosOwnerAVet = this.comentarioRepository.findComentariosOwnerConVet(idVet, idOwner);
-		List<Comentario> comentarios3 = this.comentarioRepository.findComentariosByOwner(comentario.getOwner());
+
+		List<Comentario> comentarios3 = this.comentarioRepository.findComentariosByOwnerId(idOwner);
+
 		if((comentariosHechosOwnerAVet>=citasOwnerConVet || citasOwnerConVet==0)&& estaEditando==false ) {
 			throw new ComentariosMaximoPorCitaException();
 		}else if(!comentarios3.isEmpty()&&!comentarios3.get(0).getId().equals(comentario.getId())){
@@ -75,8 +67,9 @@ public class ComentarioService {
 	}
 	
 	@Transactional(readOnly = true)
-	public Collection<Comentario> findAllComentariosByOwner(Owner owner) throws DataAccessException{
-		return comentarioRepository.findComentariosByOwner(owner);
+
+	public List<Comentario> findAllComentariosByOwnerId(int ownerId) throws DataAccessException{
+		return comentarioRepository.findComentariosByOwnerId(ownerId);
 	}
 	
 	@Transactional(readOnly = true)

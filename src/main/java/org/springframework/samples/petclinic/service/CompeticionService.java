@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.service;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,13 +54,12 @@ public class CompeticionService {
 	
 
 	
-	@Transactional()
+	@Transactional(rollbackFor= {SolapamientoDeCompeticionesException.class,MascotaYaApuntadaCompeticionException.class})
 	public void escogerMascota(CompeticionPet compPet, List<CompeticionPet> competicionesApuntadas) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException{
 		//System.out.println("Service");
 		Pet pet = compPet.getPet();
 		System.out.println("Pet: " +pet.getId());
-		Competicion competicion = compPet.getCompeticion();
 		//List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
 		System.out.println("Comp apuntadas: "+ competicionesApuntadas);
 		//List<CompeticionPet> competicionesApuntadas = this.competicionPetRepository.findCompeticionByPetId(compPet.getPet().getId());

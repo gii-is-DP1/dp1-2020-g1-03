@@ -17,8 +17,13 @@ public class AdiestradorService {
 	}	
 
 	@Transactional(readOnly = true)
-	public int findAdiestradorIdByUsername(String user) throws DataAccessException {
-		return adiestradorRepository.findAdiestradorIdByUsername(user);
+	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
+		return adiestradorRepository.findAdiestradorByUsername(user);
+	}
+	
+	@Transactional(readOnly = true)
+	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
+		return adiestradorRepository.findAdiestradorByUsername(user);
 	}
 
 	@Transactional

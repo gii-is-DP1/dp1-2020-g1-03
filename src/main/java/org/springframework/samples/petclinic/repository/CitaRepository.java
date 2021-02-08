@@ -1,12 +1,14 @@
 
 package org.springframework.samples.petclinic.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Vet;
@@ -25,6 +27,8 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL")
 	List<Cita> findCitasSinVet() throws DataAccessException;
+
+	void delete(Cita cita)throws DataAccessException;
 	
 //	@Query("SELECT DISTINCT cita FROM Pet cita.pets WHERE cita.pets.owner LIKE ?1")
 //	public List<Cita> findCitasByOwner (Owner owner) throws DataAccessException;

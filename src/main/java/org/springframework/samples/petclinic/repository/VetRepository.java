@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
@@ -45,7 +46,7 @@ public interface VetRepository extends Repository<Vet, Integer>{
 
 	Vet findVetById(int vetId) throws DataAccessException;
 	
+	@Query("SELECT vet FROM Vet vet WHERE vet.lastName LIKE :lastName%")
+	Vet findVetsByLastName(String lastName) throws DataAccessException;
 	
-	//@Query("SELECT vet FROM Vet WHERE vet_id =:id")
-	//public Vet findById(@Param("vet_id") int id);
 }

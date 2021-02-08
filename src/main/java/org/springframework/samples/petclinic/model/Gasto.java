@@ -25,20 +25,20 @@ import java.time.LocalDate;
 public class Gasto extends BaseEntity {
 
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String titulo;
 	
 	
-	@PositiveOrZero
+	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
 	@NotNull
 	private Integer cantidad;
 	    
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Past
+	@Past(message="La fecha debe ser anterior al día actual")
 	private LocalDate fecha;
 
 	
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String description;
 
 	

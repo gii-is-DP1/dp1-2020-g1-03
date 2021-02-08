@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="citas">
@@ -14,8 +15,9 @@
         <thead>
         <tr>
         	<th>Estado</th>
+        	<th>Titulo</th>
             <th>Fecha y hora</th>
-            <th>Razon</th>
+            <th>Razón</th>
             <th>Veterinario</th>
             <th></th>
         </tr>
@@ -25,6 +27,9 @@
             <tr>
             	<td>
                     <c:out value="${cita.estado}"/>
+                </td>
+             	<td>
+                    <c:out value="${cita.titulo}"/>
                 </td>
                 <td>
                     <c:out value="${cita.fechaHora}"/>

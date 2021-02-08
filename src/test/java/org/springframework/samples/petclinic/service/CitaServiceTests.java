@@ -21,6 +21,7 @@ import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import org.junit.Assert;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
@@ -49,6 +50,7 @@ public class CitaServiceTests {
 		Assert.assertEquals(citas.size(), 3);
 	}
 
+
 	@Test
 	void shouldFindCitaWithCorrectId() {
 		Cita cita = this.citaService.findCitaById(1);
@@ -72,4 +74,5 @@ public class CitaServiceTests {
 		Cita cita = this.citaService.findCitaById(1);
 		Assert.assertTrue(cita.getId() == 1);
 	}
+
 }

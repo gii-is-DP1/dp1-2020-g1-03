@@ -26,10 +26,10 @@ public class Vacuna extends BaseEntity {
 	private TipoEnfermedad tipoEnfermedad;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Past
+	@Past(message="La fecha debe ser anterior al día actual")
 	private LocalDate fecha;
 
-	@NotEmpty
+	@NotEmpty(message="Este campo no puede estar vacío")
 	private String descripcion;
 	
 	@ManyToOne
