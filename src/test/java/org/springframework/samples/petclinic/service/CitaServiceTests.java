@@ -32,7 +32,7 @@ public class CitaServiceTests {
 
 	@Test
 	@Transactional
-	public void shouldUpdateClase() throws Exception {
+	public void shouldUpdateCita() throws Exception {
 		Cita cita = this.citaService.findCitaById(1);
 		String nombreCita = "Cita";
 		

@@ -31,6 +31,7 @@ import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.SecretarioService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelOwnerException;
 import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelVetException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
@@ -72,8 +73,8 @@ public class CitaController {
 
 	@GetMapping(value = "/vets/citas")
 	public String listadoCitasVets(Map<String, Object> model, Principal principal) {
-		Vet vet=this.vetService.findVetByUsername(principal.getName());
-		List<Cita> citas= citaService.findCitasByVet(vet);
+		Vet vet = this.vetService.findVetByUsername(principal.getName());
+		List<Cita> citas = citaService.findCitasByVet(vet);
 		model.put("citas", citas);
 		return "citas/citasList";
 	}
@@ -113,9 +114,13 @@ public class CitaController {
 	public String mostarCitaOwner(Map<String, Object> model, Principal principal, @PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
 		List<Pet> mascotas = cita.getPets();// this.citaService.findCitaMascotaByCitaId(citaId);
-		model.put("mascotas", mascotas);
-		model.put("cita", cita);
-		return "citas/showCitaOwner";
+		if (cita.getPets().get(0).getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+			model.put("mascotas", mascotas);
+			model.put("cita", cita);
+			return "citas/showCitaOwner";
+		} else {
+			return "exception";
+		}
 	}
 
 	@GetMapping(value = "/owners/citas/new")
@@ -133,7 +138,8 @@ public class CitaController {
 
 	@PostMapping(value = "/owners/citas/new")
 	public String processCrearCitaOwner(Map<String, Object> model, @Valid Cita cita, BindingResult result,
-			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet {
+			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet,
+			CitaPisadaDelOwnerException {
 		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
 		List<Pet> pets = this.petService.findMascotasOwner(owner);
 		cita.setName(cita.getTitulo());
@@ -146,7 +152,12 @@ public class CitaController {
 		}
 		System.out.println("Pets: " + cita.getPets());
 		model.put("cita", cita);
-		this.citaService.saveCita(cita);
+		try {
+			this.citaService.saveCita(cita);
+		} catch (CitaPisadaDelOwnerException ex3) {
+			result.rejectValue("owner", "No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.");
+			return "citas/crearOEditarCitaOwner";
+		}
 		return "redirect:/owners/citas/";
 	}
 
@@ -164,7 +175,8 @@ public class CitaController {
 
 	@PostMapping(value = "/owners/citas/{citaId}/edit")
 	public String processEditarCitaOwner(@Valid Cita cita, @PathVariable("citaId") int citaId, BindingResult result,
-			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet {
+			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet,
+			CitaPisadaDelOwnerException {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
@@ -177,7 +189,14 @@ public class CitaController {
 			cita.setPets(pets);
 			cita.setId(citaId);
 			cita.setEstado(Estado.PENDIENTE);
-			this.citaService.saveCita(cita);
+			try {
+				this.citaService.saveCita(cita);
+			} catch (CitaPisadaDelOwnerException ex3) {
+				result.rejectValue("owner",
+						"No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.");
+				return "citas/crearOEditarCitaOwner";
+			}
+
 			return "redirect:/owners/citas/";
 		}
 	}
@@ -218,14 +237,12 @@ public class CitaController {
 	public String getEditarCitaSecretario(Map<String, Object> model, Principal principal,
 			@PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
-
 		if (cita.getEstado().equals(Estado.PENDIENTE)) {
 			model.put("cita", cita);
 			List<Vet> vets = new ArrayList<>(this.vetService.findVets());
 			List<Estado> estados = new ArrayList<Estado>();
 			estados.add(Estado.ACEPTADA);
 			estados.add(Estado.RECHAZADA);
-			estados.add(Estado.PENDIENTE);
 			model.put("estados", estados);
 			model.put("vets", vets);
 			return "citas/editarCitaSecretario";
@@ -236,12 +253,17 @@ public class CitaController {
 
 	@PostMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String processEditarCitaSecretario(Map<String, Object> model, @Valid Cita cita, BindingResult result,
-			final Principal principal, @PathVariable("citaId") int citaId) {
+			final Principal principal, @PathVariable("citaId") int citaId) throws DataAccessException {
 		List<Vet> vets = new ArrayList<>(this.vetService.findVets());
 		List<Estado> estados = new ArrayList<>();
+//		Cita citaux = this.citaService.findCitaById(citaId);
+//		cita.setName(citaux.getName());
+//		cita.setFechaHora(citaux.getFechaHora());
+//		cita.setRazon(citaux.getRazon());
+//		cita.setTitulo(citaux.getTitulo());
+//		System.out.println(citaux.getTitulo());
 		estados.add(Estado.ACEPTADA);
 		estados.add(Estado.RECHAZADA);
-		estados.add(Estado.PENDIENTE);
 		model.put("estados", estados);
 		model.put("cita", cita);
 		model.put("vets", vets);
@@ -262,15 +284,23 @@ public class CitaController {
 		List<Pet> mascotas = cita1.getPets();
 		cita.setPets(mascotas);
 		cita.setId(citaId);
+		if (cita.getEstado().equals(Estado.PENDIENTE)) {
+			cita.setEstado(Estado.ACEPTADA);
+		}
 		try {
 			this.citaService.saveCita(cita);
-		}catch(CitaPisadaDelVetException ex) {
-			result.rejectValue("vet","No puede aceptar la cita de este veterinario porque se pisa con otra cita",
+		} catch (CitaPisadaDelVetException ex) {
+			result.rejectValue("vet", "No puede aceptar la cita de este veterinario porque se pisa con otra cita",
 					"No puede aceptar la cita de este veterinario porque se pisa con otra cita");
 			return "citas/editarCitaSecretario";
-		}catch(LimiteDeCitasAlDiaDelVet ex2) {
-			result.rejectValue("vet","El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio",
-			"El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio");
+		} catch (LimiteDeCitasAlDiaDelVet ex2) {
+			result.rejectValue("vet",
+					"El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio",
+					"El veterinario seleccionado no puede aceptar la cita debido a que supera el límite de citas en un día, violación de regla de negocio");
+			return "citas/editarCitaSecretario";
+		} catch (CitaPisadaDelOwnerException ex3) {
+			result.rejectValue("owner",
+					"No puede aceptar esta cita porque el propietario ya tiene otra con la misma fecha y hora.");
 			return "citas/editarCitaSecretario";
 		}
 		return "redirect:/secretarios/citas";

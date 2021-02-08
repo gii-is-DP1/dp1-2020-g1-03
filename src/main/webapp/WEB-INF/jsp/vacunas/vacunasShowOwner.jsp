@@ -34,7 +34,7 @@
     <spring:url value="/owners/{ownerId}/vacuna/" var="vacunasUrl"> 
     				<spring:param name="ownerId" value="${vacuna.pet.owner.id}"/>         	
                     </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="Volver"/></a>
+                    <a href="${fn:escapeXml(vacunasUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
 
 
     <br/>

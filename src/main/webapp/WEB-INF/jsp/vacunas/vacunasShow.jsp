@@ -37,7 +37,7 @@
     
     <spring:url value="/vets/vacuna" var="vacunasUrl">          	
                     </spring:url>
-                    <a href="${fn:escapeXml(vacunasUrl)}"><c:out value="Volver"/></a>
+                    <a href="${fn:escapeXml(vacunasUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
 
 
     <br/>

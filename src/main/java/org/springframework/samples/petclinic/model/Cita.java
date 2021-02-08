@@ -35,13 +35,11 @@ public class Cita extends NamedEntity {
 	private String titulo;
 
 	@Column(name = "fecha_hora")
-	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private LocalDateTime fechaHora;
 
 
 	
-	//@NotEmpty
 	private Estado estado;
 	
 	

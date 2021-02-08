@@ -86,7 +86,7 @@ class IngresosServiceTest {
 		assertThat(constraintViolations.size()).isEqualTo(1);
 		ConstraintViolation<Ingreso> violation = constraintViolations.iterator().next();
 		assertThat(violation.getPropertyPath().toString()).isEqualTo("titulo");
-		assertThat(violation.getMessage()).isEqualTo("no puede estar vacío");
+		assertThat(violation.getMessage()).isEqualTo("Este campo no puede estar vacío");
 	 }
 	
 	@Test
