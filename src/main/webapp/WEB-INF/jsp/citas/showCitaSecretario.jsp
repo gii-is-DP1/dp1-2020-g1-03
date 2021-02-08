@@ -1,7 +1,9 @@
 <%@ page session="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="cita">
@@ -16,7 +18,7 @@
             <td><c:out value="${cita.fechaHora}"/></td>
         </tr>
         <tr>
-            <th>Razon</th>
+            <th>Razón</th>
             <td><c:out value="${cita.razon}"/></td>
         </tr>
         <tr>
@@ -31,20 +33,28 @@
             <tr>
             	<th>Nombre Mascota</th>
                 <td>
-                    <c:out value="${mascota.pet.name}"/>
+                    <c:out value="${mascota.name}"/>
                 </td>
                 <th>Especie</th>
                 <td>
-                   <c:out value="${mascota.pet.type}"/>
+                   <c:out value="${mascota.type}"/>
                 </td>
             </tr>
         </c:forEach>
         
     </table>
-<spring:url value="{citaId}/edit" var="editUrl">
-        <spring:param name="citaId" value="${cita.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
+		<!--<c:choose>
+		<c:when test="${cita.estado<='PENDIENTE'}">-->
+			<div class="form-group">
+				<spring:url value="{citaId}/edit" var="editUrl">
+        			<spring:param name="citaId" value="${cita.id}"/>
+   				</spring:url>
+    			<a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
+			</div>
+		<!--</c:when>
+		</c:choose>-->    
+     <spring:url value="/secretarios/citas" var="citasUrl"></spring:url>
+     <a href="${fn:escapeXml(citasUrl)}"><c:out value="Volver"/></a>
 
 
 </petclinic:layout>

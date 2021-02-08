@@ -69,6 +69,7 @@ public class ComentarioController {
 	@GetMapping(value = "/owners/comentarios/{vetId}")
 	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal, @PathVariable("vetId") int vetId) {
 		Collection<Comentario> comentario= comentarioService.findAllComentariosByVetId(vetId);
+
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
 		}
@@ -88,6 +89,7 @@ public class ComentarioController {
 		return "comentarios/crearOEditarComentario";
 	}
 	
+
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
 	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId, Owner owner, Vet vet,
 			@PathVariable("comentarioId") int comentarioId) {
@@ -116,8 +118,7 @@ public class ComentarioController {
 	@GetMapping(value = "/owners/comentarios/new") 
 	public String initCreateComentario(Map<String, Object> model, final Principal principal, Owner owner, Vet vet) {
 		Comentario comentario = new Comentario();
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
 		model.put("comentario", comentario);
 		Collection<Vet> vets = this.vetService.findVets();
@@ -148,4 +149,5 @@ public class ComentarioController {
 			return "redirect:/owners/comentarios";
 		}
 	}
+
 }

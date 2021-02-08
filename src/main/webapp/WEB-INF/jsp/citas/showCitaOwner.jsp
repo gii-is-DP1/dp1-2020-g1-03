@@ -27,17 +27,20 @@
             <tr>
             	<th>Nombre Mascota</th>
                 <td>
-                    <c:out value="${mascota.pet.name}"/>
+                    <c:out value="${mascota.name}"/>
                 </td>
                 <th>Especie</th>
                 <td>
-                   <c:out value="${mascota.pet.type}"/>
+                   <c:out value="${mascota.type}"/>
                 </td>
             </tr>
         </c:forEach>
         
     </table>
 
-
+<spring:url value="{citaId}/edit" var="editUrl">
+        <spring:param name="citaId" value="${cita.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
 
 </petclinic:layout>

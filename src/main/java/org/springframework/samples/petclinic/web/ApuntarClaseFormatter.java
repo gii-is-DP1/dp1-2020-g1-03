@@ -1,7 +1,9 @@
 package org.springframework.samples.petclinic.web;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,24 @@ public class ApuntarClaseFormatter implements Formatter<Pet>{
 	public ApuntarClaseFormatter(PetService petService) {
 		this.peService = petService;
 	} 
-	@Override
-	public String print(Pet pet, Locale locale) {
-		return pet.getName();
-	}
 
-	@Override
-	public Pet parse(String text, Locale locale) throws ParseException {
-		String[] split = text.split(",");
-		String nombre = split[0].trim();
-		Integer idOwner = Integer.parseInt(split[1]);
-		Collection<Pet> findPets = this.peService.findPetsByOwnerId(idOwner);
-		for (Pet pet : findPets) {
-			if (pet.getName().equals(nombre)) {
-				return pet;
-			}
+
+@Override
+public String print(Pet pet, Locale locale) {
+	return pet.getName();
+}
+
+@Override
+public Pet parse(String text, Locale locale) throws ParseException {
+	String[] split = text.split(",");
+	String nombre = split[0].trim();
+	Integer idOwner = Integer.parseInt(split[1]);
+	Collection<Pet> findPets = this.peService.findPetsByOwnerId(idOwner);
+	for (Pet pet : findPets) {
+		if (pet.getName().equals(nombre)) {
+			return pet;
 		}
-		throw new ParseException("type not found: " + text, 0);
 	}
+	throw new ParseException("type not found: " + text, 0);
+}
 }

@@ -191,12 +191,15 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 
 
 
-INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2020-01-14 15:30',2,'Mi perros están malitos',1);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2021-02-14 15:30',2,'Mi perros están malitos',1);
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon) VALUES (2,'Cita2','2020-01-17 15:30',0,'Mi perros están malitos');
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (3,'Cita3','2020-01-15 15:30',2,'Mi perros están malitos',4);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (4,'Cita4','2020-01-14 15:30',0,'Mi perros están malitosssss',1);
 
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (1,4,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (2,3,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (4,1,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (3,78,2);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (5,1,3);
+
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,4);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (3,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (78,2);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,3);
