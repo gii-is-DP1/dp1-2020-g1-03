@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.View;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -100,6 +102,7 @@ public class CitaControllerTest {
 		this.pet.setId(1);
 		this.pet.setName("Tomi");
 		this.pet.setType(dog);
+		this.pet.setOwner(this.pedro);
 
 		List<Pet> pets = new ArrayList<>();
 		pets.add(pet);
@@ -132,6 +135,15 @@ public class CitaControllerTest {
 	}
 
 	@Test
+	@WithMockUser(value = "juan", roles = "vet")
+	void testMostrarCitaVetError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/citas/{citaId}", this.TEST_CITA_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cita", "owner", "mascotas"));
+	}
+
+	@Test
 	@WithMockUser(value = "pedro", roles = "owner")
 	void testListadoCitasOwner() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/"))
@@ -151,6 +163,15 @@ public class CitaControllerTest {
 
 	@Test
 	@WithMockUser(value = "pedro", roles = "owner")
+	void testMostrarCitaOwnerError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}", this.TEST_CITA_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cita"));
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
 	void testInitCreateCitaOwner() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/new"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -164,7 +185,17 @@ public class CitaControllerTest {
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/owners/citas/new").with(csrf()).param("titulo", "Cita 1")
 						.param("fechaHora", "2022-01-01 15:30").param("estado", "PENDIENTE").param("razon", "razon1"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/citas/"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testProcessCreateCitaOwnerError() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/owners/citas/new").with(csrf()).param("titulo", "Cita 1")
+						.param("estado", "PENDIENTE").param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -179,14 +210,41 @@ public class CitaControllerTest {
 
 	@Test
 	@WithMockUser(value = "pedro", roles = "owner")
+	void testGetEditarCitaOwnerError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}/edit", this.TEST_CITA_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cita"));
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
 	void testProcessEditarCitaOwner() throws Exception {
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/owners/citas/{citaId}/edit", this.TEST_CITA_ID).with(csrf())
 						.param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30").param("estado", "PENDIENTE")
 						.param("razon", "razon1"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
-				.andExpect(MockMvcResultMatchers.model().attribute("cita.titulo", "Cita 1"))
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/citas/"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testProcessEditarCitaOwnerError() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/owners/citas/{citaId}/edit", this.TEST_CITA_ID_INEXISTENTE)
+						.with(csrf()).param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30")
+						.param("estado", "PENDIENTE").param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
+	}
+
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testDeleteCita() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}/delete", this.TEST_CITA_ID).with(csrf()))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/citas/"));
 	}
 
 	@Test
@@ -215,7 +273,16 @@ public class CitaControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaSecretario"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
 	}
-	
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testMostrarCitaSecretarioError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/secretarios/citas/{citaId}", this.TEST_CITA_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cita"));
+	}
+
 	@Test
 	@WithMockUser(value = "josue", roles = "secretario")
 	void testGetEditarCitaSecretario() throws Exception {
@@ -224,7 +291,17 @@ public class CitaControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("citas/editarCitaSecretario"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"));
 	}
-	
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testGetEditarCitaSecretarioError() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.get("/secretarios/citas/{citaId}/edit", this.TEST_CITA_ID_INEXISTENTE))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cita"));
+	}
+
 	@Test
 	@WithMockUser(value = "josue", roles = "secretario")
 	void testProcessEditarCitaSecretario() throws Exception {
@@ -232,8 +309,18 @@ public class CitaControllerTest {
 				.perform(MockMvcRequestBuilders.post("/secretarios/citas/{citaId}/edit", this.TEST_CITA_ID).with(csrf())
 						.param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30").param("estado", "ACEPTADA")
 						.param("razon", "razon1"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
-				.andExpect(MockMvcResultMatchers.model().attribute("cita.estado", "Cita 1"))
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/citas"))
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
+	}
+
+	@Test
+	@WithMockUser(value = "josue", roles = "secretario")
+	void testProcessEditarCitaSecretarioError() throws Exception {
+		this.mockMvc
+				.perform(MockMvcRequestBuilders.post("/secretarios/citas/{citaId}/edit", this.TEST_CITA_ID_INEXISTENTE)
+						.with(csrf()).param("titulo", "Cita 1").param("fechaHora", "2022-01-01 15:30")
+						.param("estado", "ACEPTADA").param("razon", "razon1"))
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }
