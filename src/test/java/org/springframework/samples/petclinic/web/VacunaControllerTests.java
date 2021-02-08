@@ -41,6 +41,7 @@ excludeAutoConfiguration= SecurityConfiguration.class)
 public class VacunaControllerTests {
 	
 	private static final int TEST_VACUNA_ID = 1;
+	private static final int TEST_NO_VACUNA_ID = 100;
 	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_VETERINARIO_ID = 1;
 	private static final int TEST_PET_ID = 2;
@@ -105,6 +106,7 @@ public class VacunaControllerTests {
 
 		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(hamster));
 		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_VACUNA_ID)).willReturn(this.vacuna1);
+		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_NO_VACUNA_ID)).willReturn(null);
 		BDDMockito.given(this.vacunaService.findTipoEnfermedades()).willReturn(Lists.newArrayList(rabia));
 		BDDMockito.given(this.vetService.findVetIdByUsername("josue")).willReturn(VacunaControllerTests.TEST_VETERINARIO_ID);
 		BDDMockito.given(this.petService.findPetById(VacunaControllerTests.TEST_PET_ID)).willReturn(this.pet1);
@@ -128,6 +130,15 @@ public class VacunaControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("pet", Matchers.is(vacuna1.getPet()))))
 				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("vet", Matchers.is(vacuna1.getVet()))))
 				.andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShowOwner"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testVacunaShowOwnerErrors() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/owners/{ownerId}/vacuna/{vacunaId}", VacunaControllerTests.TEST_OWNER_ID, VacunaControllerTests.TEST_NO_VACUNA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("vacuna","descrpcion","tipoEnfermedad"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "vet")
@@ -228,22 +239,6 @@ public class VacunaControllerTests {
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.view().name("vacunas/crearVacuna"));
 	}
-	
-//	@WithMockUser(value = "josue", roles = "vet")
-//    @Test
-//    void testProcessCreationVacunaFormHasErrorsFechaIncorrecta() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.post("/vets/vacuna/pets/{petId}/create", VacunaControllerTests.TEST_PET_ID)
-//				.with(csrf())
-//				.param("tipoEnfermedad", "Rabia")
-//				.param("fecha", "2000-08-06")
-//				.param("descripcion", "aaaaaa"))
-//			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("pet"))
-//			.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("vet"))
-//			.andExpect(MockMvcResultMatchers.model().attributeHasErrors("vacuna"))
-//			.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("vacuna", "fecha"))
-//			.andExpect(MockMvcResultMatchers.status().isOk())
-//			.andExpect(MockMvcResultMatchers.view().name("vacunas/crearVacuna"));
-//	}
 	
 
 }
