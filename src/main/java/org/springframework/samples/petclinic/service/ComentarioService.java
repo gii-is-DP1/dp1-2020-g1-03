@@ -8,7 +8,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.repository.CitaMascotaRepository;
+import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.repository.CitaRepository;
 import org.springframework.samples.petclinic.repository.ComentarioRepository;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
@@ -77,8 +78,4 @@ public class ComentarioService {
 		return comentarioRepository.findById(comentarioId);
 	}
 
-	@Transactional(readOnly = true)
-	public Collection<Comentario> findAllComentariosByOwnerId(Owner owner) throws DataAccessException{
-		return comentarioRepository.findComentariosByOwner(owner);
-	}
 }

@@ -108,12 +108,10 @@ public class TutoriaControllerTests {
 		this.tutoria1.setRazon("Mejoras en el animal");
 		this.tutoria1.setPet(max);
 		
-		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(TutoriaControllerTests.TEST_OWNER_ID);
-		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(TutoriaControllerTests.TEST_ADI_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro").getId()).willReturn(TutoriaControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue").getId()).willReturn(TutoriaControllerTests.TEST_ADI_ID);
 		BDDMockito.given(this.tutoriaService.findTutoriaById(TEST_TUTORIA_ID)).willReturn(this.tutoria1);
-		BDDMockito.given(this.tutoriaService.findMascotaByName("Max")).willReturn(Lists.newArrayList(max));
-		BDDMockito.given(this.petService.findNameMascota(TEST_OWNER_ID)).willReturn(Lists.newArrayList("Max,1"));
-		
+		BDDMockito.given(this.tutoriaService.findMascotaByName("Max")).willReturn(Lists.newArrayList(max));	
 	}
 	
 	@WithMockUser(value = "josue", roles = "adiestrador")

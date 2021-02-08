@@ -48,8 +48,8 @@ public class VetService {
 	}	
 
 	@Transactional(readOnly = true)
-	public Vet findVetIdByUsername(String username) {
-		return vetRepository.findVetIdByUsername(username);
+	public Vet findVetByUsername(String username) {
+		return vetRepository.findVetByUsername(username);
 	}
 	
 	@Transactional(readOnly = true)

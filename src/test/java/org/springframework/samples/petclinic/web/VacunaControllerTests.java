@@ -112,7 +112,7 @@ public class VacunaControllerTests {
 		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_VACUNA_ID)).willReturn(this.vacuna1);
 		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_NO_VACUNA_ID)).willReturn(null);
 		BDDMockito.given(this.vacunaService.findTipoEnfermedades()).willReturn(Lists.newArrayList(rabia));
-		BDDMockito.given(this.vetService.findVetIdByUsername("josue")).willReturn(VacunaControllerTests.TEST_VETERINARIO_ID);
+		BDDMockito.given(this.vetService.findVetByUsername("josue").getId()).willReturn(VacunaControllerTests.TEST_VETERINARIO_ID);
 		BDDMockito.given(this.petService.findPetById(VacunaControllerTests.TEST_PET_ID)).willReturn(this.pet1);
 //		BDDMockito.given(this.vacunaService.saveVacuna(vacuna1, TEST_PET_ID)).thenAnswer(this.TEST_VACUNA_ID);
 		BDDMockito.doAnswer(setIdVacuna()).when(this.vacunaService).saveVacuna(BDDMockito.any(), BDDMockito.anyInt());

@@ -136,13 +136,13 @@ public class ClaseControllerTests {
 		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
 		BDDMockito.given(this.claseService.findClaseById(TEST_CLASE_ID)).willReturn(this.clase1);
 
-		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(ClaseControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro").getId()).willReturn(ClaseControllerTests.TEST_OWNER_ID);
 		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
 		BDDMockito.given(this.claseService.findAllCategoriasClase()).willReturn(Lists.newArrayList(this.adiestrar));
 		BDDMockito.given(this.adiService.findNameAndLastnameAdiestrador()).willReturn(Lists.newArrayList(this.josue.getFirstName()+","+this.josue.getLastName()));
 		BDDMockito.given(this.adiService.findAllAdiestradores()).willReturn(Lists.newArrayList(this.josue));
-		BDDMockito.given(this.petService.findMascotasOwner(TEST_OWNER_ID)).willReturn(Lists.newArrayList(this.max));
-		BDDMockito.given(this.petService.findNameMascota(TEST_OWNER_ID)).willReturn(Lists.newArrayList("Max,1"));
+		BDDMockito.given(this.petService.findMascotasOwner(this.pedro)).willReturn(Lists.newArrayList(this.max));
+		BDDMockito.given(this.petService.findNameMascota(this.pedro)).willReturn(Lists.newArrayList("Max,1"));
 
 	}
 

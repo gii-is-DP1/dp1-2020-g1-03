@@ -54,7 +54,7 @@
 		<!--</c:when>
 		</c:choose>-->    
      <spring:url value="/secretarios/citas" var="citasUrl"></spring:url>
-     <a href="${fn:escapeXml(citasUrl)}"><c:out value="Volver"/></a>
+     <a href="${fn:escapeXml(citasUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
 
 
 </petclinic:layout>

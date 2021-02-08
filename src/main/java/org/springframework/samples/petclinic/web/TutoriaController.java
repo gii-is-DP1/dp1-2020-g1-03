@@ -57,7 +57,7 @@ public class TutoriaController {
 	
 	@GetMapping(value = "/owners/tutorias") 
 	public String listadoTutoriasOwner(final Principal principal, Map<String, Object> model) {
-		int idOwner = this.ownerService.findOwnerIdByUsername(principal.getName());
+		int idOwner = this.ownerService.findOwnerByUsername(principal.getName()).getId();
 		Collection<Tutoria> tutorias = this.tutoriaService.findTutoriaByOwnerId(idOwner);
 		model.put("tutorias", tutorias);
 		return "tutorias/tutoriasListOwner";

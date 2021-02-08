@@ -135,7 +135,7 @@ public class CitaControllerTests {
 		this.cita1.setPets(pets);
 		BDDMockito.given(this.citaService.findCitaById(TEST_CITA_ID)).willReturn(this.cita1);
 		//BDDMockito.given(this.ownerService.findOwnerByUsername("owner1").getId()).willReturn(CitaControllerTests.TEST_OWNER_ID);
-		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(CitaControllerTests.TEST_VET_ID);
+		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue").getId()).willReturn(CitaControllerTests.TEST_VET_ID);
 
 
 	}

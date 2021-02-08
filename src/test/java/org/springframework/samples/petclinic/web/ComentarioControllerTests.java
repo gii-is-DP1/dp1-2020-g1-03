@@ -89,7 +89,7 @@ public class ComentarioControllerTests {
 		this.comentario1.setVet(this.josue);
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
-		BDDMockito.given(this.ownerService.findOwnerIdByUsername("josue1")).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1").getId()).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
 		BDDMockito.given(this.vetService.findVetsByLastName("Perez Gutierrez")).willReturn(this.josue);
 	}
 	

@@ -50,7 +50,7 @@ public class ComentarioController {
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
-		Vet vet = this.vetService.findVetIdByUsername(principal.getName());
+		Vet vet = this.vetService.findVetByUsername(principal.getName());
 		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(vet.getId());
 		model.put("comentarios", comentarios);
 		return "comentarios/comentariosList";
@@ -126,8 +126,7 @@ public class ComentarioController {
 
 	@PostMapping(value = "/owners/comentarios/new")
 	public String processCreateComentario(Map<String, Object> model, @Valid Comentario comentario, BindingResult result,final Principal principal, Owner owner, Vet vet) {
-		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
-		Owner ow= this.ownerService.findOwnerById(idOw);
+		Owner ow= this.ownerService.findOwnerByUsername(principal.getName());
 		comentario.setOwner(ow);
 		Collection<Vet> vets = this.vetService.findVets();
 		model.put("vets", vets);

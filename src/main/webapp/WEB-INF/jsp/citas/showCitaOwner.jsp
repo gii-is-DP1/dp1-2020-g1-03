@@ -38,9 +38,17 @@
         
     </table>
 
-<spring:url value="{citaId}/edit" var="editUrl">
-        <spring:param name="citaId" value="${cita.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
+<!--<c:choose>
+		<c:when test="${cita.estado<='PENDIENTE'}">-->
+			<div class="form-group">
+				<spring:url value="{citaId}/edit" var="editUrl">
+        			<spring:param name="citaId" value="${cita.id}"/>
+   				</spring:url>
+    			<a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar cita</a>
+			</div>
+		<!--</c:when>
+		</c:choose>-->    
+     <spring:url value="/owners/citas" var="citasUrl"></spring:url>
+     <a href="${fn:escapeXml(citasUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
 
 </petclinic:layout>

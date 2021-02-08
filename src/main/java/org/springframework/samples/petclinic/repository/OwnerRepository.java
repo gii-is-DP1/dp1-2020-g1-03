@@ -67,6 +67,4 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	@Query("SELECT owner FROM Owner owner WHERE owner.user.username LIKE ?1")
 	Owner findOwnerByUsername(String username) throws DataAccessException;
   
-	@Query("SELECT owner.id FROM Owner owner WHERE owner.user.username LIKE ?1")
-	int findOwnerIdByUsername(String username) throws DataAccessException;
 }

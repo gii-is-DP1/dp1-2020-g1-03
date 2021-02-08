@@ -138,7 +138,7 @@ public class VacunaController {
 	@PostMapping(value = "/vets/vacuna/pets/{petId}/create")
 	public String processCreateVacuna(Pet pet, Vet vet, @Valid Vacuna vacuna, BindingResult result, ModelMap model,@PathVariable("petId") int Id, final Principal principal) {
 		vacuna.setId(vacuna.getId());
-		vet.setId(this.vetService.findVetIdByUsername(principal.getName()));
+		vet.setId(this.vetService.findVetByUsername(principal.getName()).getId());
 		pet.setId(this.petService.findPetById(Id).getId());
 		pet.setName(this.petService.findPetById(Id).getName());
 		pet.setBirthDate(this.petService.findPetById(Id).getBirthDate());

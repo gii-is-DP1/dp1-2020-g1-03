@@ -7,20 +7,16 @@ import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.repository.AdiestradorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class AdiestradorService {
-	private AdiestradorRepository adiestradorRepository;	
-	
+	private AdiestradorRepository adiestradorRepository;
+
 	@Autowired
 	public AdiestradorService(AdiestradorRepository adiestradorRepository) {
 		this.adiestradorRepository = adiestradorRepository;
-	}	
-
-	@Transactional(readOnly = true)
-	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
-		return adiestradorRepository.findAdiestradorByUsername(user);
 	}
-	
+
 	@Transactional(readOnly = true)
 	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
 		return adiestradorRepository.findAdiestradorByUsername(user);
@@ -28,16 +24,21 @@ public class AdiestradorService {
 
 	@Transactional
 	public void saveAdiestrador(Adiestrador adiestrador) throws DataAccessException {
-		adiestradorRepository.save(adiestrador);			
-	}		
-	
+		adiestradorRepository.save(adiestrador);
+	}
+
 	@Transactional(readOnly = true)
 	public Collection<Adiestrador> findAllAdiestradores() {
 		return adiestradorRepository.findAll();
 	}
-	
+
 	@Transactional(readOnly = true)
-	public Collection<String> findNameAndLastnameAdiestrador() throws DataAccessException{
+	public Adiestrador findAdiestradorById(int id) throws DataAccessException {
+		return adiestradorRepository.findById(id);
+	}
+
+	@Transactional(readOnly = true)
+	public Collection<String> findNameAndLastnameAdiestrador() throws DataAccessException {
 		return adiestradorRepository.findNameAndLastnameAdiestrador();
 	}
 }

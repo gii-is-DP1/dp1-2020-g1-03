@@ -72,7 +72,7 @@ public class CitaController {
 
 	@GetMapping(value = "/vets/citas")
 	public String listadoCitasVets(Map<String, Object> model, Principal principal) {
-		Vet vet=this.vetService.findVetIdByUsername(principal.getName());
+		Vet vet=this.vetService.findVetByUsername(principal.getName());
 		List<Cita> citas= citaService.findCitasByVet(vet);
 		model.put("citas", citas);
 		return "citas/citasList";
@@ -213,18 +213,6 @@ public class CitaController {
 		model.put("cita", cita);
 		return "citas/showCitaSecretario";
 	}
-
-//	@GetMapping(value = "/secretarios/citas/sinVet/{citaId}")
-//	public String mostarCitaSecretarioSinVet(Map<String, Object> model, Principal principal,
-//			@PathVariable("citaId") int citaId) {
-//		Cita cita = this.citaService.findCitaById(citaId);
-//		List<Pet> mascotas = cita.getPets();
-//		Owner owner = mascotas.get(0).getOwner();
-//		model.put("owner", owner);
-//		model.put("mascotas", mascotas);
-//		model.put("cita", cita);
-//		return "citas/showCitaSecretario";
-//	}
 
 	@GetMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String getEditarCitaSecretario(Map<String, Object> model, Principal principal,
