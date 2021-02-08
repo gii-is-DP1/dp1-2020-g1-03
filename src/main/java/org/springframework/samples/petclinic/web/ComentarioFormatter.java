@@ -23,12 +23,10 @@ public class ComentarioFormatter implements Formatter<Vet>{
 	}
 
 	public Vet parse(String text, Locale locale) throws ParseException {
-		Collection<Vet> findVets = this.vetService.findVets();
-		for (Vet vet : findVets) {
-			if (vet.getLastName().equals(text)) {
-				return vet;
-			}
+		Vet findVet = this.vetService.findVetsByLastName(text);
+		if(findVet.getLastName().isEmpty()) {
+			throw new ParseException("vet not found: " + text, 0);
 		}
-		throw new ParseException("type not found: " + text, 0);
+		return findVet;
 	}
 }

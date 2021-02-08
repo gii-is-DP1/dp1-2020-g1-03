@@ -120,25 +120,28 @@ public class ClaseControllerTests {
 		this.max.setName("Max");
 		this.max.setBirthDate(this.fecha);
 		this.max.setType(dog);
+		this.max.setOwner(this.pedro);
 
 		this.clase1 = new Clase();
 		this.clase1.setId(ClaseControllerTests.TEST_CLASE_ID);
 		this.clase1.setName("Clase 1");
-		this.clase1.setFechaHoraInicio(fechaClaseInicio);
-		this.clase1.setFechaHoraFin(fechaClaseFin);
+		this.clase1.setFechaHoraInicio(this.fechaClaseInicio);
+		this.clase1.setFechaHoraFin(this.fechaClaseFin);
 		this.clase1.setNumeroPlazasTotal(15);
 		this.clase1.setNumeroPlazasDisponibles(12);
-		this.clase1.setAdiestrador(josue);
+		this.clase1.setAdiestrador(this.josue);
 		this.clase1.setType(dog);
-		this.clase1.setCategoriaClase(adiestrar);
+		this.clase1.setCategoriaClase(this.adiestrar);
 
 		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
 		BDDMockito.given(this.claseService.findClaseById(TEST_CLASE_ID)).willReturn(this.clase1);
 		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(ClaseControllerTests.TEST_OWNER_ID);
 		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
-		BDDMockito.given(this.claseService.findAllCategoriasClase()).willReturn(Lists.newArrayList(adiestrar));
-		BDDMockito.given(this.adiService.findNameAndLastnameAdiestrador()).willReturn(Lists.newArrayList(josue.getFirstName()+","+josue.getLastName()));
-
+		BDDMockito.given(this.claseService.findAllCategoriasClase()).willReturn(Lists.newArrayList(this.adiestrar));
+		BDDMockito.given(this.adiService.findNameAndLastnameAdiestrador()).willReturn(Lists.newArrayList(this.josue.getFirstName()+","+this.josue.getLastName()));
+		BDDMockito.given(this.adiService.findAllAdiestradores()).willReturn(Lists.newArrayList(this.josue));
+		BDDMockito.given(this.petService.findMascotasOwner(TEST_OWNER_ID)).willReturn(Lists.newArrayList(this.max));
+		BDDMockito.given(this.petService.findNameMascota(TEST_OWNER_ID)).willReturn(Lists.newArrayList("Max,1"));
 
 	}
 
@@ -213,16 +216,9 @@ public class ClaseControllerTests {
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testProcessApuntarMascotaCreationFormSuccess() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/clases/show/apuntar/{claseId}", ClaseControllerTests.TEST_OWNER_ID)
-				.with(csrf())
-				.param("name", "Clase 1")
-				.param("fechaHoraInicio", "2025-01-15 15:30")
-				.param("fechaHoraFin", "2025-01-15 16:30")
-				.param("numeroPlazasTotal", "25")
-				.param("type", "dog")
-				.param("numeroPlazasDisponibles", "13")
-				.param("categoriaClase", "Adiestrar")
-				.param("adiestrador", "Josue,Martinez"))
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/clases/show/apuntar/{claseId}", ClaseControllerTests.TEST_CLASE_ID)
+				.with(csrf()))
+//				.param("pet", "Max,1"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/clases"));
 	}
@@ -287,18 +283,23 @@ public class ClaseControllerTests {
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/clases/show/{claseId}"));
 	}
 	
-//	@WithMockUser(value = "angel", roles = "secretario")
-//	@Test
-//	void testProcessEditFormHasErrors() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.post("/secretarios/clases/show/{claseId}/edit", ClaseControllerTests.TEST_CLASE_ID)
-//				.with(csrf())
-//				.param("name", "Clase 1")
-//				.param("fechaHoraInicio", "2021-01-15 15:30")
-//				.param("fechaHoraFin", "2021-01-15 16:30")
-//				.param("numeroPlazasDisponibles", "13")
-//				.param("categoriaClase", "ADIESTRAR"))
-//		.andExpect(MockMvcResultMatchers.view().name("clases/crearOEditarClase"));
-//	}
+	@WithMockUser(value = "angel", roles = "secretario")
+	@Test
+	void testProcessEditFormHasErrors() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/secretarios/clases/show/{claseId}/edit", ClaseControllerTests.TEST_CLASE_ID)
+				.with(csrf())
+				.param("name", "Clase 1")
+				.param("fechaHoraInicio", "2025-01-14 15:30")
+				.param("fechaHoraFin", "2025-01-14 16:30")
+				.param("numeroPlazasTotal", "20")
+				.param("numeroPlazasDisponibles", "12")
+				.param("categoriaClase", "Adiestrar")
+				.param("adiestrador", "Josue,Martinez"))
+		.andExpect(MockMvcResultMatchers.model().attributeHasErrors("clase"))
+		.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("clase", "type"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("clases/crearOEditarClase"));
+	}
 	
 	@WithMockUser(value = "angel", roles = "secretario")
 	@Test
@@ -322,6 +323,24 @@ public class ClaseControllerTests {
 				.param("adiestrador", "Josue,Martinez"))
 		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/secretarios/clases"));
+	}
+	
+	@WithMockUser(value = "angel", roles = "secretario")
+	@Test
+	void testProcessCreationFormSuccessHasError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/secretarios/clases/new")
+				.with(csrf())
+				.param("name", "Clase 1")
+				.param("fechaHoraInicio", "2025-01-14 15:30")
+				.param("fechaHoraFin", "2025-01-14 16:30")
+				.param("numeroPlazasTotal", "20")
+				.param("numeroPlazasDisponibles", "12")
+				.param("categoriaClase", "Adiestrar")
+				.param("adiestrador", "Josue,Martinez"))
+		.andExpect(MockMvcResultMatchers.model().attributeHasErrors("clase"))
+		.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("clase", "type"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("clases/crearOEditarClase"));
 	}
 	
 	@WithMockUser(value = "angel", roles = "secretario")

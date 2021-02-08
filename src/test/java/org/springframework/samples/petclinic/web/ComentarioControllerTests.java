@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
@@ -33,7 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = ComentarioController.class,excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-classes = WebSecurityConfigurer.class),
+classes = WebSecurityConfigurer.class),includeFilters = @ComponentScan.Filter(value = ComentarioFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 excludeAutoConfiguration= SecurityConfiguration.class)
 public class ComentarioControllerTests {
 	private static final int	TEST_COMENTARIO_ID= 1;
@@ -89,6 +90,7 @@ public class ComentarioControllerTests {
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
 		BDDMockito.given(this.ownerService.findOwnerIdByUsername("josue1")).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.vetService.findVetsByLastName("Perez Gutierrez")).willReturn(this.josue);
 
 	}
 	
@@ -153,13 +155,12 @@ public class ComentarioControllerTests {
     @Test
     void testProcessCreationComentarioFormSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/owners/comentarios/new")
-				.param("owner", "pedro")
 					.with(csrf())
-					.param("titulo", "titulo")
+					.param("titulo", "Esto es un titulo")
 					.param("cuerpo", "cuerpo")
 					.param("vet", "josue"))
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios"));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios/"+ComentarioControllerTests.TEST_VET_ID));
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")

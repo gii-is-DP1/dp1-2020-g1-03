@@ -40,7 +40,7 @@ public class ComentarioFormatterTests {
 		
 		@Test
 		void shouldParse() throws ParseException {
-			Mockito.when(vetService.findVets()).thenReturn(makeVets());
+			Mockito.when(vetService.findVetsByLastName("Carter")).thenReturn(makeVets());
 			Vet vet = comentarioFormatter.parse("Carter", Locale.ENGLISH);
 			assertEquals("Carter", vet.getLastName());
 		}
@@ -48,25 +48,19 @@ public class ComentarioFormatterTests {
 		
 		@Test
 		void shouldThrowParseException() throws ParseException {
-			Mockito.when(vetService.findVets()).thenReturn(makeVets());
+			Mockito.when(vetService.findVetsByLastName("Carter")).thenReturn(makeVets());
 			Assertions.assertThrows(ParseException.class, () -> {
 				comentarioFormatter.parse("Juan", Locale.ENGLISH);
 			});
 		}
 
-		private Collection<Vet> makeVets() {
-			Collection<Vet> vets = new ArrayList<>();
-			vets.add(new Vet() {
+		private Vet makeVets() {
+			Vet vet = new Vet() {
 				{
 					setLastName("Carter");
 				}
-			});
-			vets.add(new Vet() {
-				{
-					setLastName("Stevens");
-				}
-			});
-			return vets;
+			};
+			return vet;
 		}
 }
 
