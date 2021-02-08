@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Adiestrador;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Tutoria;
 import org.springframework.samples.petclinic.service.AdiestradorService;
@@ -114,7 +115,7 @@ public class TutoriaController {
 	}
 
 	@PostMapping(value = "adiestradores/tutorias/pets/{petId}/new")
-	public String processCreateTutoria(@Valid Tutoria tutoria,@PathVariable("petId") int Id, @Valid BindingResult result,final Principal principal) 
+	public String processCreateTutoria(@Valid Tutoria tutoria, BindingResult result, @PathVariable("petId") int Id,final Principal principal) 
 			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
 		tutoria.setId(tutoria.getId());
 		tutoria.setPet(this.petService.findPetById(Id));

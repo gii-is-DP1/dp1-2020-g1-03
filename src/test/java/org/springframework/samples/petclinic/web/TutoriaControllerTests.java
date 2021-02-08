@@ -1,9 +1,14 @@
 package org.springframework.samples.petclinic.web;
 
+import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.assertj.core.util.Lists;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,7 +75,7 @@ public class TutoriaControllerTests {
 		
 		PetType dog = new PetType();
 		dog.setId(6);
-		dog.setName("perro");
+		dog.setName("dog");
 		
 		this.pedro = new Owner();
 		this.pedro.setId(TutoriaControllerTests.TEST_OWNER_ID);
@@ -104,6 +109,7 @@ public class TutoriaControllerTests {
 		BDDMockito.given(this.ownerService.findOwnerIdByUsername("pedro")).willReturn(TutoriaControllerTests.TEST_OWNER_ID);
 		BDDMockito.given(this.adiService.findAdiestradorIdByUsername("josue")).willReturn(TutoriaControllerTests.TEST_ADI_ID);
 		BDDMockito.given(this.tutoriaService.findTutoriaById(TEST_TUTORIA_ID)).willReturn(this.tutoria1);
+		BDDMockito.given(this.tutoriaService.findMascotaByName("Max")).willReturn(Lists.newArrayList(max));
 		
 	}
 	
@@ -128,16 +134,37 @@ public class TutoriaControllerTests {
 	
 	@WithMockUser(value = "josue", roles = "adiestrador")
 	@Test
-	void testAdiestradorInitFindForm() throws Exception {
+	void testInitFindNombreMascotaForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/pets/find", TutoriaControllerTests.TEST_ADI_ID)).andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("tutorias/EncontrarMascotas"));
 	}
 	
-//	@WithMockUser(value = "josue", roles = "adiestrador")
-//	@Test
-//	void testAdiestradorProcessFindForm() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
-//	}
+	@WithMockUser(value = "josue", roles = "adiestrador")
+    @Test
+    void testAdiestradorProcessFindFormSuccess() throws Exception {
+		given(this.petService.findAllPets()).willReturn(Lists.newArrayList(max));
+		mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/pets/find").param("name", "")).andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("tutorias/EncontrarMascotas"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "adiestrador")
+    @Test
+    void testAdiestradorProcessFindFormByName() throws Exception {
+		given(this.tutoriaService.findMascotaByName(max.getName())).willReturn(Lists.newArrayList(max));
+		mockMvc.perform(get("/adiestradores/tutorias/pets").param("name", "Max"))
+			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/adiestradores/tutorias/pets/" + TutoriaControllerTests.TEST_PET_ID + "/new"));
+	}
+	
+	@WithMockUser(value = "josue", roles = "vet")
+	@Test
+	void testAdiestradorProcessFindFormNoMascotasFound() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/pets").param("name", "Pakito"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("pet", "name", "notFound"))
+				.andExpect(MockMvcResultMatchers.view().name("tutorias/EncontrarMascotas"));
+	}
 	
 	@WithMockUser(value = "josue", roles = "adiestrador")
 	@Test
@@ -146,15 +173,33 @@ public class TutoriaControllerTests {
 		.andExpect(MockMvcResultMatchers.view().name("tutorias/crearOEditarTutoria")).andExpect(MockMvcResultMatchers.model().attributeExists("tutoria"));
 	}
 	
-//	@WithMockUser(value = "josue", roles = "adiestrador")
-//	@Test
-//	void testProcessCreationFormSuccess() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.post("/adiestradores/tutorias/pets/{petId}/new").with(csrf())
-//				.param("titulo", "Primera tutoria")
-//				.param("fechaHora", "2021-01-14 16:30")
-//				.param("razon", "Mejoras en el animal"))
-//		.andExpect(MockMvcResultMatchers.status().is3xxRedirection());
-//	}
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test
+	void testProcessCreationFormSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/adiestradores/tutorias/pets/{petId}/new", TEST_PET_ID).with(csrf())
+				.param("titulo", "Primera tutoria")
+				.param("fechaHora", "2025-01-14 16:30")
+				.param("razon", "Mejoras en el animal")
+				.param("pet", "max")
+				.param("adiestrador", "josue")
+				.param("owner", "pedro"))
+		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+		.andExpect(MockMvcResultMatchers.view().name("redirect:/adiestradores/tutorias"));		
+	}
+	
+	@WithMockUser(value = "josue", roles = "adiestrador")
+	@Test
+	void testProcessCreationFormNotSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/adiestradores/tutorias/pets/{petId}/new", TEST_PET_ID).with(csrf())
+				.param("titulo", "Primera tutoria")
+				.param("fechaHora", "2025-01-14 16:30")
+				.param("razon", "Mejoras en el animal"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("pet"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasErrors("tutoria"))
+				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("tutoria", "fechaHora"))
+				.andExpect(status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/adiestradores/tutorias"));		
+	}
 	
 	
 	
