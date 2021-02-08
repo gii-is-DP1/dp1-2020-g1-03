@@ -138,7 +138,7 @@ public class VacunaControllerTests {
 		mockMvc.perform(MockMvcRequestBuilders.get("/owners/{ownerId}/vacuna/{vacunaId}", VacunaControllerTests.TEST_OWNER_ID, VacunaControllerTests.TEST_NO_VACUNA_ID))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("exception"))
-				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("vacuna","descrpcion","tipoEnfermedad"));
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("vacuna","descripcion","tipoEnfermedad"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "vet")
