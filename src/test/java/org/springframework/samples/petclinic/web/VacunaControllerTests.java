@@ -13,11 +13,14 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
@@ -29,6 +32,7 @@ import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,11 +40,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = VacunaController.class,excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-classes = WebSecurityConfigurer.class),
+classes = WebSecurityConfigurer.class),includeFilters = @ComponentScan.Filter(value = VacunaFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 excludeAutoConfiguration= SecurityConfiguration.class)
 public class VacunaControllerTests {
 	
 	private static final int TEST_VACUNA_ID = 1;
+	private static final int TEST_NO_VACUNA_ID = 100;
 	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_VETERINARIO_ID = 1;
 	private static final int TEST_PET_ID = 2;
@@ -62,10 +67,12 @@ public class VacunaControllerTests {
 	private LocalDate fecha = LocalDate.parse("2012-08-06");
 
 	@BeforeEach
-	void setup() {
+	void setup() throws DataAccessException, DistanciaEntreDiasException {
+		
 		TipoEnfermedad rabia = new TipoEnfermedad();
 		rabia.setName("Rabia");
 		rabia.setId(3);
+		
 		PetType hamster = new PetType();
 		hamster.setId(6);
 		hamster.setName("hamster");
@@ -91,14 +98,36 @@ public class VacunaControllerTests {
 		this.pet1.setBirthDate(fecha);
 		this.pet1.setName("Basil");
 		this.pet1.setType(hamster);
+		
+		
+		this.vacuna1= new Vacuna();
+		this.vacuna1.setFecha(LocalDate.parse("2020-08-06"));
+		this.vacuna1.setDescripcion("Vacuna de prueba");
+		this.vacuna1.setPet(this.pet1);
+		this.vacuna1.setTipoEnfermedad(rabia);
+		this.vacuna1.setId(VacunaControllerTests.TEST_VACUNA_ID);
+		this.vacuna1.setVet(this.josue);
 
 		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(hamster));
 		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_VACUNA_ID)).willReturn(this.vacuna1);
+		BDDMockito.given(this.vacunaService.findVacunaById(VacunaControllerTests.TEST_NO_VACUNA_ID)).willReturn(null);
 		BDDMockito.given(this.vacunaService.findTipoEnfermedades()).willReturn(Lists.newArrayList(rabia));
 		BDDMockito.given(this.vetService.findVetIdByUsername("josue")).willReturn(VacunaControllerTests.TEST_VETERINARIO_ID);
 		BDDMockito.given(this.petService.findPetById(VacunaControllerTests.TEST_PET_ID)).willReturn(this.pet1);
+//		BDDMockito.given(this.vacunaService.saveVacuna(vacuna1, TEST_PET_ID)).thenAnswer(this.TEST_VACUNA_ID);
+		BDDMockito.doAnswer(setIdVacuna()).when(this.vacunaService).saveVacuna(BDDMockito.any(), BDDMockito.anyInt());
 	}
 	
+	private Answer<Void> setIdVacuna() {
+		return new Answer<Void>() {
+			public Void answer(InvocationOnMock invocation) {
+				Vacuna vacuna = (Vacuna) invocation.getArguments()[0];
+				vacuna.setId(VacunaControllerTests.TEST_VACUNA_ID);
+			       return null;
+			}
+		};
+	}
+
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testVacunaListOwner() throws Exception {
@@ -110,7 +139,22 @@ public class VacunaControllerTests {
 	@Test
 	void testVacunaShowOwner() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/owners/{ownerId}/vacuna/{vacunaId}", VacunaControllerTests.TEST_OWNER_ID, VacunaControllerTests.TEST_VACUNA_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShowOwner"));
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("tipoEnfermedad", Matchers.hasProperty("name", Matchers.is("Rabia")))))
+				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("fecha", Matchers.is(vacuna1.getFecha()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("descripcion", Matchers.is(vacuna1.getDescripcion()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("pet", Matchers.is(vacuna1.getPet()))))
+				.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("vet", Matchers.is(vacuna1.getVet()))))
+				.andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShowOwner"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testVacunaShowOwnerErrors() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/owners/{ownerId}/vacuna/{vacunaId}", VacunaControllerTests.TEST_OWNER_ID, VacunaControllerTests.TEST_NO_VACUNA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("vacuna","descripcion","tipoEnfermedad"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "vet")
@@ -124,7 +168,12 @@ public class VacunaControllerTests {
 	@Test
 	void testVacunaShowVet() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/vets/vacuna/{vacunaId}", VacunaControllerTests.TEST_VACUNA_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShow"));
+		.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("tipoEnfermedad", Matchers.hasProperty("name", Matchers.is("Rabia")))))
+		.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("fecha", Matchers.is(vacuna1.getFecha()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("descripcion", Matchers.is(vacuna1.getDescripcion()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("pet", Matchers.is(vacuna1.getPet()))))
+		.andExpect(MockMvcResultMatchers.model().attribute("vacuna", Matchers.hasProperty("vet", Matchers.is(vacuna1.getVet()))))		
+		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("vacunas/vacunasShow"));
 	}
 	
 	@WithMockUser(value = "josue", roles = "vet")
@@ -185,8 +234,8 @@ public class VacunaControllerTests {
     void testProcessCreationVacunaFormSuccess() throws Exception {
     	mockMvc.perform(MockMvcRequestBuilders.post("/vets/vacuna/pets/{petId}/create", VacunaControllerTests.TEST_PET_ID)
 						.with(csrf())
-						.param("tipoEnfermedad", "Rabia")
 						.param("fecha", "2020-08-06")
+						.param("tipoEnfermedad", "Rabia")
 						.param("descripcion", "Prueba de vacuna"))
     		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 			.andExpect(MockMvcResultMatchers.view().name("redirect:/vets/vacuna/"+VacunaControllerTests.TEST_VACUNA_ID));

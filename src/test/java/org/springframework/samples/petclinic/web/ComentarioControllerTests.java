@@ -39,6 +39,7 @@ public class ComentarioControllerTests {
 	private static final int	TEST_COMENTARIO_ID= 1;
 	private static final int	TEST_OWNER_ID= 1;
 	private static final int	TEST_VET_ID= 1;
+	private final static int	TEST_COMENTARIO_INEXISTENTE_ID= 100;
 	
 	@MockBean
 	private ComentarioService	comentarioService;
@@ -113,9 +114,28 @@ public class ComentarioControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/showVet"));
 	}
 	
+	
+	@WithMockUser(value = "josue", roles = "vet")
+	@Test
+	void testShowComentarioVetError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/comentarios/show/{comentarioId}", ComentarioControllerTests.TEST_COMENTARIO_INEXISTENTE_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("comentario"));
+	}
+	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testComentarioList() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/{vetId}", ComentarioControllerTests.TEST_VET_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
+
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testComentarioListError() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/{vetId}", ComentarioControllerTests.TEST_VET_ID))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
