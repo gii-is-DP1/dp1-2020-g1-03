@@ -64,6 +64,9 @@ public class VacunaController {
 	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
 	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
 		Vacuna vacuna= vacunaService.findVacunaById(Id);
+		if(vacuna.isNew()) {
+			return "exception";
+		}
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShowOwner";
 		}
@@ -79,6 +82,9 @@ public class VacunaController {
 	@GetMapping(value = "/vets/vacuna/{vacunaId}")
 	public String mostarVacuna(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
 		Vacuna vacuna= vacunaService.findVacunaById(Id);
+		if(vacuna.isNew()) {
+			return "exception";
+		}
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShow";
 		}

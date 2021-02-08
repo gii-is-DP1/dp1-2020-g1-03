@@ -15,7 +15,6 @@ import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Clase;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Secretario;
@@ -102,6 +101,9 @@ public class ClaseController {
 	@GetMapping(value = "/adiestradores/clases/show/{claseId}")
 	public String mostarClasesAdiestrador(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
 		Clase clase= claseService.findClaseById(claseId);
+		if(clase.isNew()) {
+			return "exception";
+		}
 		model.put("clase", clase);
 		return "clases/showAdiestrador";
 		}
@@ -131,8 +133,8 @@ public class ClaseController {
 		ApuntarClase apClase = new ApuntarClase();
 		apClase.setClase(clas);
 		model.put("apuntarClase", apClase);
-		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
-		List<String> pets = this.petService.findNameMascota(owner);
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		return "clases/apuntarClases";
 	}
@@ -141,8 +143,8 @@ public class ClaseController {
 	public String processApuntarMascota(@Valid ApuntarClase apClase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId, Map<String, Object> model) throws DataAccessException, LimiteAforoClaseException, DiferenciaClasesDiasException, ClasePisadaDelAdiestradorException {
 		apClase.setPet(apClase.getPet());
-		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
-		List<String> pets = this.petService.findNameMascota(owner);
+		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
+		List<String> pets = this.petService.findNameMascota(ownerId);
 		model.put("pets", pets);
 		Clase clas = this.claseService.findClaseById(claseId);
 		apClase.setClase(clas);

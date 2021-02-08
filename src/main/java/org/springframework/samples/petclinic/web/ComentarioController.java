@@ -44,14 +44,13 @@ public class ComentarioController {
 	@InitBinder("vet")
 	public void initVetBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new ComentarioValidator());
+		dataBinder.addCustomFormatter(new ComentarioFormatter(vetService));
 	}
 	
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
 		int idVet = this.vetService.findVetIdByUsername(principal.getName());
-		System.out.println(idVet);
-		System.out.println("ID DEL VETERINARIO"+idVet);
 		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
 		model.put("comentarios", comentarios);
 		return "comentarios/comentariosList";
@@ -60,6 +59,9 @@ public class ComentarioController {
 	@GetMapping(value = "/vets/comentarios/show/{comentarioId}")
 	public String mostarComentariosDeVet(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
 		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
+		if(comentario.isNew()) {
+			return "exception";
+		}
 		model.put("comentario", comentario);
 		return "comentarios/showVet";
 		}
@@ -75,35 +77,33 @@ public class ComentarioController {
 		}
 	@GetMapping(value = "/owners/comentarios/show/{comentarioId}")
 	public String mostarComentariosDeOwner(@PathVariable("comentarioId") int comentarioId, Map<String, Object> model, final Principal principal) {
-		
 		Comentario comentario= comentarioService.findComentarioByComentarioId(comentarioId);
 		model.put("comentario", comentario);
 		return "comentarios/show";
 		}
 	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model, Owner owner, Vet vet) {
+	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
 		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
 		model.put("comentario", comentario);
-		Collection<Vet> vets = this.vetService.findVets();
-		model.put("vets", vets);
 		return "comentarios/crearOEditarComentario";
 	}
 	
 
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId, Owner owner, Vet vet,
+	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId,Owner owner, Vet vet,
 			@PathVariable("comentarioId") int comentarioId) {
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
+		System.out.println(ow);
 		comentario.setOwner(ow);
 		comentario.setId(comentarioId);
 		comentario.setVet(this.vetService.findVetById(vetId));
-		Collection<Vet> vets = this.vetService.findVets();
-		model.put("vets", vets);
+		
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors()+ "Errores");
 			return "comentarios/crearOEditarComentario";
 		}
 		else {
+			
 			try{
 				this.comentarioService.saveComentario(comentario, true);
 			}catch(ComentariosMaximoPorCitaException ex){
@@ -116,10 +116,8 @@ public class ComentarioController {
 	}
 	
 	@GetMapping(value = "/owners/comentarios/new") 
-	public String initCreateComentario(Map<String, Object> model, final Principal principal, Owner owner, Vet vet) {
+	public String initCreateComentario(Map<String, Object> model) {
 		Comentario comentario = new Comentario();
-		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		comentario.setOwner(ow);
 		model.put("comentario", comentario);
 		Collection<Vet> vets = this.vetService.findVets();
 		model.put("vets", vets);
@@ -131,7 +129,6 @@ public class ComentarioController {
 		int idOw = this.ownerService.findOwnerIdByUsername(principal.getName());
 		Owner ow= this.ownerService.findOwnerById(idOw);
 		comentario.setOwner(ow);
-		comentario.setId(comentario.getId());
 		Collection<Vet> vets = this.vetService.findVets();
 		model.put("vets", vets);
 		
@@ -146,7 +143,7 @@ public class ComentarioController {
 	        		"El dueño ha puesto un comentario con un veterinario que no ha tenido cita o ha puesto más de un comentario a un veterinario con el que ya tuvo cita y comentó, violación de la regla de negocio");
 	        return "comentarios/crearOEditarComentario";
 	    }
-			return "redirect:/owners/comentarios";
+			return "redirect:/owners/comentarios/"+comentario.getVet().getId();
 		}
 	}
 

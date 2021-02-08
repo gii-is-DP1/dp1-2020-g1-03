@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.format.Formatter;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Comentario;
 import org.springframework.samples.petclinic.model.Owner;
@@ -33,12 +34,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = ComentarioController.class,excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-classes = WebSecurityConfigurer.class),
+classes = WebSecurityConfigurer.class),includeFilters = @ComponentScan.Filter(value = ComentarioFormatter.class, type = FilterType.ASSIGNABLE_TYPE),
 excludeAutoConfiguration= SecurityConfiguration.class)
 public class ComentarioControllerTests {
 	private static final int	TEST_COMENTARIO_ID= 1;
 	private static final int	TEST_OWNER_ID= 1;
 	private static final int	TEST_VET_ID= 1;
+	private final static int	TEST_COMENTARIO_INEXISTENTE_ID= 100;
 	
 	@MockBean
 	private ComentarioService	comentarioService;
@@ -87,8 +89,8 @@ public class ComentarioControllerTests {
 		this.comentario1.setVet(this.josue);
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
-		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1").getId()).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
-
+		BDDMockito.given(this.ownerService.findOwnerIdByUsername("josue1")).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.vetService.findVetsByLastName("Perez Gutierrez")).willReturn(this.josue);
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")
@@ -113,9 +115,28 @@ public class ComentarioControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/showVet"));
 	}
 	
+	
+	@WithMockUser(value = "josue", roles = "vet")
+	@Test
+	void testShowComentarioVetError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/vets/comentarios/show/{comentarioId}", ComentarioControllerTests.TEST_COMENTARIO_INEXISTENTE_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("exception"))
+				.andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("comentario"));
+	}
+	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testComentarioList() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/{vetId}", ComentarioControllerTests.TEST_VET_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
+
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testComentarioListError() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/{vetId}", ComentarioControllerTests.TEST_VET_ID))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("comentarios/comentariosListOwner"));
@@ -133,13 +154,12 @@ public class ComentarioControllerTests {
     @Test
     void testProcessCreationComentarioFormSuccess() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.post("/owners/comentarios/new")
-				.param("owner", "pedro")
 					.with(csrf())
-					.param("titulo", "titulo")
+					.param("titulo", "Esto es un titulo")
 					.param("cuerpo", "cuerpo")
 					.param("vet", "josue"))
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios"));
+			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios/"+ComentarioControllerTests.TEST_VET_ID));
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")
