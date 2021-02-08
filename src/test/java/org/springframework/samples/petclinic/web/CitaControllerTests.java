@@ -174,6 +174,14 @@ public class CitaControllerTests {
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
+	void testShowOwnerCitaErrorForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}", 200))
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(MockMvcResultMatchers.view().name("exception"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
 	void testOwnerInitCitaCreationForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/new")).andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("citas/crearOEditarCitaOwner"));

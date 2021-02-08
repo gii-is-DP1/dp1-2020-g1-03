@@ -65,25 +65,6 @@ class CompeticionTests {
 
 	}
 
-	@Test
-	void shouldNotValidateWhenHisFechaCompeIsPast() {
 
-		LocaleContextHolder.setLocale(Locale.ENGLISH);
-		Competicion competicion = new Competicion();
-		Secretario secretario=new Secretario();
-		
-		competicion.setNombre("Prueba no todo correcto");
-		competicion.setCantidad(1200);
-		competicion.setFechaHoraInicio(LocalDate.of(2019, 11, 11));
-		competicion.setFechaHoraFin(LocalDate.of(2019, 11, 11));;
-		competicion.setSecretario(secretario);
-		competicion.setPremios("Premio pruebas");
-		
-		Validator validator = this.createValidator();
-		Set<ConstraintViolation<Competicion>> constraintViolations = validator.validate(competicion);
-
-
-		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
-	}
 
 }
