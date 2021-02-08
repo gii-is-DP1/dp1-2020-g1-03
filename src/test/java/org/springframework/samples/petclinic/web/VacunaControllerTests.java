@@ -29,6 +29,7 @@ import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vacuna;
 import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
@@ -56,6 +57,8 @@ public class VacunaControllerTests {
 	private PetService petService;
 	@MockBean
 	private VetService vetService;
+	@MockBean
+	private OwnerService ownerService;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -98,6 +101,7 @@ public class VacunaControllerTests {
 		this.pet1.setBirthDate(fecha);
 		this.pet1.setName("Basil");
 		this.pet1.setType(hamster);
+		this.pet1.setOwner(this.pedro);
 		
 		
 		this.vacuna1= new Vacuna();

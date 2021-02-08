@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -33,6 +35,8 @@ public class TutoriaController {
 	private OwnerService ownerService;
 	private AdiestradorService adiestradorService;
 	private PetService petService;
+	private static final Logger logger =
+			Logger.getLogger(VacunaController.class.getName());
 	
 	@Autowired
 	public TutoriaController(TutoriaService tutoriaService, AdiestradorService adiestradorService, PetService petService, OwnerService ownerService) {
@@ -49,10 +53,14 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/adiestradores/tutorias/show/{tutoriaId}")
-	public String mostrarTutoria(@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
+	public String mostrarTutoria(final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+		if(tutoria.getAdiestrador().equals(this.adiestradorService.findAdiestradorByUsername(principal.getName()))) {
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowAdiestrador";
+		}else {
+			return "exception";
+		}
 	}
 	
 	@GetMapping(value = "/owners/tutorias") 
@@ -64,10 +72,14 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/owners/tutorias/show/{tutoriaId}")
-	public String mostrarTutoriaOwner(@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
+	public String mostrarTutoriaOwner(final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+		if(tutoria.getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowOwner";
+		}else {
+			return "exception";
+		}
 	}
 	
 	
@@ -145,23 +157,25 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
-	public String initEditTutoria(Map<String, Object> model, @PathVariable ("tutoriaId") int tutoriaId) {
+	public String initEditTutoria(final Principal principal,Map<String, Object> model, @PathVariable ("tutoriaId") int tutoriaId) {
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(tutoriaId);
+		if(tutoria.getAdiestrador().equals(this.adiestradorService.findAdiestradorByUsername(principal.getName()))) {
 		model.put("tutoria", tutoria);
-		System.out.println(tutoria.getPet()+" WAZEXSDCRFVTGYBHNUJMINHUBGYVFTCRDECFTVGYBHNJM");
 		return "tutorias/crearOEditarTutoria";
+		}else {
+			return "exception";
+		}
 	}
 	
 	@PostMapping(value = "adiestradores/tutorias/show/{tutoriaId}/edit")
 	public String processEditTutoria(@Valid Tutoria tutoria, BindingResult result,final Principal principal, 
 			@PathVariable("tutoriaId") int tutoriaId) throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
-		System.out.println(tutoria.getAdiestrador());
 		Tutoria tutoria2 = this.tutoriaService.findTutoriaById(tutoriaId);
 		tutoria.setAdiestrador(tutoria2.getAdiestrador());
 		tutoria.setPet(tutoria2.getPet());
 		
 		if(result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "tutorias/crearOEditarTutoria";
 		}else {
 			try {

@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.web;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -29,6 +31,8 @@ public class ComentarioController {
 	private final ComentarioService comentarioService;
     private final OwnerService ownerService;
     private final VetService vetService;
+    private static final Logger logger =
+			Logger.getLogger(ComentarioController.class.getName());
 
 	@Autowired
 	public ComentarioController(ComentarioService comentarioService, 
@@ -82,24 +86,30 @@ public class ComentarioController {
 		return "comentarios/show";
 		}
 	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String initEditComentario(@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
-		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
-		model.put("comentario", comentario);
+	public String initEditComentario(final Principal principal,@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
+		Comentario coment= this.comentarioService.findComentarioByComentarioId(comentarioId);
+		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
+		if(ow.equals(coment.getOwner())) {
+		coment.setOwner(ow);
+		model.put("comentario", coment);
 		return "comentarios/crearOEditarComentario";
+		}else {
+			return "exception";
+		}
 	}
 	
 
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId,Owner owner, Vet vet,
+	public String processEditComentario(final Principal principal,Map<String, Object> model,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId,Owner owner, Vet vet,
 			@PathVariable("comentarioId") int comentarioId) {
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		System.out.println(ow);
+		
 		comentario.setOwner(ow);
 		comentario.setId(comentarioId);
 		comentario.setVet(this.vetService.findVetById(vetId));
 		
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors()+ "Errores");
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "comentarios/crearOEditarComentario";
 		}
 		else {
@@ -113,6 +123,7 @@ public class ComentarioController {
 	    }
 			return "redirect:/owners/comentarios/show/{comentarioId}";
 		}
+		
 	}
 	
 	@GetMapping(value = "/owners/comentarios/new") 

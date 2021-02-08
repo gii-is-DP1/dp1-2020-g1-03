@@ -27,6 +27,13 @@
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					<span>Home</span>
 				</petclinic:menuItem>
+				
+				<sec:authorize access="hasAnyAuthority('owner')">
+					<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"	title="find owners">
+						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+						<span>Find owners</span>
+					</petclinic:menuItem>
+				</sec:authorize>
 
 
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"

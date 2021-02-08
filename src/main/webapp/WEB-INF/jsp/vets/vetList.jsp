@@ -46,4 +46,7 @@
             </td>            
         </tr>
     </table>
+    <spring:url value="owners/comentarios/new" var="editUrl">
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Crear comentario</a>
 </petclinic:layout>

@@ -177,7 +177,7 @@ public class ComentarioControllerTests {
 			.andExpect(MockMvcResultMatchers.view().name("comentarios/crearOEditarComentario"));
 	}
 	
-	@WithMockUser(value = "spring")
+	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testInitUpdateForm() throws Exception {
 		mockMvc.perform(get("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID))
@@ -185,7 +185,7 @@ public class ComentarioControllerTests {
 				.andExpect(view().name("comentarios/crearOEditarComentario"));
 	}
     
-    @WithMockUser(value = "spring")
+    @WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testProcessUpdateFormSuccess() throws Exception {
 		mockMvc.perform(post("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID)

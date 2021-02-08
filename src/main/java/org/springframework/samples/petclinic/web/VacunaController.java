@@ -14,6 +14,7 @@ import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
 import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VacunaService;
 import org.springframework.samples.petclinic.service.VetService;
@@ -34,13 +35,15 @@ public class VacunaController {
 	private final VacunaService vacunaService;
 	private final PetService petService;
 	private final VetService vetService;
+	private final OwnerService ownerService;
 	private static final Logger logger =
 			Logger.getLogger(VacunaController.class.getName());
 	@Autowired
-	public VacunaController(VacunaService vacunaService,PetService petService,VetService vetService) {
+	public VacunaController(VacunaService vacunaService,PetService petService,VetService vetService, OwnerService ownerService) {
 		this.vacunaService = vacunaService;
 		this.petService=petService;
 		this.vetService=vetService;
+		this.ownerService=ownerService;
 	}
 	
 	@ModelAttribute("tipoenfermedades")
@@ -62,14 +65,18 @@ public class VacunaController {
 	}
 	
 	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
-	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model) {
+	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model,final Principal principal) {
 		Vacuna vacuna= vacunaService.findVacunaById(Id);
 		if(vacuna.isNew()) {
 			return "exception";
 		}
+		if(vacuna.getPet().getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 		model.put("vacuna", vacuna);
 		return "vacunas/vacunasShowOwner";
+		}else {
+			return "exception";
 		}
+	}
 	
 	//VETS
 	@GetMapping(value = "/vets/vacuna")
