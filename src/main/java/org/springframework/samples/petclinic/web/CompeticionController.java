@@ -134,7 +134,6 @@ public class CompeticionController {
 	public String processInscribePet(@PathVariable("competicionId") int competicionId,
 			@Valid CompeticionPet competicionPet, BindingResult result, final Principal principal, Map<String, Object> model) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException {
-//		int ownerId = this.ownerService.findOwnerIdByUsername(principal.getName());
 		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
 		List<String> pets = this.petService.findNameMascota(owner);
 		model.put("pets", pets);
@@ -151,19 +150,14 @@ public class CompeticionController {
 			return "competiciones/competicionesInscribePet";
 
 		} else {
-			System.out.println("Elseeeee");
+			System.out.println("Id: "+comp.getId());
 			try{
 				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
 	        }catch(SolapamientoDeCompeticionesException ex4){
 	        	//System.out.println("EX4444444444");
-	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada",
-						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada");
-				return "competiciones/competicionesInscribePet";
-	        }catch(MascotaYaApuntadaCompeticionException ex5){
-	        	//System.out.println("EX5555555555");
-	        	result.rejectValue("pet","Ya se ha apuntado a esta competición",
-						"Ya se ha apuntado a esta competición");
+	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada o ya se ha apuntado a esta competición",
+						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada o ya se ha apuntado a esta competición");
 				return "competiciones/competicionesInscribePet";
 	        }
 			this.competicionPetService.saveCompeticionPet(competicionPet);
