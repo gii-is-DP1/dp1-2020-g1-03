@@ -58,13 +58,15 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	 * @return the <code>Owner</code> if found
 	 * @throws org.springframework.dao.DataRetrievalFailureException if not found
 	 */	
-	@Query("SELECT owner FROM Owner owner left join fetch owner.pets WHERE owner.id =:id")
+	@Query("SELECT owner FROM Owner owner WHERE owner.id =:id")
 	public Owner findById(@Param("id") int id);
-	//int findOwnerIdByUsername(String user)throws DataAccessException;
 	
 	@Query("SELECT id FROM Owner owner WHERE owner.user.username LIKE ?1")
 	Integer findOwnerIdByUsername(String user) throws DataAccessException;
 	
 	@Query("SELECT owner FROM Owner owner WHERE owner.user.username LIKE ?1")
 	Owner findOwnerByUsername(String username) throws DataAccessException;
+  
+	@Query("SELECT owner.id FROM Owner owner WHERE owner.user.username LIKE ?1")
+	int findOwnerIdByUsername(String username) throws DataAccessException;
 }

@@ -20,6 +20,11 @@ public class AdiestradorService {
 	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
 		return adiestradorRepository.findAdiestradorByUsername(user);
 	}
+	
+	@Transactional(readOnly = true)
+	public Adiestrador findAdiestradorByUsername(String user) throws DataAccessException {
+		return adiestradorRepository.findAdiestradorByUsername(user);
+	}
 
 	@Transactional
 	public void saveAdiestrador(Adiestrador adiestrador) throws DataAccessException {

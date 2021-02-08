@@ -71,6 +71,7 @@ public class ComentarioController {
 	@GetMapping(value = "/owners/comentarios/{vetId}")
 	public String listadoComentariosByOwnerId(Map<String, Object> model,final Principal principal, @PathVariable("vetId") int vetId) {
 		Collection<Comentario> comentario= comentarioService.findAllComentariosByVetId(vetId);
+
 		model.put("comentarios", comentario);
 		return "comentarios/comentariosListOwner";
 		}
@@ -87,6 +88,7 @@ public class ComentarioController {
 		return "comentarios/crearOEditarComentario";
 	}
 	
+
 	@PostMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
 	public String processEditComentario(Map<String, Object> model,final Principal principal,@Valid Comentario comentario, BindingResult result, @PathVariable("vetId") int vetId,Owner owner, Vet vet,
 			@PathVariable("comentarioId") int comentarioId) {
@@ -144,4 +146,5 @@ public class ComentarioController {
 			return "redirect:/owners/comentarios/"+comentario.getVet().getId();
 		}
 	}
+
 }

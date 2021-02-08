@@ -22,6 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 
@@ -54,22 +55,23 @@ public interface PetRepository extends Repository<Pet, Integer> {
 	 * @see BaseEntity#isNew
 	 */
 	
-	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id LIKE ?1")
-	List<Pet> findMascotasOwner(int idOwner) throws DataAccessException;
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner LIKE ?1")
+	List<Pet> findMascotasOwner(Owner owner) throws DataAccessException;
 	
 	void save(Pet pet) throws DataAccessException;
 	
 	Collection<Pet> findAll() throws DataAccessException;
 
 	
-	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id =:ownerId")
-	List<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException;
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner =:owner")
+	List<Pet> findPetsByOwner(Owner owner) throws DataAccessException;
 //	@Query("SELECT pet.name FROM Pet pet WHERE pet.owner.id =:ownerId")
 //	List<String> findPetsByOwnerId(int ownerId) throws DataAccessException;
+	@Query("SELECT pet FROM Pet pet WHERE pet.owner.id =:owner")
+	List<Pet> findPetsByOwnerId(int owner) throws DataAccessException;
 
-
-	@Query("SELECT pet.name, pet.owner.id FROM Pet pet WHERE pet.owner.id LIKE ?1")
-	List<String> findNameMascota(int idOwner)throws DataAccessException;
+	@Query("SELECT pet.name, pet.owner.id FROM Pet pet WHERE pet.owner LIKE ?1")
+	List<String> findNameMascota(Owner owner)throws DataAccessException;
 
 	
 }

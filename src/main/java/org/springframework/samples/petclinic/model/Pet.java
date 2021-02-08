@@ -61,11 +61,11 @@ public class Pet extends NamedEntity {
 	private Owner owner;
 	
 	
-	@JoinTable(name = "rel_clases_pets", joinColumns = @JoinColumn(name = "FK_PET", nullable = false),
-				inverseJoinColumns = @JoinColumn(name="FK_CLASE", nullable = false))
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name = "clases")
-	private List<Clase> clases;
+//	@JoinTable(name = "rel_clases_pets", joinColumns = @JoinColumn(name = "FK_PET", nullable = false),
+//				inverseJoinColumns = @JoinColumn(name="FK_CLASE", nullable = false))
+//	@ManyToMany(cascade=CascadeType.ALL)
+//	@JoinColumn(name = "clases")
+//	private List<Clase> clases;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Visit> visits;

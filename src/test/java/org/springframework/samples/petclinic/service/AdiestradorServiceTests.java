@@ -32,7 +32,6 @@ public class AdiestradorServiceTests {
 		Collection<Adiestrador> adiestradores=this.adiestradorService.findAllAdiestradores();
 		Assert.assertTrue(adiestradores.size()==2);
 	}
-	//PREGUNTAR
 	@Test
 	void shouldFindFirstnameAndLastnameOfAdiestrador() {
 		String adiestradorBD = "Daniel,Castroviejo";

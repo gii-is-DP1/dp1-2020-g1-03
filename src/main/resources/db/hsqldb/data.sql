@@ -172,6 +172,12 @@ INSERT INTO vacunas(id, tipoenfermedad_id, fecha, descripcion, pet_id, vet_id) V
 
 
 INSERT INTO adiestrador VALUES(1,'Daniel','Castroviejo','competencia','adiestrador1');
+
+
+INSERT INTO tutorias(id,titulo,fecha_hora,razon,pet_id,adiestrador_id,owner_id) VALUES(1,'TutoriaPrueba', '2021-01-14 15:30', 'Probando las tutorias',3,1,1);
+INSERT INTO tutorias(id,titulo,fecha_hora,razon,pet_id,adiestrador_id,owner_id) VALUES(2,'TutoriaPrueba2', '2021-01-16 15:30', 'Probando las tutorias',3,1,1);
+
+
 INSERT INTO adiestrador VALUES(2,'Manuel','Castroviejo','competencia','adiestrador2');
 
 INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota, adiestrador_id) VALUES (1,'Clase1','2020-12-14 15:30', '2020-12-14 16:30', 10, 8, 1, 2, 1);
@@ -188,12 +194,15 @@ INSERT INTO clases(id,name,inicio,fin,plazas,disponibles,categoria,mascota,adies
 
 
 
-INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2020-01-14 15:30',2,'Mi perros están malitos',1);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (1,'Cita1','2021-02-14 15:30',2,'Mi perros están malitos',1);
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon) VALUES (2,'Cita2','2020-01-17 15:30',0,'Mi perros están malitos');
 INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (3,'Cita3','2020-01-15 15:30',2,'Mi perros están malitos',4);
+INSERT INTO citas(id,titulo,fecha_hora,estado,razon,vet_id) VALUES (4,'Cita4','2020-01-14 15:30',0,'Mi perros están malitosssss',1);
 
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (1,4,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (2,3,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (4,1,1);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (3,78,2);
-INSERT INTO citas_Pets(id,pet_id,cita_id) VALUES (5,1,3);
+
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (4,4);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (3,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,1);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (78,2);
+INSERT INTO citas_Pets(pet_id,cita_id) VALUES (1,3);
