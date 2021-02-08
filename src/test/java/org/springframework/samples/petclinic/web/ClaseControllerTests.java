@@ -135,8 +135,7 @@ public class ClaseControllerTests {
 
 		BDDMockito.given(this.petService.findPetTypes()).willReturn(Lists.newArrayList(dog));
 		BDDMockito.given(this.claseService.findClaseById(TEST_CLASE_ID)).willReturn(this.clase1);
-
-		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro").getId()).willReturn(ClaseControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
 		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
 		BDDMockito.given(this.claseService.findAllCategoriasClase()).willReturn(Lists.newArrayList(this.adiestrar));
 		BDDMockito.given(this.adiService.findNameAndLastnameAdiestrador()).willReturn(Lists.newArrayList(this.josue.getFirstName()+","+this.josue.getLastName()));

@@ -89,8 +89,9 @@ public class ComentarioControllerTests {
 		this.comentario1.setVet(this.josue);
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
-		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1").getId()).willReturn(ComentarioControllerTests.TEST_OWNER_ID);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1")).willReturn(this.pedro);
 		BDDMockito.given(this.vetService.findVetsByLastName("Perez Gutierrez")).willReturn(this.josue);
+
 	}
 	
 	@WithMockUser(value = "pedro", roles = "owner")
