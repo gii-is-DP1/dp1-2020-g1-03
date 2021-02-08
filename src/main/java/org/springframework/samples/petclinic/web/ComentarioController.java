@@ -50,8 +50,8 @@ public class ComentarioController {
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
 		System.out.println(principal.getName());
-		int idVet = this.vetService.findVetIdByUsername(principal.getName());
-		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(idVet);
+		Vet vet = this.vetService.findVetIdByUsername(principal.getName());
+		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(vet.getId());
 		model.put("comentarios", comentarios);
 		return "comentarios/comentariosList";
 		}

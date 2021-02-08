@@ -50,7 +50,7 @@ class IngresosServiceTest {
 	void shouldFindAllIngresos() {
 		Collection<Ingreso> gastos = this.ingresoService.findAllIngresos();
 
-		Assertions.assertEquals(gastos.size(), 2);
+		Assertions.assertEquals(gastos.size(), 3);
 	}
 	
 	 @Test

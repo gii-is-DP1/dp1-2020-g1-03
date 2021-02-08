@@ -21,24 +21,27 @@ public class CitaTests {
 		return localValidatorFactoryBean;
 	}
 	
-
 	@Test
 	void shouldValidateWhenFieldsAreCorrect() {
-		
+
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Cita cita = new Cita();
-		List<Pet> pets = new ArrayList<>();
 		Vet vet = new Vet();
-		cita.setEstado(Estado.ACEPTADA);
-		cita.setFechaHora(LocalDateTime.of(2020, 1, 4, 12, 30));
-		cita.setTitulo("Cita prueba");
-		cita.setRazon("Probando citas");
-		cita.setPets(pets);
+		Pet pet1= new Pet();
+		Pet pet2= new Pet();
+		List<Pet> petls=new ArrayList<>(); petls.add(pet1); petls.add(pet2);
+		cita.setName("CitaPrueba");
+		cita.setFechaHora(LocalDateTime.of(2022, 1, 4, 12, 30));
+		cita.setEstado(Estado.PENDIENTE);
+		cita.setRazon("RazonCitaPrueba");
+		cita.setTitulo("TituloCitaPrueba");
 		cita.setVet(vet);
-		
+		cita.setPets(petls);
+
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Cita>> constraintViolations = validator.validate(cita);
-		
+
+
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(0);
 
 	}
@@ -47,15 +50,21 @@ public class CitaTests {
 	void shouldNotValidateWhenHisFieldsBlankOrNull() {
 		LocaleContextHolder.setLocale(Locale.ENGLISH);
 		Cita cita = new Cita();
-		
-		cita.setEstado(Estado.ACEPTADA);
-		cita.setFechaHora(LocalDateTime.of(2020, 1, 4, 12, 30));
-		cita.setTitulo("");
-		cita.setRazon("Probando citas");
-		
+
+		Vet vet = new Vet();
+		Pet pet1= new Pet();
+		Pet pet2= new Pet();
+		List<Pet> petls=new ArrayList<>(); petls.add(pet1); petls.add(pet2);
+		cita.setName("CitaPrueba");
+		cita.setFechaHora(LocalDateTime.of(2022, 1, 4, 12, 30));
+		cita.setEstado(Estado.PENDIENTE);
+		cita.setRazon("");
+		cita.setTitulo("TituloCitaPrueba");
+		cita.setVet(vet);
+		cita.setPets(petls);
+
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Cita>> constraintViolations = validator.validate(cita);
-		
+
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
-	}
 }

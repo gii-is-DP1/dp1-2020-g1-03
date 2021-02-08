@@ -91,7 +91,8 @@ public class CompeticionService {
 			throw new MascotaYaApuntadaCompeticionException();
 		} else {
 			System.out.println("Pet: "+ compPet.getPet()+" Competición: "+ compPet.getCompeticion().getNombre());
-			competicionPetRepository.save(compPet);
+//			competicionRepository.save(competicion);
+//			competicionPetRepository.save(compPet);
 		}
 
 	}
