@@ -53,8 +53,8 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/adiestradores/tutorias/show/{tutoriaId}")
-	public String mostrarTutoria(final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
-		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+	public String mostrarTutoria(Tutoria tutoria,final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
+		tutoria = this.tutoriaService.findTutoriaById(Id);
 		if(tutoria.getAdiestrador().equals(this.adiestradorService.findAdiestradorByUsername(principal.getName()))) {
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowAdiestrador";
@@ -72,8 +72,8 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "/owners/tutorias/show/{tutoriaId}")
-	public String mostrarTutoriaOwner(final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model) {
-		Tutoria tutoria = this.tutoriaService.findTutoriaById(Id);
+	public String mostrarTutoriaOwner(final Principal principal,@PathVariable ("tutoriaId") int Id, Map<String, Object> model, Tutoria tutoria) {
+		tutoria = this.tutoriaService.findTutoriaById(Id);
 		if(tutoria.getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 		model.put("tutoria", tutoria);
 		return "tutorias/tutoriaShowOwner";
@@ -117,7 +117,7 @@ public class TutoriaController {
 	}
 	
 	@GetMapping(value = "adiestradores/tutorias/pets/{petId}/new")  ///owners/comentarios/new
-	public String initCreateTutoria(Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
+	public String initCreateTutoria(Pet pet, Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
 		Tutoria tutoria = new Tutoria();
 		tutoria.setPet(this.petService.findPetById(Id));
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
@@ -127,10 +127,11 @@ public class TutoriaController {
 	}
 
 	@PostMapping(value = "adiestradores/tutorias/pets/{petId}/new")
-	public String processCreateTutoria(@Valid Tutoria tutoria, BindingResult result, @PathVariable("petId") int Id,final Principal principal) 
+	public String processCreateTutoria(Pet pet,@Valid Tutoria tutoria, BindingResult result, @PathVariable("petId") int Id,final Principal principal) 
 			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
+		pet=this.petService.findPetById(Id);
 		tutoria.setId(tutoria.getId());
-		tutoria.setPet(this.petService.findPetById(Id));
+		tutoria.setPet(pet);
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
 		tutoria.setAdiestrador(adiestrador);
 		if (result.hasErrors()) {

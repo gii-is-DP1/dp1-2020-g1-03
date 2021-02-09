@@ -30,6 +30,7 @@ public class ComentarioFormatterTests {
 			comentarioFormatter = new ComentarioFormatter(vetService);
 		}
 		
+
 		@Test
 		void testPrint() {
 			Vet vet = new Vet();

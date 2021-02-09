@@ -196,7 +196,7 @@ public class ComentarioControllerTests {
 				.andExpect(view().name("redirect:/owners/comentarios/show/{comentarioId}"));
 	}
     
-    @WithMockUser(value = "spring")
+    @WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testProcessUpdateFormHasErrors() throws Exception {
 		mockMvc.perform(post("/owners/comentarios/edit/{comentarioId}/{vetId}", TEST_COMENTARIO_ID, TEST_VET_ID)

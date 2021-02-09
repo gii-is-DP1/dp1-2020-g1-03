@@ -24,7 +24,7 @@ public class ComentarioFormatter implements Formatter<Vet>{
 
 	public Vet parse(String text, Locale locale) throws ParseException {
 		Vet findVet = this.vetService.findVetsByLastName(text);
-		if(findVet.getLastName().isEmpty()) {
+		if(findVet.getLastName().isEmpty()||findVet==null||findVet.toString().isEmpty()) {
 			throw new ParseException("vet not found: " + text, 0);
 		}
 		return findVet;

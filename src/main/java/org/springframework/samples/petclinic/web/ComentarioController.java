@@ -19,6 +19,7 @@ import org.springframework.samples.petclinic.service.exceptions.ComentariosMaxim
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,12 +87,12 @@ public class ComentarioController {
 		return "comentarios/show";
 		}
 	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String initEditComentario(final Principal principal,@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, Map<String, Object> model) {
-		Comentario coment= this.comentarioService.findComentarioByComentarioId(comentarioId);
+	public String initEditComentario(final Principal principal,@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, ModelMap model) {
+		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		if(ow.equals(coment.getOwner())) {
-		coment.setOwner(ow);
-		model.put("comentario", coment);
+		if(ow.equals(comentario.getOwner())) {
+			comentario.setOwner(ow);
+		model.put("comentario", comentario);
 		return "comentarios/crearOEditarComentario";
 		}else {
 			return "exception";

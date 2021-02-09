@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
@@ -65,8 +66,8 @@ public class VacunaController {
 	}
 	
 	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
-	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model,final Principal principal) {
-		Vacuna vacuna= vacunaService.findVacunaById(Id);
+	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model,final Principal principal,Vacuna vacuna, Owner owner) {
+		vacuna= vacunaService.findVacunaById(Id);
 		if(vacuna.isNew()) {
 			return "exception";
 		}

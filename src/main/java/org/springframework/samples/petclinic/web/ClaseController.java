@@ -126,12 +126,8 @@ public class ClaseController {
 	@GetMapping(value = "owners/clases/show/{claseId}")
 	public String mostarClaseOwner(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
 		Clase clase= claseService.findClaseById(claseId);
-		if(clase.getAdiestrador().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 		model.put("clase", clase);
 		return "clases/showClaseOwner";
-		}else {
-			return "exception";
-		}
 	}
 	@GetMapping(value = "owners/clases/show/apuntar/{claseId}")	
 	public String initApuntarMascota(@PathVariable("claseId") int claseId, Map<String, Object> model, final Principal principal) {
