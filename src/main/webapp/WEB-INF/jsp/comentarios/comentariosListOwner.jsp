@@ -34,5 +34,8 @@
         </c:forEach>
         </tbody>
     </table>
+    <spring:url value="/vets" var="comentariosUrl"></spring:url>
+    <a href="${fn:escapeXml(comentariosUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
+    <br/>
 	
 </petclinic:layout>

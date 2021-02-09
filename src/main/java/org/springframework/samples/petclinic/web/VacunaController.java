@@ -66,7 +66,7 @@ public class VacunaController {
 	}
 	
 	@GetMapping(value = "/owners/{ownerId}/vacuna/{vacunaId}")
-	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model,final Principal principal,Vacuna vacuna, Owner owner) {
+	public String mostarVacunaDeOwner(@PathVariable("vacunaId") int Id,Map<String, Object> model,final Principal principal,Vacuna vacuna) {
 		vacuna= vacunaService.findVacunaById(Id);
 		if(vacuna.isNew()) {
 			return "exception";

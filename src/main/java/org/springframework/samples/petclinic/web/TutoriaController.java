@@ -116,7 +116,7 @@ public class TutoriaController {
 		
 	}
 	
-	@GetMapping(value = "adiestradores/tutorias/pets/{petId}/new")  ///owners/comentarios/new
+	@GetMapping(value = "/adiestradores/tutorias/pets/{petId}/new")  
 	public String initCreateTutoria(Pet pet, Map<String, Object> model, final Principal principal, @PathVariable("petId") int Id) {
 		Tutoria tutoria = new Tutoria();
 		tutoria.setPet(this.petService.findPetById(Id));
@@ -126,8 +126,8 @@ public class TutoriaController {
 		return "tutorias/crearOEditarTutoria";
 	}
 
-	@PostMapping(value = "adiestradores/tutorias/pets/{petId}/new")
-	public String processCreateTutoria(Pet pet,@Valid Tutoria tutoria, BindingResult result, @PathVariable("petId") int Id,final Principal principal) 
+	@PostMapping(value = "/adiestradores/tutorias/pets/{petId}/new")
+	public String processCreateTutoria(Pet pet,@PathVariable("petId") int Id,@Valid Tutoria tutoria, BindingResult result,final Principal principal) 
 			throws DataAccessException, MismaHoraTutoriaException, NumeroTutoriasMaximoPorDiaException, MismaHoraTutoriaPetException {
 		pet=this.petService.findPetById(Id);
 		tutoria.setId(tutoria.getId());
@@ -135,7 +135,7 @@ public class TutoriaController {
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
 		tutoria.setAdiestrador(adiestrador);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "tutorias/crearOEditarTutoria";
 		}else {
 			try {

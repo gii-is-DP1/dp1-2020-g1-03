@@ -29,8 +29,9 @@
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Editar comentario</a>
 
-    <spring:url value="/owners/comentarios" var="comentariosUrl"></spring:url>
-    <a href="${fn:escapeXml(comentariosUrl)}"><c:out value="Volver"/></a>
+    <spring:url value="/owners/comentarios/{vetId}" var="comentariosUrl">
+    <spring:param name="vetId" value="${comentario.vet.id}"/></spring:url>
+    <a href="${fn:escapeXml(comentariosUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
     <br/>
     <br/>
     <br/>

@@ -49,7 +49,7 @@ public class ComentarioFormatterTests {
 		
 		@Test
 		void shouldThrowParseException() throws ParseException {
-			Mockito.when(vetService.findVetsByLastName("Carter")).thenReturn(makeVets());
+			Mockito.when(vetService.findVetsByLastName("Juan")).thenReturn(null);
 			Assertions.assertThrows(ParseException.class, () -> {
 				comentarioFormatter.parse("Juan", Locale.ENGLISH);
 			});

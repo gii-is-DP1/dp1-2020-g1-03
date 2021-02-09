@@ -217,8 +217,8 @@ public class ClaseControllerTests {
 	@Test
 	void testProcessApuntarMascotaCreationFormSuccess() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/clases/show/apuntar/{claseId}", ClaseControllerTests.TEST_CLASE_ID)
-				.with(csrf()))
-//				.param("pet", "Max,1"))
+				.with(csrf())
+				.param("pet", "Max,1"))
 		.andExpect(MockMvcResultMatchers.status().isOk())
 		.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/clases"));
 	}

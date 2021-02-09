@@ -74,7 +74,7 @@ public class ComentarioControllerTests {
 		this.josue = new Vet();
 		this.josue.setId(ComentarioControllerTests.TEST_VET_ID);
 		this.josue.setFirstName("Josue");
-		this.josue.setLastName("Perez Gutierrez");
+		this.josue.setLastName("Gutierrez");
 
 		this.error = new Vet();
 		this.error.setId(2);
@@ -90,7 +90,7 @@ public class ComentarioControllerTests {
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
 		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1")).willReturn(this.pedro);
-		BDDMockito.given(this.vetService.findVetsByLastName("Perez Gutierrez")).willReturn(this.josue);
+		BDDMockito.given(this.vetService.findVetsByLastName(this.josue.getLastName())).willReturn(this.josue);
 
 	}
 	
@@ -158,7 +158,7 @@ public class ComentarioControllerTests {
 					.with(csrf())
 					.param("titulo", "Esto es un titulo")
 					.param("cuerpo", "cuerpo")
-					.param("vet", "josue"))
+					.param("vet", "Gutierrez"))
 			.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
 			.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/comentarios/"+ComentarioControllerTests.TEST_VET_ID));
 	}
