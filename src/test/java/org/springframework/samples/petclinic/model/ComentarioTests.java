@@ -46,7 +46,6 @@ public class ComentarioTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Comentario>> constraintViolations = validator.validate(comentario);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
 
 	}

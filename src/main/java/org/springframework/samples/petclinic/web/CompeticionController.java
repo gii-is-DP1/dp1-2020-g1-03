@@ -57,10 +57,6 @@ public class CompeticionController {
 		this.competicionPetService = competicionPetService;
 	}
 
-	@InitBinder("pet")
-	public void initPetBinder(WebDataBinder dataBinder) {
-	   dataBinder.setValidator(new CompeticionPetValidator());
-	}
 
 
 	@ModelAttribute("types")
@@ -137,6 +133,10 @@ public class CompeticionController {
 		competicionPet.setPet(competicionPet.getPet());
 		Competicion comp = this.competicionService.findCompeticionById(competicionId);
 		competicionPet.setCompeticion(comp);
+		if(competicionPet.getPet()==null) {
+			result.rejectValue("pet", "Debe seleccionar una mascota", "Debe seleccionar una mascota");
+			return "competiciones/competicionesInscribePet";
+		}
 		List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
 		if (result.hasErrors()) {
 			logger.log(Level.WARNING, "Error detected", result.getAllErrors());

@@ -54,7 +54,6 @@ class SecretarioTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Secretario>> constraintViolations = validator.validate(secretario);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
 
 	}

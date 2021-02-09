@@ -12,10 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-/**
- * @author Michael Isvy Simple test to make sure that Bean Validation is working (useful
- *         when upgrading to a new version of Hibernate Validator/ Bean Validation)
- */
 class EconomistaTests {
 
 	private Validator createValidator() {
@@ -57,7 +53,6 @@ class EconomistaTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Economista>> constraintViolations = validator.validate(economista);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
 
 	}

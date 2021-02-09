@@ -55,7 +55,6 @@ class IngresoTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Ingreso>> constraintViolations = validator.validate(ingreso);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}

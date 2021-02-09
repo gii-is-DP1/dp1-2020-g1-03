@@ -55,7 +55,6 @@ class GastoTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Gasto>> constraintViolations = validator.validate(gasto);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}

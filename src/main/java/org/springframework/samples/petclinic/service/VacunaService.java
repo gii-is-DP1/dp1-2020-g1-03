@@ -8,9 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.TipoEnfermedad;
 import org.springframework.samples.petclinic.model.Vacuna;
-import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VacunaRepository;
-import org.springframework.samples.petclinic.repository.VetRepository;
 import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +21,7 @@ public class VacunaService {
 	public static final Integer DÍAS_ENTRE_VACUNAS=7;
 
 	@Autowired
-	public VacunaService(VacunaRepository vacunaRepository,PetRepository petRepository,VetRepository vetRepository) {
+	public VacunaService(VacunaRepository vacunaRepository) {
 		this.vacunaRepository = vacunaRepository;
 	}
 

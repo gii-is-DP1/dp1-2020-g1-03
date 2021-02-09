@@ -52,10 +52,6 @@ public class CompeticionService {
 	@Transactional(rollbackFor= {SolapamientoDeCompeticionesException.class,MascotaYaApuntadaCompeticionException.class})
 	public void escogerMascota(CompeticionPet compPet, List<CompeticionPet> competicionesApuntadas) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException{
-		Pet pet = compPet.getPet();
-		System.out.println("Pet: " +pet.getId());
-		System.out.println("Comp apuntadas: "+ competicionesApuntadas);
-		
 		Boolean b=true;
 		int i=0;
 		Boolean apuntada=false;
@@ -76,15 +72,11 @@ public class CompeticionService {
 				i++;
 			}
 		}
-		System.out.println("Importa");
 		if (b == false) {
 			throw new SolapamientoDeCompeticionesException();
 		} else if (apuntada) {
 			throw new MascotaYaApuntadaCompeticionException();
-		} else {
-			System.out.println("Pet: "+ compPet.getPet()+" Competición: "+ compPet.getCompeticion().getNombre());
-		}
-
+		} 
 	}
 	
 }

@@ -47,7 +47,6 @@ public class VacunaTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Vacuna>> constraintViolations = validator.validate(vacuna);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}
@@ -63,7 +62,6 @@ public class VacunaTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Vacuna>> constraintViolations = validator.validate(vacuna);
 
-		System.out.println(constraintViolations.toString());
 		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}

@@ -229,7 +229,6 @@ public class TutoriaServiceTests {
         }
 		List<Tutoria> tutorias = this.tutoriaService.findAllTutorias();
 		int tam = tutorias.size();
-		System.out.println(tutorias+" AQWSEXDRCFTVGYBHNUJMIK,O");
 		Tutoria tutoria = this.tutoriaService.findTutoriaById(1);
 		tutoria.setRazon("Cambiando la razon");
 		tutoria.setTitulo("Cambiando el titulo");
