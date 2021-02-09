@@ -54,7 +54,7 @@
     <a href="${fn:escapeXml(editUrl2)}" class="btn btn-default">Ver mascotas apuntadas</a>
     
     <spring:url value="/owners/clases" var="clasesUrl"></spring:url>
-    <a href="${fn:escapeXml(clasesUrl)}"><c:out value="Volver"/></a>
+    <a href="${fn:escapeXml(clasesUrl)}" class="btn btn-default"><c:out value="Volver"/></a>
     <br/>
     <br/>
     <br/>

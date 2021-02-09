@@ -4,8 +4,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +32,6 @@ import org.springframework.context.annotation.FilterType;
 class IngresoControllerTests {
 	
 	private static final int	TEST_INGRESO_ID = 1;
-	private static final int	TEST_INGRESO_ID_INEXISTENTE = 100;
 	private static final int	TEST_ECONOMISTA_ID = 1;
 	
 	@MockBean
@@ -59,8 +56,6 @@ class IngresoControllerTests {
 
 	private LocalDate fecha = LocalDate.parse("2020-10-04");
 
-	private Ingreso ingreso2;
-	
 	@BeforeEach
 	void setup() {
 		

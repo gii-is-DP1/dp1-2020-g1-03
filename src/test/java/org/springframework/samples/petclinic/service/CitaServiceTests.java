@@ -1,24 +1,11 @@
 package org.springframework.samples.petclinic.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.petclinic.model.Adiestrador;
-import org.springframework.samples.petclinic.model.ApuntarClase;
-import org.springframework.samples.petclinic.model.CategoriaClase;
 import org.springframework.samples.petclinic.model.Cita;
-import org.springframework.samples.petclinic.model.Clase;
-import org.springframework.samples.petclinic.model.Estado;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Secretario;
-import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,7 +42,6 @@ public class CitaServiceTests {
 	void shouldFindCitaWithCorrectId() {
 		Cita cita = this.citaService.findCitaById(1);
 		Assert.assertEquals(cita.getTitulo(), "Cita1");
-		//Assert.assertEquals(cita.getEstado(), Estado.PENDIENTE);
 	}
 
 	@Test

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,9 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.samples.petclinic.model.Adiestrador;
 import org.springframework.samples.petclinic.model.CategoriaClase;
-import org.springframework.samples.petclinic.service.AdiestradorService;
 import org.springframework.samples.petclinic.service.ClaseService;
 
 @ExtendWith(MockitoExtension.class)

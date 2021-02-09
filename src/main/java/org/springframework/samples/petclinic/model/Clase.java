@@ -13,6 +13,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -35,18 +36,22 @@ public class Clase extends BaseEntity{
 	
 	@Column(name = "inicio")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@NotNull(message="Debes rellenar este campo")
 	private LocalDateTime fechaHoraInicio;
 	
 	@Column(name = "fin")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@NotNull(message="Debes rellenar este campo")
 	private LocalDateTime fechaHoraFin;
 	
 	@Column(name = "plazas")
 	@Positive(message="El número de plazas totales debe ser mayor a 0")
+	@NotNull(message="Debes rellenar este campo")
 	private Integer numeroPlazasTotal;
 	
 	@Column(name = "disponibles")
 	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
+	@NotNull(message="Debes rellenar este campo")
 	private Integer numeroPlazasDisponibles;
 	
 	@ManyToOne

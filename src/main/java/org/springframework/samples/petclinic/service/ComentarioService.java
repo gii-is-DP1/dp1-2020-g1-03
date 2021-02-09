@@ -20,16 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComentarioService {
 	
 	private ComentarioRepository comentarioRepository;
-	private OwnerRepository ownerRepository;
-	//private CitaMascotaRepository citaMascotaRepository;
 	private CitaRepository citaRepository;
 	
 	@Autowired
 	public ComentarioService(ComentarioRepository comentarioRepository,
 			VetRepository vetRepository, OwnerRepository ownerRepository,CitaRepository citaRepository) {
 		this.comentarioRepository = comentarioRepository;
-		this.ownerRepository = ownerRepository;
-		//this.citaMascotaRepository = citaMascotaRepository;
 		this.citaRepository = citaRepository;
 	}
 
@@ -37,7 +33,6 @@ public class ComentarioService {
 	public void saveComentario(Comentario comentario, boolean estaEditando) throws DataAccessException,  ComentariosMaximoPorCitaException{
 		int idVet = comentario.getVet().getId();
 		int idOwner = comentario.getOwner().getId();
-		//int citasOwnerConVet = this.citaMascotaRepository.findCitasOwnerConVet(idVet, idOwner);
 		int citasOwnerConVet=0;
 		Vet vet =comentario.getVet();
 		List<Cita> citasVet=this.citaRepository.findCitasByVet(vet);

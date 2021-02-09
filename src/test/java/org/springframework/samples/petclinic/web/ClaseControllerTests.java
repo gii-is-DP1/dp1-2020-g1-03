@@ -215,12 +215,22 @@ public class ClaseControllerTests {
 	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
+	void testInitInscribePetError() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/clases/show/apuntar/{claseId}", 99))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("clases/apuntarClases"))
+				.andExpect(MockMvcResultMatchers.model().attribute("apuntarClase",
+						Matchers.hasProperty("clase", Matchers.nullValue())))
+				.andExpect(MockMvcResultMatchers.model().attributeExists("pets"));
+	}
+	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
 	void testProcessApuntarMascotaCreationFormSuccess() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.post("/owners/clases/show/apuntar/{claseId}", ClaseControllerTests.TEST_CLASE_ID)
 				.with(csrf())
 				.param("pet", "Max,1"))
-		.andExpect(MockMvcResultMatchers.status().isOk())
-		.andExpect(MockMvcResultMatchers.view().name("redirect:/owners/clases"));
+		.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 	
 	

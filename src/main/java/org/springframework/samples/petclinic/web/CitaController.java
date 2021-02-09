@@ -61,10 +61,6 @@ public class CitaController {
 		this.secretarioService = secretarioService;
 	}
 
-	@InitBinder("fecha")
-	public void initFechaBinder(WebDataBinder dataBinder) {
-		dataBinder.addCustomFormatter(new FechaFormatter(citaService));
-	}
 
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
@@ -155,7 +151,8 @@ public class CitaController {
 		try {
 			this.citaService.saveCita(cita);
 		} catch (CitaPisadaDelOwnerException ex3) {
-			result.rejectValue("owner", "No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.");
+			result.rejectValue("fechaHora", "No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.",
+					"No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.");
 			return "citas/crearOEditarCitaOwner";
 		}
 		return "redirect:/owners/citas/";

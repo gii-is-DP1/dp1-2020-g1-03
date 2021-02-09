@@ -29,20 +29,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
-/**
- * Test class for {@link VisitController}
- *
- * @author Colin But
- */
 @WebMvcTest(controllers = GastoController.class,excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
 	classes = WebSecurityConfigurer.class),
 	excludeAutoConfiguration= SecurityConfiguration.class)
 class GastoControllerTests {
 
 	private static final int	TEST_GASTO_ID				= 1;
-	private static final int	TEST_GASTO_ID_INEXISTENTE	= 100;
 	private static final int	TEST_ECONOMISTA_ID				= 1;
 
 	@MockBean
@@ -67,9 +60,6 @@ class GastoControllerTests {
 	private Economista			error;
 
 	private LocalDate			fecha = LocalDate.parse("2020-10-04");
-
-	private Gasto 				gasto2;
-
 
 	@BeforeEach
 	void setup() {

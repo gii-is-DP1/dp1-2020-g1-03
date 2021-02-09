@@ -4,8 +4,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.service.CompeticionPetService;
 import org.springframework.samples.petclinic.service.CompeticionService;
@@ -40,7 +37,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class CompeticionControllerTests {
 
 	private static final int TEST_COMPETICION_ID = 1;
-	private static final int TEST_COMPETICION_ID_INEXISTENTE = 100;
 	private static final int TEST_SECRETARIO_ID = 1;
 
 	@MockBean
@@ -73,8 +69,6 @@ class CompeticionControllerTests {
 
 	private LocalDate fechaFin = LocalDate.of(2020, 10, 4);
 
-	private Competicion competicion2;
-
 	@BeforeEach
 	void setup() {
 		this.pedro = new Owner();
@@ -95,7 +89,7 @@ class CompeticionControllerTests {
 		cal.set(Calendar.YEAR, 2012);
 		cal.set(Calendar.MONTH, Calendar.JANUARY);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		Date dateRepresentation = cal.getTime();
+		cal.getTime();
 
 		this.error = new Secretario();
 		this.error.setId(2);
@@ -114,7 +108,6 @@ class CompeticionControllerTests {
 
 		BDDMockito.given(this.competicionService.findCompeticionById(CompeticionControllerTests.TEST_COMPETICION_ID))
 				.willReturn(this.competicion1);
-		// BDDMockito.given(this.secretarioService.find("josue")).willReturn(CompeticionControllerTests.TEST_ECONOMISTA_ID);
 
 	}
 
@@ -188,15 +181,6 @@ class CompeticionControllerTests {
 
 	}
 
-//	// Escenario negativo
-//	//PREGUNTAR
-//		@WithMockUser(value = "pedro", roles = "owner")
-//		@Test
-//		void testGastoListError() throws Exception {
-//			this.mockMvc.perform(MockMvcRequestBuilders.get("/economistas/gasto", GastoControllerTests.TEST_GASTO_ID))
-//			.andExpect(MockMvcResultMatchers.status().is);
-//
-//		}
 	@WithMockUser(value = "josue", roles = "secretario")
 	@Test
 	void testInitCompeticionCreationForm() throws Exception {

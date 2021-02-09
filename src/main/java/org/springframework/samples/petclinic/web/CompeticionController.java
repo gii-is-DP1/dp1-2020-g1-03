@@ -155,7 +155,6 @@ public class CompeticionController {
 				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
 	        }catch(SolapamientoDeCompeticionesException ex4){
-	        	//System.out.println("EX4444444444");
 	        	result.rejectValue("pet","No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada o ya se ha apuntado a esta competición",
 						"No puede apuntar a su mascota porque se pisa con otra competición a la que está apuntada o ya se ha apuntado a esta competición");
 				return "competiciones/competicionesInscribePet";
@@ -175,7 +174,7 @@ public class CompeticionController {
 	}
 
 	@PostMapping(value = "/secretarios/competiciones/new")
-	public String processCreateComentario(@Valid Competicion competicion, BindingResult result,
+	public String processCreateCompeticion(@Valid Competicion competicion, BindingResult result,
 			final Principal principal) {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());

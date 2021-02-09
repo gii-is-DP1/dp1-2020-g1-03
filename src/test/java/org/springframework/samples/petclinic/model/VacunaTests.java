@@ -10,7 +10,6 @@ import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 public class VacunaTests {
@@ -49,7 +48,7 @@ public class VacunaTests {
 		Set<ConstraintViolation<Vacuna>> constraintViolations = validator.validate(vacuna);
 
 		System.out.println(constraintViolations.toString());
-		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
+		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}
 	
@@ -65,7 +64,7 @@ public class VacunaTests {
 		Set<ConstraintViolation<Vacuna>> constraintViolations = validator.validate(vacuna);
 
 		System.out.println(constraintViolations.toString());
-		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
+		Assertions.assertThat(constraintViolations.size()).isEqualTo(2);
 
 	}
 

@@ -86,7 +86,8 @@ public class ComentarioController {
 		return "comentarios/show";
 		}
 	@GetMapping(value = "/owners/comentarios/edit/{comentarioId}/{vetId}")
-	public String initEditComentario(final Principal principal,@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, ModelMap model) {
+	public String initEditComentario(final Principal principal,@PathVariable("comentarioId") int comentarioId, @PathVariable("vetId") int vetId, 
+			ModelMap model) {
 		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
 		if(ow.equals(comentario.getOwner())) {

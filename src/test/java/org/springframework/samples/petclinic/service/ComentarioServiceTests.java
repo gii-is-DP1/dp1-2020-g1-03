@@ -8,17 +8,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.samples.petclinic.model.Comentario;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.exceptions.ComentariosMaximoPorCitaException;
-import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class ComentarioServiceTests {

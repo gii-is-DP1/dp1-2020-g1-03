@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +26,7 @@ public class Tutoria extends BaseEntity {
 	
 	@Column(name = "fecha_hora")
 	@DateTimeFormat(pattern ="yyyy-MM-dd HH:mm")
+	@NotNull(message="Debe poner una fecha")
 	private LocalDateTime fechaHora;
 	
 	@NotEmpty(message="Este campo no puede estar vacío")

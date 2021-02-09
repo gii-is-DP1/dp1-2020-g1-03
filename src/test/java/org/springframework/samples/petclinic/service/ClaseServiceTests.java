@@ -24,8 +24,6 @@ import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.service.exceptions.ClasePisadaDelAdiestradorException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
 import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
-import org.springframework.samples.petclinic.model.TipoEnfermedad;
-import org.springframework.samples.petclinic.service.exceptions.DistanciaEntreDiasException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.samples.petclinic.service.exceptions.MacostaYaApuntadaException;
 import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeClasesException;

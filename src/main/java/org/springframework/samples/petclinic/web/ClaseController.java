@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,19 +60,10 @@ public class ClaseController {
 	
 	@InitBinder("pet")
 	public void initPetBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new ApuntarClaseValidator());
 		dataBinder.addCustomFormatter(new ApuntarClaseFormatter(petService));
 	}
 	
-	
-	@InitBinder("fechaHoraInicio")
-	public void initFechaHoraInicioBinder(WebDataBinder dataBinder) {
-		dataBinder.addCustomFormatter(new FechaHoraFormatter());
-	}
-	@InitBinder("fechaHoraFin")
-	public void initFechaHoraFinBinder(WebDataBinder dataBinder) {
-		dataBinder.addCustomFormatter(new FechaHoraFormatter());
-	}
+
 	
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
@@ -279,11 +271,17 @@ public class ClaseController {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "clases/crearOEditarClase";
+		}else if(clase.getFechaHoraFin().isBefore(LocalDateTime.now())||clase.getFechaHoraInicio().isBefore(LocalDateTime.now())){
+			result.rejectValue("fechaHoraInicio","Algunas de las dos fechas es anterior a hoy",
+					"Algunas de las dos fechas es anterior a hoy");
+			result.rejectValue("fechaHoraFin","Algunas de las dos fechas es anterior a hoy",
+					"Algunas de las dos fechas es anterior a hoy");
+			return "clases/crearOEditarClase";
 		}else if(clase.getNumeroPlazasTotal()<clase.getNumeroPlazasDisponibles()){
 			result.rejectValue("numeroPlazasDisponibles","El número de plazas totales debe ser mayor que el de las plazas disponibles",
 					"El número de plazas totales debe ser mayor que el de las plazas disponibles");
 			return "clases/crearOEditarClase";
-		}else if(clase.getFechaHoraFin().isBefore(clase.getFechaHoraInicio())){
+		}else if(clase.getFechaHoraFin().isBefore(clase.getFechaHoraInicio())||clase.getFechaHoraFin().equals(clase.getFechaHoraInicio())){
 			result.rejectValue("fechaHoraFin","La fecha y hora de inicio de una clase deben ser anteriores a la de fin",
 					"La fecha y hora de inicio de una clase deben ser anteriores a la de fin");
 			return "clases/crearOEditarClase";

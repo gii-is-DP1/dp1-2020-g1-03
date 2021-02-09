@@ -1,7 +1,5 @@
 package org.springframework.samples.petclinic.service;
 
-import static org.junit.Assert.assertThat;
-
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.samples.petclinic.model.Ingreso;
-import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -98,7 +95,6 @@ class IngresosServiceTest {
 		ingreso.setCantidad(newCantidad);
 		this.ingresoService.saveIngreso(ingreso);
 		
-		// retrieving new cantidad from database
 		ingreso = this.ingresoService.findIngresoById(1);
 		assertThat(ingreso.getCantidad()).isEqualTo(newCantidad);
 		

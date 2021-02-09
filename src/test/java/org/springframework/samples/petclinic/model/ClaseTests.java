@@ -26,10 +26,12 @@ public class ClaseTests {
 		Clase clase = new Clase();
 		Adiestrador adiestrador = new Adiestrador();
 		Secretario secretario = new Secretario();
+		PetType type = new PetType();
 		clase.setName("ClasePrueba");
 		clase.setFechaHoraInicio(LocalDateTime.of(2020, 1, 4, 12, 30));
 		clase.setFechaHoraFin(LocalDateTime.of(2020, 1, 4, 13, 00));
 		clase.setNumeroPlazasTotal(20);
+		clase.setType(type);
 		clase.setNumeroPlazasDisponibles(15);
 		clase.setCategoriaClase(new CategoriaClase());
 		clase.setAdiestrador(adiestrador);
@@ -57,7 +59,7 @@ public class ClaseTests {
 		Validator validator = this.createValidator();
 		Set<ConstraintViolation<Clase>> constraintViolations = validator.validate(clase);
 
-		Assertions.assertThat(constraintViolations.size()).isEqualTo(1);
+		Assertions.assertThat(constraintViolations.size()).isEqualTo(3);
 
 	}
 }
