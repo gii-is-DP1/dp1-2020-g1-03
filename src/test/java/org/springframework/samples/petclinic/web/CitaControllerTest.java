@@ -115,6 +115,7 @@ public class CitaControllerTest {
 		this.cita.setPets(pets);
 
 		BDDMockito.given(this.citaService.findCitaById(this.TEST_CITA_ID)).willReturn(this.cita);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
 	}
 
 	@Test
@@ -152,15 +153,15 @@ public class CitaControllerTest {
 				.andExpect(MockMvcResultMatchers.model().attributeExists("citas"));
 	}
 
-//	@Test
-//	@WithMockUser(value = "pedro", roles = "owner")
-//	void testMostrarCitaOwner() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}", 2))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
-//				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaOwner"));
-//				
-//	}
+	@Test
+	@WithMockUser(value = "pedro", roles = "owner")
+	void testMostrarCitaOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/citas/{citaId}", this.TEST_CITA_ID))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("cita"))
+				.andExpect(MockMvcResultMatchers.view().name("citas/showCitaOwner"));
+				
+	}
 
 	@Test
 	@WithMockUser(value = "pedro", roles = "owner")

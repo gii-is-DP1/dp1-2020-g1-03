@@ -165,11 +165,14 @@ public class CitaController {
 	public String getEditarCitaOwner(Map<String, Object> model, Principal principal,
 			@PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
-		if (cita.getEstado().equals(Estado.PENDIENTE)) {
+		if (!cita.getEstado().equals(Estado.PENDIENTE)) {
+			return "redirect:/owners/citas/" + citaId;
+		} else if (!cita.getPets().get(0).getOwner()
+				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+			return "exception";
+		} else {
 			model.put("cita", cita);
 			return "citas/crearOEditarCitaOwner";
-		} else {
-			return "redirect:/owners/citas/" + citaId;
 		}
 	}
 
@@ -177,15 +180,18 @@ public class CitaController {
 	public String processEditarCitaOwner(@Valid Cita cita, @PathVariable("citaId") int citaId, BindingResult result,
 			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet,
 			CitaPisadaDelOwnerException {
+		List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
+		} else if (!pets.get(0).getOwner()
+				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+			return "exception";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
 					"La fecha no puede ser una fecha pasada");
 			return "citas/crearOEditarCitaOwner";
 		} else {
-			List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
 			cita.setPets(pets);
 			cita.setId(citaId);
 			cita.setEstado(Estado.PENDIENTE);
