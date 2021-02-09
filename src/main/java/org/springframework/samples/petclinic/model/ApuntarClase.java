@@ -17,7 +17,7 @@ public class ApuntarClase extends BaseEntity{
 	
 	
 	@ManyToOne
-	@NotNull
+	@NotNull(message="Debes seleccionar una mascota")
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
 	

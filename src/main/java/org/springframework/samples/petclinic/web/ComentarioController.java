@@ -48,7 +48,6 @@ public class ComentarioController {
 	//VETERINARIO
 	@InitBinder("vet")
 	public void initVetBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new ComentarioValidator());
 		dataBinder.addCustomFormatter(new ComentarioFormatter(vetService));
 	}
 	
@@ -143,8 +142,12 @@ public class ComentarioController {
 		Collection<Vet> vets = this.vetService.findVets();
 		model.put("vets", vets);
 		
-		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+		if(comentario.getVet()==null) {
+			result.rejectValue("vet", "Debe seleccionar un vet", 
+	        		"Debe seleccionar un vet");
+	        return "comentarios/crearOEditarComentario";
+		}else if (result.hasErrors()) {
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "comentarios/crearOEditarComentario";
 		} else {
 			try{

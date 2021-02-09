@@ -94,17 +94,6 @@ public class ComentarioControllerTests {
 
 	}
 	
-	@WithMockUser(value = "pedro", roles = "owner")
-	@Test
-	void testShowOwnerComentarioForm() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/comentarios/show/{comentarioId}", 1)).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("comentario"))
-			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("titulo", Matchers.is("Buen veterinario"))))
-			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("cuerpo", Matchers.is("Buen servicio y atención"))))
-			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("vet", Matchers.hasProperty("firstName", Matchers.is("Josue")))))
-			.andExpect(MockMvcResultMatchers.model().attribute("comentario", Matchers.hasProperty("vet", Matchers.hasProperty("lastName", Matchers.is("Perez Gutierrez")))))
-			.andExpect(MockMvcResultMatchers.view().name("comentarios/show"));
-	}
-	
 	@WithMockUser(value = "josue", roles = "vet")
 	@Test
 	void testShowVetComentarioForm() throws Exception {

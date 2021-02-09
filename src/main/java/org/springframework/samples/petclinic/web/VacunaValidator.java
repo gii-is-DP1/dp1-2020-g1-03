@@ -8,7 +8,7 @@ import org.springframework.validation.Validator;
 
 public class VacunaValidator implements Validator{
 	
-	private static final String REQUIRED = "required";
+	private static final String REQUIRED = "necesario";
 	private static final String PAST = "date must be a past date";
 
 	@Override
