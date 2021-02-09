@@ -2,7 +2,7 @@ package org.springframework.samples.petclinic.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.sun.istack.NotNull;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDate;
@@ -28,18 +29,17 @@ public class Competicion extends BaseEntity {
 	
 	
 	@PositiveOrZero(message="La cantidad debe ser mayor o igual a 0")
-	@NotNull
+	@NotNull(message="Este campo debe rellenarse")
 	private Integer cantidad;
 	
 	@Column(name = "fecha_hora_inicio")        
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-
-	@NotNull
+	@NotNull(message="Este campo debe rellenarse")
 	private LocalDate fechaHoraInicio;
 	
 	@Column(name = "fecha_hora_fin")        
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@NotNull
+	@NotNull(message="Este campo debe rellenarse")
 	private LocalDate fechaHoraFin;
 
 	@NotEmpty(message="Este campo no puede estar vacío")
