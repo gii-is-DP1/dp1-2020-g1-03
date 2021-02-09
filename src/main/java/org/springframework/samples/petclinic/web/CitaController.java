@@ -165,11 +165,14 @@ public class CitaController {
 	public String getEditarCitaOwner(Map<String, Object> model, Principal principal,
 			@PathVariable("citaId") int citaId) {
 		Cita cita = this.citaService.findCitaById(citaId);
-		if (cita.getEstado().equals(Estado.PENDIENTE)) {
+		if (!cita.getEstado().equals(Estado.PENDIENTE)) {
+			return "redirect:/owners/citas/" + citaId;
+		} else if (!cita.getPets().get(0).getOwner()
+				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+			return "exception";
+		} else {
 			model.put("cita", cita);
 			return "citas/crearOEditarCitaOwner";
-		} else {
-			return "redirect:/owners/citas/" + citaId;
 		}
 	}
 
@@ -180,6 +183,9 @@ public class CitaController {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
+		} else if (!cita.getPets().get(0).getOwner()
+				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+			return "exception";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",
 					"La fecha no puede ser una fecha pasada");
