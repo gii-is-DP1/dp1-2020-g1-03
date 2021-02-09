@@ -180,10 +180,11 @@ public class CitaController {
 	public String processEditarCitaOwner(@Valid Cita cita, @PathVariable("citaId") int citaId, BindingResult result,
 			final Principal principal) throws DataAccessException, CitaPisadaDelVetException, LimiteDeCitasAlDiaDelVet,
 			CitaPisadaDelOwnerException {
+		List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
-		} else if (!cita.getPets().get(0).getOwner()
+		} else if (!pets.get(0).getOwner()
 				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 			return "exception";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
@@ -191,7 +192,6 @@ public class CitaController {
 					"La fecha no puede ser una fecha pasada");
 			return "citas/crearOEditarCitaOwner";
 		} else {
-			List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
 			cita.setPets(pets);
 			cita.setId(citaId);
 			cita.setEstado(Estado.PENDIENTE);
