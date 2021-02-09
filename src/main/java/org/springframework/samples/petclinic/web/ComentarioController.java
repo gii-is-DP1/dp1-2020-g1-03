@@ -87,8 +87,6 @@ public class ComentarioController {
 			ModelMap model) {
 		Comentario comentario= this.comentarioService.findComentarioByComentarioId(comentarioId);
 		Owner ow = this.ownerService.findOwnerByUsername(principal.getName());
-		System.out.println(comentario);
-		System.out.println(ow);
 		if(ow.equals(comentario.getOwner())) {
 			comentario.setOwner(ow);
 		model.put("comentario", comentario);

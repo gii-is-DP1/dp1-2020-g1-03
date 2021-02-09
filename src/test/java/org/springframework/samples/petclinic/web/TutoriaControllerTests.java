@@ -108,6 +108,7 @@ public class TutoriaControllerTests {
 		this.tutoria1.setRazon("Mejoras en el animal");
 		this.tutoria1.setPet(max);
 		this.tutoria1.setAdiestrador(this.josue);
+		this.tutoria1.setOwner(pedro);
 		
 		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
 		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
@@ -227,17 +228,17 @@ public class TutoriaControllerTests {
 	
 	
 	
-//	@WithMockUser(value = "pedro", roles = "owner")
-//	@Test
-//	void testShowOwnerTutoriaForm() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
-//		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("tutoria"))
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("titulo", Matchers.is("Primera tutoria"))))
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("fechaHora", Matchers.is(fechaHora))))
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("razon", Matchers.is("Mejoras en el animal"))))
-//			.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowOwner"));
-//	}
-//	
+	@WithMockUser(value = "pedro", roles = "owner")
+	@Test
+	void testShowOwnerTutoriaForm() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_TUTORIA_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("tutoria"))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("titulo", Matchers.is("Primera tutoria"))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("fechaHora", Matchers.is(fechaHora))))
+			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("razon", Matchers.is("Mejoras en el animal"))))
+			.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowOwner"));
+	}
+	
 	@WithMockUser(value = "pedro", roles = "owner")
 	@Test
 	void testShowOwnerListTutorias() throws Exception {
