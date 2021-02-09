@@ -52,10 +52,6 @@ public class VacunaController {
 		return this.vacunaService.findTipoEnfermedades();
 	}
 	
-	@InitBinder("vacuna")
-	public void initTipoEnfermedadBinder(WebDataBinder dataBinder) {
-		dataBinder.setValidator(new VacunaValidator());
-	}
 	
 	//OWNERS
 	@GetMapping(value = "/owners/{ownerId}/vacuna")

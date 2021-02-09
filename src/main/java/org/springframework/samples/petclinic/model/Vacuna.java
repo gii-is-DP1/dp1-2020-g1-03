@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,10 +24,12 @@ public class Vacuna extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "tipoenfermedad_id")
+	@NotNull(message="Debe seleccionar un campo")
 	private TipoEnfermedad tipoEnfermedad;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Past(message="La fecha debe ser anterior al día actual")
+	@NotNull(message="Debe seleccionar una fecha")
 	private LocalDate fecha;
 
 	@NotEmpty(message="Este campo no puede estar vacío")
