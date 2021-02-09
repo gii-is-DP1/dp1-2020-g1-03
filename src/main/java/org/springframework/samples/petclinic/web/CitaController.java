@@ -61,7 +61,6 @@ public class CitaController {
 		this.secretarioService = secretarioService;
 	}
 
-
 	@ModelAttribute("types")
 	public Collection<PetType> populatePetTypes() {
 		return this.petService.findPetTypes();
@@ -80,10 +79,14 @@ public class CitaController {
 		Cita cita = this.citaService.findCitaById(citaId);
 		List<Pet> mascotas = cita.getPets();
 		Owner owner = mascotas.get(0).getOwner();
-		model.put("owner", owner);
-		model.put("mascotas", mascotas);
-		model.put("cita", cita);
-		return "citas/showCitaVet";
+		if (cita.getVet() != null && cita.getVet().equals(this.vetService.findVetByUsername(principal.getName()))) {
+			model.put("owner", owner);
+			model.put("mascotas", mascotas);
+			model.put("cita", cita);
+			return "citas/showCitaVet";
+		} else {
+			return "exception";
+		}
 	}
 
 	@GetMapping(value = "/owners/citas")
@@ -151,7 +154,8 @@ public class CitaController {
 		try {
 			this.citaService.saveCita(cita);
 		} catch (CitaPisadaDelOwnerException ex3) {
-			result.rejectValue("fechaHora", "No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.",
+			result.rejectValue("fechaHora",
+					"No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.",
 					"No puede aceptar esta cita porque ya tiene otra con la misma fecha y hora.");
 			return "citas/crearOEditarCitaOwner";
 		}
@@ -181,8 +185,7 @@ public class CitaController {
 		if (result.hasErrors()) {
 			System.out.println(result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
-		} else if (!pets.get(0).getOwner()
-				.equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
+		} else if (!pets.get(0).getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 			return "exception";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",

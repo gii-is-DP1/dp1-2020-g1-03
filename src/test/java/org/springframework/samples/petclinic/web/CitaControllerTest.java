@@ -111,9 +111,10 @@ public class CitaControllerTest {
 		this.cita.setFechaHora(LocalDateTime.of(LocalDate.of(2022, 01, 01), LocalTime.of(15, 30)));
 		this.cita.setName("Citatest");
 		this.cita.setPets(pets);
-
+		this.cita.setVet(this.juan);
 		BDDMockito.given(this.citaService.findCitaById(CitaControllerTest.TEST_CITA_ID)).willReturn(this.cita);
 		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
+		BDDMockito.given(this.vetService.findVetByUsername("juan")).willReturn(this.juan);
 	}
 
 	@Test
