@@ -47,7 +47,7 @@ public class CitaServiceTests {
 	@Test
 	void shouldFindAllCitas() {
 		Collection<Cita> citas = this.citaService.findAllCitas();
-		Assert.assertEquals(citas.size(), 3);
+		Assert.assertEquals(citas.size(), 4);
 	}
 
 

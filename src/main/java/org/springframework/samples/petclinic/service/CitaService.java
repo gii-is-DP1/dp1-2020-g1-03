@@ -47,7 +47,7 @@ public class CitaService {
 		boolean b = true;
 		boolean c = true;
 		for (int j = 0; j < allCitas.size(); j++) {
-			if (allCitas.get(j).getPets().get(0).getOwner().equals(cita.getPets().get(0).getOwner())
+			if (allCitas.get(j).getPets().get(0).getOwner().equals(cita.getPets().get(0).getOwner())&&!allCitas.get(j).getId().equals(cita.getId())
 					&& allCitas.get(j).getFechaHora().isEqual(cita.getFechaHora())) {
 				c = false;
 				break;
