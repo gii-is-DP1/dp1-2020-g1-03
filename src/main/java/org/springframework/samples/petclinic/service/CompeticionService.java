@@ -8,7 +8,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.repository.CompeticionPetRepository;
 import org.springframework.samples.petclinic.repository.CompeticionRepository;
 import org.springframework.samples.petclinic.service.exceptions.MascotaYaApuntadaCompeticionException;
 import org.springframework.samples.petclinic.service.exceptions.SolapamientoDeCompeticionesException;
@@ -18,13 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompeticionService {
 	
 	private CompeticionRepository competicionRepository;
-	private CompeticionPetRepository competicionPetRepository;
-
-
 	@Autowired
 	public CompeticionService(CompeticionRepository competicionRepository) {
-		this.competicionRepository = competicionRepository;	
-		this.competicionPetRepository = competicionPetRepository;
+		this.competicionRepository = competicionRepository;
 	}
 	@Transactional()
 	public void saveCompeticion(Competicion competicion) throws DataAccessException {
@@ -57,12 +52,9 @@ public class CompeticionService {
 	@Transactional(rollbackFor= {SolapamientoDeCompeticionesException.class,MascotaYaApuntadaCompeticionException.class})
 	public void escogerMascota(CompeticionPet compPet, List<CompeticionPet> competicionesApuntadas) throws DataAccessException,
 	SolapamientoDeCompeticionesException, MascotaYaApuntadaCompeticionException{
-		//System.out.println("Service");
 		Pet pet = compPet.getPet();
 		System.out.println("Pet: " +pet.getId());
-		//List<CompeticionPet> competicionesApuntadas = this.competicionPetService.findCompeticionByPetId(competicionPet.getPet().getId());
 		System.out.println("Comp apuntadas: "+ competicionesApuntadas);
-		//List<CompeticionPet> competicionesApuntadas = this.competicionPetRepository.findCompeticionByPetId(compPet.getPet().getId());
 		
 		Boolean b=true;
 		int i=0;
@@ -91,8 +83,6 @@ public class CompeticionService {
 			throw new MascotaYaApuntadaCompeticionException();
 		} else {
 			System.out.println("Pet: "+ compPet.getPet()+" Competición: "+ compPet.getCompeticion().getNombre());
-//			competicionRepository.save(competicion);
-//			competicionPetRepository.save(compPet);
 		}
 
 	}

@@ -1,30 +1,24 @@
 
 package org.springframework.samples.petclinic.web;
 
-import java.io.IOException;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.ApuntarClase;
 import org.springframework.samples.petclinic.model.Cita;
-import org.springframework.samples.petclinic.model.Clase;
 import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Secretario;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.CitaService;
 import org.springframework.samples.petclinic.service.OwnerService;
@@ -33,14 +27,13 @@ import org.springframework.samples.petclinic.service.SecretarioService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelOwnerException;
 import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelVetException;
-import org.springframework.samples.petclinic.service.exceptions.DiferenciaClasesDiasException;
-import org.springframework.samples.petclinic.service.exceptions.DiferenciaTipoMascotaException;
-import org.springframework.samples.petclinic.service.exceptions.LimiteAforoClaseException;
 import org.springframework.samples.petclinic.service.exceptions.LimiteDeCitasAlDiaDelVet;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class CitaController {
@@ -49,8 +42,8 @@ public class CitaController {
 	private final VetService vetService;
 	private final OwnerService ownerService;
 	private final PetService petService;
-	private final SecretarioService secretarioService;
-
+	private static final Logger logger =
+			Logger.getLogger(CitaController.class.getName());
 	@Autowired
 	public CitaController(CitaService citaService, VetService vetService, SecretarioService secretarioService,
 			PetService petService, OwnerService ownerService) {
@@ -58,7 +51,6 @@ public class CitaController {
 		this.vetService = vetService;
 		this.ownerService = ownerService;
 		this.petService = petService;
-		this.secretarioService = secretarioService;
 	}
 
 	@ModelAttribute("types")
@@ -127,11 +119,7 @@ public class CitaController {
 		Cita cita = new Cita();
 		List<Pet> petsEnt = new ArrayList<>();
 		cita.setPets(petsEnt);
-//		Owner owner = this.ownerService.findOwnerByUsername(principal.getName());
 		model.put("cita", cita);
-//		List<String> pets = this.petService.findNameMascota(owner);
-//		System.out.println("Pets: "+pets);
-//		model.put("pets", pets);
 		return "citas/crearOEditarCitaOwner";
 	}
 
@@ -149,7 +137,6 @@ public class CitaController {
 					"La fecha no puede ser una fecha pasada");
 			return "citas/crearOEditarCitaOwner";
 		}
-		System.out.println("Pets: " + cita.getPets());
 		model.put("cita", cita);
 		try {
 			this.citaService.saveCita(cita);
@@ -183,7 +170,7 @@ public class CitaController {
 			CitaPisadaDelOwnerException {
 		List<Pet> pets = this.citaService.findCitaById(citaId).getPets();
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "citas/crearOEditarCitaOwner";
 		} else if (!pets.get(0).getOwner().equals(this.ownerService.findOwnerByUsername(principal.getName()))) {
 			return "exception";
@@ -262,19 +249,13 @@ public class CitaController {
 			final Principal principal, @PathVariable("citaId") int citaId) throws DataAccessException {
 		List<Vet> vets = new ArrayList<>(this.vetService.findVets());
 		List<Estado> estados = new ArrayList<>();
-//		Cita citaux = this.citaService.findCitaById(citaId);
-//		cita.setName(citaux.getName());
-//		cita.setFechaHora(citaux.getFechaHora());
-//		cita.setRazon(citaux.getRazon());
-//		cita.setTitulo(citaux.getTitulo());
-//		System.out.println(citaux.getTitulo());
 		estados.add(Estado.ACEPTADA);
 		estados.add(Estado.RECHAZADA);
 		model.put("estados", estados);
 		model.put("cita", cita);
 		model.put("vets", vets);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "citas/citasSecretarioList";
 		} else if (cita.getFechaHora().isBefore(LocalDateTime.now())) {
 			result.rejectValue("fechaHora", "La fecha no puede ser una fecha pasada",

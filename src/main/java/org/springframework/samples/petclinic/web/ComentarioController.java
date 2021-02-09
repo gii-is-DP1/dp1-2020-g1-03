@@ -16,8 +16,6 @@ import org.springframework.samples.petclinic.service.ComentarioService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.samples.petclinic.service.exceptions.ComentariosMaximoPorCitaException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -53,7 +51,6 @@ public class ComentarioController {
 	
 	@GetMapping(value = "/vets/comentarios")
 	public String listadoComentariosByVetId(Map<String, Object> model, final Principal principal) {
-		System.out.println(principal.getName());
 		Vet vet = this.vetService.findVetByUsername(principal.getName());
 		Collection<Comentario> comentarios= comentarioService.findAllComentariosByVetId(vet.getId());
 		model.put("comentarios", comentarios);

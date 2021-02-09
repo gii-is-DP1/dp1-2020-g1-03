@@ -1,12 +1,13 @@
 package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
@@ -47,6 +48,8 @@ public class ClaseController {
 	private final SecretarioService secretarioService;
 	private final PetService petService;
 	private final OwnerService ownerService;
+	private static final Logger logger =
+			Logger.getLogger(ClaseController.class.getName());
 	
 	@Autowired
 	public ClaseController(ClaseService claseService, AdiestradorService adiestradorService, SecretarioService secretarioService, 
@@ -84,7 +87,6 @@ public class ClaseController {
 	
 	@GetMapping(value = "/adiestradores/clases")
 	public String listadoClasesByAdiestradorId(Map<String, Object> model, final Principal principal) {
-		System.out.println(principal.getName());
 		Adiestrador adiestrador = this.adiestradorService.findAdiestradorByUsername(principal.getName());
 		Collection<Clase> clases= claseService.findClaseByAdiestradorId(adiestrador.getId());
 		model.put("clases", clases);
@@ -143,7 +145,7 @@ public class ClaseController {
 		Clase clas = this.claseService.findClaseById(claseId);
 		apClase.setClase(clas);
 		if(result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "clases/apuntarClases";
 		}else if(apClase.getClase().getFechaHoraInicio().isBefore(LocalDateTime.now())){
 			result.rejectValue("pet","La clase ya ha comenzado o ha terminado",
@@ -219,7 +221,7 @@ public class ClaseController {
 	public String processEditClase(@Valid Clase clase, BindingResult result,final Principal principal, 
 			@PathVariable("claseId") int claseId) throws DataAccessException, ClasePisadaDelAdiestradorException{
 		if(result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "clases/crearOEditarClase";
 		}else if(clase.getNumeroPlazasTotal()<clase.getNumeroPlazasDisponibles()){
 			result.rejectValue("numeroPlazasDisponibles","El número de plazas totales debe ser mayor que el de las plazas disponibles",
@@ -269,7 +271,7 @@ public class ClaseController {
 		Secretario sec = this.secretarioService.findSecretarioByUsername(principal.getName());
 		clase.setSecretario(sec);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "clases/crearOEditarClase";
 		}else if(clase.getFechaHoraFin().isBefore(LocalDateTime.now())||clase.getFechaHoraInicio().isBefore(LocalDateTime.now())){
 			result.rejectValue("fechaHoraInicio","Algunas de las dos fechas es anterior a hoy",

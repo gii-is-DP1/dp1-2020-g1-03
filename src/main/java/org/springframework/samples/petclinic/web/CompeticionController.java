@@ -3,19 +3,17 @@ package org.springframework.samples.petclinic.web;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+//import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.validation.Valid;
 
-//import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.logging.log4j2.Log4J2LoggingSystem;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Competicion;
 import org.springframework.samples.petclinic.model.CompeticionPet;
@@ -38,7 +36,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import lombok.extern.java.Log;
 
 @Controller
 public class CompeticionController {
@@ -150,7 +147,6 @@ public class CompeticionController {
 			return "competiciones/competicionesInscribePet";
 
 		} else {
-			System.out.println("Id: "+comp.getId());
 			try{
 				this.competicionService.escogerMascota(competicionPet, competicionesApuntadas);
 
@@ -177,7 +173,7 @@ public class CompeticionController {
 	public String processCreateCompeticion(@Valid Competicion competicion, BindingResult result,
 			final Principal principal) {
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors());
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "competiciones/competicionesCreateOrUpdate";
 		} else {
 			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {
@@ -212,7 +208,7 @@ public class CompeticionController {
 		Secretario secretario = this.secretarioService.findSecretarioByUsername(principal.getName());
 		competicion.setSecretario(secretario);
 		if (result.hasErrors()) {
-			System.out.println(result.getAllErrors() + "Errores");
+			logger.log(Level.WARNING, "Error detected", result.getAllErrors());
 			return "/secretarios/competicionesCreateOrUpdate"; 
 		}else {
 			if(competicion.getFechaHoraInicio().isBefore(LocalDate.now())&&competicion.getFechaHoraFin().isBefore(LocalDate.now())) {

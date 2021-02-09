@@ -19,7 +19,6 @@ public class CompeticionPetValidator implements Validator {
 		CompeticionPet comPet = (CompeticionPet) obj;
 		
 
-		// type validation
 		if (comPet.getPet().isNew() && comPet.getPet() == null) {
 			errors.rejectValue("pet", REQUIRED, REQUIRED);
 		}

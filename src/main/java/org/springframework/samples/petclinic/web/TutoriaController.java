@@ -12,7 +12,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Adiestrador;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Tutoria;
 import org.springframework.samples.petclinic.service.AdiestradorService;
@@ -36,7 +35,7 @@ public class TutoriaController {
 	private AdiestradorService adiestradorService;
 	private PetService petService;
 	private static final Logger logger =
-			Logger.getLogger(VacunaController.class.getName());
+			Logger.getLogger(TutoriaController.class.getName());
 	
 	@Autowired
 	public TutoriaController(TutoriaService tutoriaService, AdiestradorService adiestradorService, PetService petService, OwnerService ownerService) {
