@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Vet;
 
 public interface CitaRepository extends Repository<Cita, Integer> {
@@ -21,8 +22,8 @@ public interface CitaRepository extends Repository<Cita, Integer> {
 	
 	List<Cita> findAll() throws DataAccessException;
 	
-	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL")
-	List<Cita> findCitasSinVet() throws DataAccessException;
+	@Query("SELECT cita FROM Cita cita WHERE cita.vet IS NULL AND cita.estado LIKE ?1")
+	List<Cita> findCitasSinVet(Estado estado) throws DataAccessException;
 
 	void delete(Cita cita)throws DataAccessException;
 

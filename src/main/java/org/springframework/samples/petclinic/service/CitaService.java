@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Cita;
+import org.springframework.samples.petclinic.model.Estado;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.CitaRepository;
 import org.springframework.samples.petclinic.service.exceptions.CitaPisadaDelOwnerException;
@@ -84,8 +85,8 @@ public class CitaService {
 
 
 	@Transactional(readOnly = true)
-	public List<Cita> findCitasSinVet() throws DataAccessException {
-		return citaRepository.findCitasSinVet();
+	public List<Cita> findCitasSinVet(Estado estado) throws DataAccessException {
+		return citaRepository.findCitasSinVet(estado);
 	}
 
 

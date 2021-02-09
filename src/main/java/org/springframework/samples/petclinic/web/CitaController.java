@@ -209,7 +209,7 @@ public class CitaController {
 
 	@GetMapping(value = "/secretarios/citas/sinVet")
 	public String listadoCitasSecretariosSinVet(Map<String, Object> model, Principal principal) {
-		List<Cita> citas = citaService.findCitasSinVet();
+		List<Cita> citas = citaService.findCitasSinVet(Estado.PENDIENTE);
 		model.put("citas", citas);
 		return "citas/citasSecretarioSinVetList";
 	}
@@ -243,7 +243,7 @@ public class CitaController {
 			return "redirect:/secretarios/citas/" + citaId;
 		}
 	}
-
+// ACLARACIÓN: Un secretario no puede editar una cita aceptada, por eso al intentar acceder al editar no ocurre nada. 
 	@PostMapping(value = "/secretarios/citas/{citaId}/edit")
 	public String processEditarCitaSecretario(Map<String, Object> model, @Valid Cita cita, BindingResult result,
 			final Principal principal, @PathVariable("citaId") int citaId) throws DataAccessException {
@@ -262,9 +262,8 @@ public class CitaController {
 					"La fecha no puede ser una fecha pasada");
 			return "citas/editarCitaSecretario";
 		} else if (cita.getEstado().equals(Estado.RECHAZADA)) {
-			result.rejectValue("vet", "No se puede seleccionar veterinario ya que la cita ha sido rechazada",
-					"No se puede seleccionar veterinario ya que la cita ha sido rechazada");
-			return "citas/editarCitaSecretario";
+			cita.setEstado(Estado.RECHAZADA);
+			cita.setVet(null);
 		}
 
 		Cita cita1 = this.citaService.findCitaById(citaId);

@@ -60,7 +60,7 @@ public class ComentarioControllerTests {
 	void setup() {
 		this.pedro = new Owner();
 		User username= new User();
-		username.setUsername("josue1");
+		username.setUsername("pedro");
 		this.pedro.setUser(username);
 		this.pedro.setId(ComentarioControllerTests.TEST_OWNER_ID);
 		this.pedro.setAddress("Plaza San Pedro");
@@ -87,7 +87,7 @@ public class ComentarioControllerTests {
 		this.comentario1.setVet(this.josue);
 		
 		BDDMockito.given(this.comentarioService.findComentarioByComentarioId(TEST_COMENTARIO_ID)).willReturn(this.comentario1);
-		BDDMockito.given(this.ownerService.findOwnerByUsername("josue1")).willReturn(this.pedro);
+		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
 		BDDMockito.given(this.vetService.findVetsByLastName(this.josue.getLastName())).willReturn(this.josue);
 
 	}

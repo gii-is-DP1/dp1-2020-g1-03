@@ -88,6 +88,7 @@ public class TutoriaControllerTests {
 		
 		this.josue = new Adiestrador();
 		User username = new User();
+		username.setUsername("josue");
 		this.josue.setId(TutoriaControllerTests.TEST_ADI_ID);
 		this.josue.setFirstName("Josue");
 		this.josue.setLastName("Martinez");
@@ -106,6 +107,7 @@ public class TutoriaControllerTests {
 		this.tutoria1.setTitulo("Primera tutoria");
 		this.tutoria1.setRazon("Mejoras en el animal");
 		this.tutoria1.setPet(max);
+		this.tutoria1.setAdiestrador(this.josue);
 		
 		BDDMockito.given(this.ownerService.findOwnerByUsername("pedro")).willReturn(this.pedro);
 		BDDMockito.given(this.adiService.findAdiestradorByUsername("josue")).willReturn(this.josue);
@@ -113,18 +115,6 @@ public class TutoriaControllerTests {
 		BDDMockito.given(this.tutoriaService.findMascotaByName("Max")).willReturn(Lists.newArrayList(max));
 		
 	}
-	
-//	@WithMockUser(value = "josue", roles = "adiestrador")
-//	@Test	
-//	void testShowAdiestradorTutoriaForm() throws Exception {
-//		this.mockMvc.perform(MockMvcRequestBuilders.get("/adiestradores/tutorias/show/{tutoriaId}", TutoriaControllerTests.TEST_ADI_ID))
-//		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("tutoria"))
-//			
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("titulo", Matchers.is("Primera tutoria"))))
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("fechaHora", Matchers.is(fechaHora))))
-//			.andExpect(MockMvcResultMatchers.model().attribute("tutoria", Matchers.hasProperty("razon", Matchers.is("Mejoras en el animal"))))
-//			.andExpect(MockMvcResultMatchers.view().name("tutorias/tutoriaShowAdiestrador"));
-//	}
 	
 	@WithMockUser(value = "josue", roles = "adiestrador")
 	@Test	
